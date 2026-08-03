@@ -374,37 +374,31 @@ function initEventsTenureToggle() {
 function initCabinetToggle() {
   const toggleCurrentBtn = document.getElementById('toggle-current-team');
   const togglePastBtn = document.getElementById('toggle-past-team');
-  const team2024 = document.getElementById('team-2024-2025');
-  const team2023 = document.getElementById('team-2023-2024');
+  const team2026 = document.getElementById('team-2026-2027');
+  const teamPast = document.getElementById('team-past-cabinets');
 
-  if (!toggleCurrentBtn || !togglePastBtn || !team2024 || !team2023) return;
+  if (!toggleCurrentBtn || !togglePastBtn || !team2026 || !teamPast) return;
 
   toggleCurrentBtn.addEventListener('click', () => {
     // Buttons styling
-    toggleCurrentBtn.classList.add('bg-red-600', 'text-white', 'shadow-sm');
-    toggleCurrentBtn.classList.remove('bg-slate-100', 'text-slate-600');
-    togglePastBtn.classList.add('bg-slate-100', 'text-slate-600');
-    togglePastBtn.classList.remove('bg-red-600', 'text-white', 'shadow-sm');
+    toggleCurrentBtn.className = 'px-5 py-2.5 bg-[#4a040d] text-[#ebd86e] font-extrabold rounded-xl text-sm transition shadow-sm';
+    togglePastBtn.className = 'px-5 py-2.5 text-slate-600 font-semibold rounded-xl text-sm transition hover:bg-slate-200/50';
 
-    // Section Visibility with fade
-    team2023.classList.add('hidden');
-    team2024.classList.remove('hidden');
-    // Trigger scroll reveal refresh
-    team2024.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+    // Section Visibility
+    teamPast.classList.add('hidden');
+    team2026.classList.remove('hidden');
+    team2026.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
   });
 
   togglePastBtn.addEventListener('click', () => {
     // Buttons styling
-    togglePastBtn.classList.add('bg-red-600', 'text-white', 'shadow-sm');
-    togglePastBtn.classList.remove('bg-slate-100', 'text-slate-600');
-    toggleCurrentBtn.classList.add('bg-slate-100', 'text-slate-600');
-    toggleCurrentBtn.classList.remove('bg-red-600', 'text-white', 'shadow-sm');
+    togglePastBtn.className = 'px-5 py-2.5 bg-[#4a040d] text-[#ebd86e] font-extrabold rounded-xl text-sm transition shadow-sm';
+    toggleCurrentBtn.className = 'px-5 py-2.5 text-slate-600 font-semibold rounded-xl text-sm transition hover:bg-slate-200/50';
 
-    // Section Visibility with fade
-    team2024.classList.add('hidden');
-    team2023.classList.remove('hidden');
-    // Force reveal active on past team elements
-    team2023.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+    // Section Visibility
+    team2026.classList.add('hidden');
+    teamPast.classList.remove('hidden');
+    teamPast.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
   });
 }
 
