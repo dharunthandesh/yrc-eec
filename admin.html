@@ -493,6 +493,7 @@
         target.status = newStatus;
         localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
         renderAuditionsAdminTable();
+        if (typeof window.pushCloudData === 'function') window.pushCloudData();
       }
     }
 
@@ -502,6 +503,7 @@
         applications = applications.filter(a => a.refId !== refId);
         localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
         renderAuditionsAdminTable();
+        if (typeof window.pushCloudData === 'function') window.pushCloudData();
       }
     }
 
