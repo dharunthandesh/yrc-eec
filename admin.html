@@ -233,6 +233,9 @@
   <!-- SheetJS Library for Excel (.xlsx) Export -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
+  <!-- Central App Logic & Cloud Database Controller -->
+  <script src="app.js"></script>
+
   <!-- Admin Controller Script -->
   <script>
     const ADMIN_PASSCODE = "yrc2026";
@@ -349,10 +352,28 @@
         renderAuditionsAdminTable();
         renderVolunteersAdminTable();
         updateCounts();
+
+        // Fetch live cloud database records instantly
+        if (typeof window.syncCloudData === 'function') {
+          window.syncCloudData(false);
+        }
+
+        // Auto-sync every 8 seconds for real-time mobile data updates
+        if (!window.adminSyncInterval) {
+          window.adminSyncInterval = setInterval(() => {
+            if (typeof window.syncCloudData === 'function') {
+              window.syncCloudData(false);
+            }
+          }, 8000);
+        }
       } else {
         if (loginScreen) loginScreen.classList.remove('hidden');
         if (dashboard) dashboard.classList.add('hidden');
         if (loggedInActions) loggedInActions.classList.add('hidden');
+        if (window.adminSyncInterval) {
+          clearInterval(window.adminSyncInterval);
+          window.adminSyncInterval = null;
+        }
       }
     }
 
