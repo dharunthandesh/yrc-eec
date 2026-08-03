@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Core Team | YRC Easwari Engineering College</title>
+  <meta name="description" content="Meet the leadership, faculty conveners, and office bearers managing Youth Red Cross operations, camps, and programs at Easwari Engineering College.">
+  <meta name="author" content="YRC EEC">
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            red: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              200: '#fecaca',
+              300: '#fca5a5',
+              400: '#f87171',
+              500: '#ef4444',
+              600: '#dc2626',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+            },
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo.png">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50/50 text-slate-900 font-sans selection:bg-red-500 selection:text-white antialiased min-h-screen flex flex-col">
+
+  <!-- ==========================================
+       HEADER & NAVIGATION
+       ========================================== -->
+  <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass-nav">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <!-- Logo and Brand -->
+      <a href="index.html#home" class="flex items-center gap-3.5 group">
+        <div class="w-11 h-11 bg-white rounded-xl overflow-hidden flex items-center justify-center border border-slate-200/80 shadow-sm group-hover:scale-105 group-hover:border-red-500/30 transition-all duration-300">
+          <img src="logo.png" alt="YRC Logo" class="w-full h-full object-cover">
+        </div>
+        <div class="leading-tight">
+          <span class="text-[10px] font-black uppercase tracking-widest text-red-600 block">Youth Red Cross</span>
+          <h1 class="text-sm font-extrabold text-slate-900 tracking-tight">Easwari Eng. College</h1>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-7">
+        <a href="index.html#home" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Home</a>
+        <a href="index.html#about" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">About Us</a>
+        <a href="events.html" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Events</a>
+        <a href="team.html" class="nav-link active-nav text-sm font-semibold text-red-600 transition-colors">Our Team</a>
+        <a href="magazines.html" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Magazines</a>
+        <a href="auditions.html" class="nav-link text-sm font-bold text-red-600 hover:text-red-700 transition-colors flex items-center gap-1.5">
+          <span>Auditions</span>
+          <span class="px-1.5 py-0.5 bg-red-600 text-white text-[9px] font-black uppercase tracking-wider rounded-md animate-pulse">Hiring</span>
+        </a>
+        <a href="index.html#join" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-md shadow-red-600/15 hover:shadow-red-700/25 hover:-translate-y-0.5">Join Us</a>
+      </nav>
+
+      <!-- Mobile Nav Button -->
+      <button id="mobile-menu-btn" aria-label="Toggle Menu" class="md:hidden p-2.5 text-slate-600 hover:text-red-600 focus:outline-none rounded-xl hover:bg-slate-100/80 transition" onclick="document.getElementById('mobile-nav').classList.toggle('hidden')">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Nav Grid -->
+    <div id="mobile-nav" class="hidden md:hidden border-t border-slate-200/80 bg-white/95 backdrop-blur-md px-6 py-5 shadow-xl">
+      <nav class="flex flex-col gap-4">
+        <a href="index.html#home" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Home</a>
+        <a href="index.html#about" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">About Us</a>
+        <a href="events.html" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Events</a>
+        <a href="team.html" class="text-sm font-semibold text-red-600 py-1" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Our Team</a>
+        <a href="magazines.html" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Magazines</a>
+        <a href="auditions.html" class="text-sm font-bold text-red-600 py-1 flex items-center justify-between" onclick="document.getElementById('mobile-nav').classList.add('hidden')">
+          <span>Auditions 2026-27</span>
+          <span class="px-2 py-0.5 bg-red-600 text-white text-[10px] font-black rounded">APPLY</span>
+        </a>
+        <a href="index.html#join" class="w-full text-center py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition shadow-md" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Join Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       HERO / TITLE SECTION
+       ========================================== -->
+  <section class="pt-36 pb-12 bg-gradient-to-b from-[#270206]/5 via-slate-50 to-slate-50 border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between reveal active">
+        <div class="max-w-xl">
+          <span class="inline-block px-3.5 py-1 bg-[#4a040d]/10 text-[#6a0815] border border-[#6a0815]/20 rounded-full text-xs font-black uppercase tracking-widest mb-3">Our Core Team</span>
+          <h3 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">Meet the Leaders</h3>
+          <p class="mt-4 text-slate-600 text-base sm:text-lg font-normal leading-relaxed">
+            The dedicated members managing YRC operations, camps, external relations, and communications.
+          </p>
+        </div>
+
+        <!-- Toggle Switch -->
+        <div class="inline-flex bg-slate-100 p-1.5 rounded-2xl mt-6 md:mt-0 max-w-xs border border-slate-200 shadow-sm shrink-0">
+          <button id="toggle-current-team" class="px-5 py-2.5 bg-[#4a040d] text-[#ebd86e] font-extrabold rounded-xl text-sm transition shadow-sm">Cabinet 2024-25</button>
+          <button id="toggle-past-team" class="px-5 py-2.5 text-slate-600 font-semibold rounded-xl text-sm transition hover:bg-slate-200/50">Past (2023-24)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       CABINET CONTENT
+       ========================================== -->
+  <main class="flex-grow py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      
+      <!-- ACTIVE CABINET 2024 - 2025 -->
+      <div id="team-2024-2025" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        
+        <!-- Programme Officer -->
+        <div class="bg-gradient-to-br from-[#8b0c1e] via-[#6a0815] to-[#4a040d] rounded-3xl border border-[#ebd86e]/50 p-6 text-center shadow-xl relative overflow-hidden reveal active text-white">
+          <div class="absolute top-3 right-3 px-2.5 py-1 bg-[#ebd86e] text-[#210205] text-[9px] font-black rounded-md uppercase tracking-wider shadow-sm">Faculty</div>
+          <div class="w-24 h-24 bg-[#ebd86e] text-[#210205] rounded-full flex items-center justify-center font-black text-3xl mx-auto mb-4 border-2 border-white/20 shadow-md">CM</div>
+          <h4 class="text-lg font-extrabold text-white">Mrs. C. Manjula</h4>
+          <p class="text-[#ebd86e] font-extrabold text-xs uppercase tracking-wider mt-1">Programme Officer & Convener</p>
+          <p class="text-slate-200 text-xs mt-3 leading-relaxed">Convening and managing all local operations, camps, and NGO collaborations.</p>
+        </div>
+
+        <!-- President -->
+        <div class="bg-slate-50/80 rounded-3xl border border-slate-200/80 p-6 text-center shadow-sm reveal active hover:border-[#6a0815]/30 transition-all duration-300">
+          <div class="w-24 h-24 bg-[#4a040d]/10 text-[#6a0815] rounded-full flex items-center justify-center font-black text-3xl mx-auto mb-4 border-2 border-[#6a0815]/20">NB</div>
+          <h4 class="text-lg font-extrabold text-slate-900">Nishok Balajee P J</h4>
+          <p class="text-[#6a0815] font-extrabold text-xs uppercase tracking-wider mt-1">President</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed">Providing overall cabinet guidance, institutional representation, and plan execution.</p>
+        </div>
+
+        <!-- Secretary -->
+        <div class="bg-slate-50/80 rounded-3xl border border-slate-200/80 p-6 text-center shadow-sm reveal active hover:border-[#6a0815]/30 transition-all duration-300">
+          <div class="w-24 h-24 bg-[#4a040d]/10 text-[#6a0815] rounded-full flex items-center justify-center font-black text-3xl mx-auto mb-4 border-2 border-[#6a0815]/20">EM</div>
+          <h4 class="text-lg font-extrabold text-slate-900">Esli Moses</h4>
+          <p class="text-[#6a0815] font-extrabold text-xs uppercase tracking-wider mt-1">Secretary</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed">Directing operations, official documentations, and general meetings coordination.</p>
+        </div>
+
+        <!-- Exec Secretary -->
+        <div class="bg-slate-50/80 rounded-3xl border border-slate-200/80 p-6 text-center shadow-sm reveal active hover:border-[#6a0815]/30 transition-all duration-300">
+          <div class="w-24 h-24 bg-[#4a040d]/10 text-[#6a0815] rounded-full flex items-center justify-center font-black text-3xl mx-auto mb-4 border-2 border-[#6a0815]/20">MK</div>
+          <h4 class="text-lg font-extrabold text-slate-900">Muthukaruppan K</h4>
+          <p class="text-[#6a0815] font-extrabold text-xs uppercase tracking-wider mt-1">Executive Secretary</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed">Overseeing department communication, volunteer logs, and resource distributions.</p>
+        </div>
+
+        <!-- Exec Secretary / Blood Lead -->
+        <div class="bg-slate-50/80 rounded-3xl border border-slate-200/80 p-6 text-center shadow-sm reveal active hover:border-[#6a0815]/30 transition-all duration-300 col-span-full md:max-w-xs md:mx-auto">
+          <div class="w-24 h-24 bg-[#4a040d]/10 text-[#6a0815] rounded-full flex items-center justify-center font-black text-3xl mx-auto mb-4 border-2 border-[#6a0815]/20">AV</div>
+          <h4 class="text-lg font-extrabold text-slate-900">Avanthika</h4>
+          <p class="text-[#6a0815] font-extrabold text-xs uppercase tracking-wider mt-1">Chief Blood Donor Officer</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed">Managing the blood requirements database and coordinating donation requests.</p>
+        </div>
+
+      </div>
+
+      <!-- PAST CABINET 2023 - 2024 -->
+      <div id="team-2023-2024" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        
+        <!-- Programme Officer (Unchanged) -->
+        <div class="bg-gradient-to-br from-[#8b0c1e] via-[#6a0815] to-[#4a040d] rounded-3xl border border-[#ebd86e]/50 p-6 text-center shadow-xl relative overflow-hidden reveal text-white">
+          <div class="absolute top-3 right-3 px-2.5 py-1 bg-[#ebd86e] text-[#210205] text-[9px] font-black rounded-md uppercase tracking-wider shadow-sm">Faculty</div>
+          <div class="w-24 h-24 bg-[#ebd86e] text-[#210205] rounded-full flex items-center justify-center font-black text-3xl mx-auto mb-4 border-2 border-white/20 shadow-md">CM</div>
+          <h4 class="text-lg font-extrabold text-white">Mrs. C. Manjula</h4>
+          <p class="text-[#ebd86e] font-extrabold text-xs uppercase tracking-wider mt-1">Programme Officer & Convener</p>
+          <p class="text-slate-200 text-xs mt-3 leading-relaxed">Faculty convener guiding the club through successful tenures.</p>
+        </div>
+
+        <!-- Ex President -->
+        <div class="bg-slate-50/80 rounded-3xl border border-slate-200/80 p-6 text-center shadow-sm reveal hover:border-[#6a0815]/30 transition-all duration-300">
+          <div class="w-24 h-24 bg-[#4a040d]/10 text-[#6a0815] rounded-full flex items-center justify-center font-black text-3xl mx-auto mb-4 border-2 border-[#6a0815]/20">SK</div>
+          <h4 class="text-lg font-extrabold text-slate-900">Sriram K</h4>
+          <p class="text-[#6a0815] font-extrabold text-xs uppercase tracking-wider mt-1">Ex-President</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed">Led the team during the MAGSJAM magazine edition and coordinates transition.</p>
+        </div>
+
+        <!-- Ex Secretary -->
+        <div class="bg-slate-50/80 rounded-3xl border border-slate-200/80 p-6 text-center shadow-sm reveal hover:border-[#6a0815]/30 transition-all duration-300">
+          <div class="w-24 h-24 bg-[#4a040d]/10 text-[#6a0815] rounded-full flex items-center justify-center font-black text-3xl mx-auto mb-4 border-2 border-[#6a0815]/20">JS</div>
+          <h4 class="text-lg font-extrabold text-slate-900">Jeevitha S R</h4>
+          <p class="text-[#6a0815] font-extrabold text-xs uppercase tracking-wider mt-1">Ex-Secretary</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed">Coordinated the 2023-24 camps, first-aid seminars, and outreach drives.</p>
+        </div>
+
+        <!-- Ex Exec Secretary -->
+        <div class="bg-slate-50/80 rounded-3xl border border-slate-200/80 p-6 text-center shadow-sm reveal hover:border-[#6a0815]/30 transition-all duration-300">
+          <div class="w-24 h-24 bg-[#4a040d]/10 text-[#6a0815] rounded-full flex items-center justify-center font-black text-3xl mx-auto mb-4 border-2 border-[#6a0815]/20">MK</div>
+          <h4 class="text-lg font-extrabold text-slate-900">Monish Kumaar M E</h4>
+          <p class="text-[#6a0815] font-extrabold text-xs uppercase tracking-wider mt-1">Ex-Exec Secretary</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed">Managed logsheets, registrations database, and design wing coordination.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       FOOTER & REACH US
+       ========================================== -->
+  <footer class="bg-[#1a0104] text-white pt-20 pb-10 border-t border-[#ebd86e]/20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-white/10 pb-16 mb-12">
+        <!-- Brand -->
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-white rounded-xl overflow-hidden flex items-center justify-center shadow-lg border border-white/20">
+              <img src="logo.png" alt="YRC Logo" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h4 class="text-sm font-black tracking-wide text-white">YOUTH RED CROSS</h4>
+              <span class="text-[10px] uppercase font-extrabold text-[#ebd86e]">Easwari Engineering College</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light">
+            Establishing compassionate actions, blood donation grids, coastal environmental support, and disaster response drills inside college campuses.
+          </p>
+          <div class="text-xs text-slate-400">
+            &copy; 2026 Easwari Engineering College YRC. <br>All rights reserved.
+          </div>
+        </div>
+
+        <!-- Quick Contacts -->
+        <div>
+          <h5 class="text-xs font-black uppercase tracking-widest text-[#ebd86e] mb-6">How to Reach Us?</h5>
+          <address class="not-italic space-y-4 text-sm text-slate-300">
+            <div>
+              <strong class="text-white block mb-1">Campus Address</strong>
+              Easwari Engineering College,<br>
+              Bharathi Salai, Ramapuram,<br>
+              Chennai – 600089, Tamil Nadu
+            </div>
+            <div>
+              <strong class="text-white block mb-1">Contact Office</strong>
+              Phone: 7010124979 / 8072081613 / 9345458267<br>
+              Email: <a href="mailto:yrc@eec.srmrmp.edu.in" class="hover:text-[#ebd86e] transition">yrc@eec.srmrmp.edu.in</a>
+            </div>
+          </address>
+        </div>
+
+        <!-- Links & Media -->
+        <div>
+          <h5 class="text-xs font-black uppercase tracking-widest text-[#ebd86e] mb-6">Connect With Us</h5>
+          <ul class="space-y-3 text-sm text-slate-300">
+            <li>
+              <a href="https://instagram.com/youth_red_cross_eec" target="_blank" class="hover:text-[#ebd86e] transition flex items-center gap-2">
+                <span>Instagram:</span> <span class="text-white font-medium">@youth_red_cross_eec</span>
+              </a>
+            </li>
+            <li>
+              <a href="http://www.yrceec.org.in" target="_blank" class="hover:text-[#ebd86e] transition flex items-center gap-2">
+                <span>Official Web:</span> <span class="text-white font-medium">www.yrceec.org.in</span>
+              </a>
+            </li>
+            <li>
+              <span class="flex items-center gap-2">
+                <span>Twitter / X:</span> <span class="text-white font-medium">@yrceec</span>
+              </span>
+            </li>
+            <li>
+              <span class="flex items-center gap-2">
+                <span>Facebook / YT:</span> <span class="text-white font-medium">Youth Red Cross EEC</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="text-center text-xs text-slate-400 font-light">
+        Designed for Easwari Engineering College YRC Club Chapter. Operating under standard Indian Red Cross principles.
+      </div>
+    </div>
+  </footer>
+
+  <!-- app script -->
+  <script src="app.js"></script>
+</body>
+</html>

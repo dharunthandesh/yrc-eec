@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events & Initiatives | YRC Easwari Engineering College</title>
+  <meta name="description" content="Explore the comprehensive timeline of humanitarian campaigns, blood camps, coastal cleanups, and community outreach events conducted by YRC Easwari Engineering College.">
+  <meta name="author" content="YRC EEC">
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            red: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              200: '#fecaca',
+              300: '#fca5a5',
+              400: '#f87171',
+              500: '#ef4444',
+              600: '#dc2626',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+            },
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo.png">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50/50 text-slate-900 font-sans selection:bg-red-500 selection:text-white antialiased min-h-screen flex flex-col">
+
+  <!-- ==========================================
+       HEADER & NAVIGATION
+       ========================================== -->
+  <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass-nav">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <!-- Logo and Brand -->
+      <a href="index.html#home" class="flex items-center gap-3.5 group">
+        <div class="w-11 h-11 bg-white rounded-xl overflow-hidden flex items-center justify-center border border-slate-200/80 shadow-sm group-hover:scale-105 group-hover:border-red-500/30 transition-all duration-300">
+          <img src="logo.png" alt="YRC Logo" class="w-full h-full object-cover">
+        </div>
+        <div class="leading-tight">
+          <span class="text-[10px] font-black uppercase tracking-widest text-red-600 block">Youth Red Cross</span>
+          <h1 class="text-sm font-extrabold text-slate-900 tracking-tight">Easwari Eng. College</h1>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-7">
+        <a href="index.html#home" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Home</a>
+        <a href="index.html#about" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">About Us</a>
+        <a href="events.html" class="nav-link active-nav text-sm font-semibold text-red-600 transition-colors">Events</a>
+        <a href="team.html" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Our Team</a>
+        <a href="magazines.html" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Magazines</a>
+        <a href="auditions.html" class="nav-link text-sm font-bold text-red-600 hover:text-red-700 transition-colors flex items-center gap-1.5">
+          <span>Auditions</span>
+          <span class="px-1.5 py-0.5 bg-red-600 text-white text-[9px] font-black uppercase tracking-wider rounded-md animate-pulse">Hiring</span>
+        </a>
+        <a href="index.html#join" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-md shadow-red-600/15 hover:shadow-red-700/25 hover:-translate-y-0.5">Join Us</a>
+      </nav>
+
+      <!-- Mobile Nav Button -->
+      <button id="mobile-menu-btn" aria-label="Toggle Menu" class="md:hidden p-2.5 text-slate-600 hover:text-red-600 focus:outline-none rounded-xl hover:bg-slate-100/80 transition" onclick="document.getElementById('mobile-nav').classList.toggle('hidden')">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Nav Grid -->
+    <div id="mobile-nav" class="hidden md:hidden border-t border-slate-200/80 bg-white/95 backdrop-blur-md px-6 py-5 shadow-xl">
+      <nav class="flex flex-col gap-4">
+        <a href="index.html#home" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Home</a>
+        <a href="index.html#about" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">About Us</a>
+        <a href="events.html" class="text-sm font-semibold text-red-600 py-1" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Events</a>
+        <a href="team.html" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Our Team</a>
+        <a href="magazines.html" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Magazines</a>
+        <a href="auditions.html" class="text-sm font-bold text-red-600 py-1 flex items-center justify-between" onclick="document.getElementById('mobile-nav').classList.add('hidden')">
+          <span>Auditions 2026-27</span>
+          <span class="px-2 py-0.5 bg-red-600 text-white text-[10px] font-black rounded">APPLY</span>
+        </a>
+        <a href="index.html#join" class="w-full text-center py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition shadow-md" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Join Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       HERO / TITLE SECTION
+       ========================================== -->
+  <section class="pt-36 pb-12 bg-gradient-to-b from-[#270206]/5 via-slate-50 to-slate-50 border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-3xl mx-auto reveal active">
+        <span class="inline-block px-3.5 py-1 bg-[#4a040d]/10 text-[#6a0815] border border-[#6a0815]/20 rounded-full text-xs font-black uppercase tracking-widest mb-3">Our Work</span>
+        <h3 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">Timeline of Key Initiatives</h3>
+        <p id="events-description-text" class="mt-4 text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
+          Discover YRC Easwari Engineering College's events and campaigns spanning the academic term 2025-2026.
+        </p>
+
+        <!-- Events Tenure Toggle Switch -->
+        <div class="inline-flex bg-slate-100 p-1.5 rounded-2xl mt-8 border border-slate-200 shadow-sm flex-wrap justify-center gap-1">
+          <button id="toggle-events-2025-26" class="px-5 py-2.5 bg-[#4a040d] text-[#ebd86e] font-extrabold rounded-xl text-sm transition shadow-sm">Tenure 2025-26</button>
+          <button id="toggle-events-2024-25" class="px-5 py-2.5 text-slate-600 font-semibold rounded-xl text-sm transition hover:bg-slate-200/50">Tenure 2024-25</button>
+          <button id="toggle-events-2023-24" class="px-5 py-2.5 text-slate-600 font-semibold rounded-xl text-sm transition hover:bg-slate-200/50">Tenure 2023-24</button>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="flex flex-wrap justify-center gap-2 mt-8">
+          <button class="filter-tab px-5 py-2.5 bg-[#4a040d] text-[#ebd86e] font-extrabold rounded-xl text-sm transition shadow-md" data-filter="all">All Events</button>
+          <button class="filter-tab px-5 py-2.5 bg-white text-slate-600 hover:bg-slate-100 font-semibold rounded-xl text-sm transition border border-slate-200/80" data-filter="health">Health & Camps</button>
+          <button class="filter-tab px-5 py-2.5 bg-white text-slate-600 hover:bg-slate-100 font-semibold rounded-xl text-sm transition border border-slate-200/80" data-filter="eco">Environment</button>
+          <button class="filter-tab px-5 py-2.5 bg-white text-slate-600 hover:bg-slate-100 font-semibold rounded-xl text-sm transition border border-slate-200/80" data-filter="social">Social Welfare</button>
+          <button class="filter-tab px-5 py-2.5 bg-white text-slate-600 hover:bg-slate-100 font-semibold rounded-xl text-sm transition border border-slate-200/80" data-filter="awareness">Awareness Webinars</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       EVENTS CONTAINER
+       ========================================== -->
+  <main class="flex-grow py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      
+      <!-- ==========================================
+           EVENTS GRID: TENURE 2025 - 2026
+           ========================================== -->
+      <div id="events-grid-25-26" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        
+        <!-- Event Card 1: First Aid Awareness Session -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal active" data-category="health">
+          <!-- Card Cover Image -->
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2025-26/images/first-aid-demo-1.png" alt="First Aid Awareness Session - CPR Demonstration" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-95 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2025-26</span>
+              <span class="px-2.5 py-1 bg-rose-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">First Aid & CPR</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Oct 17, 2025
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">First Aid Awareness Session</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Celebrated First Aid Day at MBA Seminar Hall. Keynote & live CPR demo by Pulavar Dr. R. Manikam (Secretary, IRCS Chengalpattu) for 123+ students.
+              </p>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-[#6a0815]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span>Dr. R. Arunkumar &bull; 123 Attended</span>
+              </div>
+              <a href="events/2025-26/first-aid-awareness.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 2: Beach Cleaning Event -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal active" data-category="eco">
+          <!-- Card Cover Image -->
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2025-26/images/beach-cleaning-group.jpg" alt="Besant Nagar Beach Cleaning" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2025-26</span>
+              <span class="px-2.5 py-1 bg-emerald-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Environment</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Sep 20, 2025
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">Besant Nagar Beach Cleaning</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                287 student volunteers collected and segregated 173 bags of plastic waste and non-biodegradable debris at Besant Nagar Beach, safeguarding marine ecosystems.
+              </p>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-[#6a0815]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span>Dr. R. Arunkumar &bull; 287 Volunteers</span>
+              </div>
+              <a href="events/2025-26/beach-cleaning-besant-nagar.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 3: Blood Donation Camp -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal active" data-category="health">
+          <!-- Card Cover Image -->
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2025-26/images/blood-donation-poster.jpg" alt="Blood Donation Camp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2025-26</span>
+              <span class="px-2.5 py-1 bg-rose-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Blood Donation</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Sep 17, 2025
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">Blood Donation Camp</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Organized at Government Hospital, Valasaravakkam. Enthusiastic YRC student volunteers donated 38 units of blood to support public healthcare needs.
+              </p>
+            </div>
+            
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-[#6a0815]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span>Dr. R. Arunkumar &bull; 38 Units Donated</span>
+              </div>
+              <a href="events/2025-26/blood-donation-valasaravakkam.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ==========================================
+           EVENTS GRID: TENURE 2024 - 2025
+           ========================================== -->
+      <div id="events-grid-24-25" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        
+        <!-- Event Card 1: Glisten -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="awareness">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2024-25/images/glisten/page_20_img_3.jpeg" alt="Glisten Installation Program" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2024-25</span>
+              <span class="px-2.5 py-1 bg-rose-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Badging Ceremony</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Aug 3, 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">"Glisten" Installation Program</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Office bearers badging ceremony. Principal Dr. P. Deiva Sundari unveiled YRC magazine "MAGSJAM", guest speaker Dr. Aravind S. highlighted Cancer Institute ties.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEAD: Sriram K. (President)</span>
+              <a href="events/2024-25/glisten.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 2: Teacher's Day -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="eco">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2024-25/images/sapling-drive/page_21_img_3.jpeg" alt="Teacher's Day Sapling Drive" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2024-25</span>
+              <span class="px-2.5 py-1 bg-emerald-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Sustainability</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Aug 29, 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">Teacher's Day Sapling Drive</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Distributed 291 saplings to faculty members inside college premises. Programme Officer Mrs. C. Manjula & 41 office bearers gifted saplings promoting sustainability.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEAD: Mrs. C. Manjula</span>
+              <a href="events/2024-25/sapling-drive.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 3: Suicide Prevention -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="awareness">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2024-25/images/suicide-prevention/page_22_img_1.jpeg" alt="Mental Health & Suicide Prevention" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2024-25</span>
+              <span class="px-2.5 py-1 bg-indigo-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Mental Health</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Sep 16, 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">Mental Health & Suicide Prevention</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Webinar featuring NIMHANS experts (Dr. Anish V Cheriyan & Ms. J. Saranya) with 160+ attendees, training volunteers on empathetic intervention.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">CONVENER: Mrs. C. Manjula</span>
+              <a href="events/2024-25/suicide-prevention.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 4: Coastal Cleanup -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="eco">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2024-25/images/coastal-cleanup/page_23_img_3.jpeg" alt="Trash the Trash Coastal Cleanup" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2024-25</span>
+              <span class="px-2.5 py-1 bg-cyan-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Environment</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Sep 21, 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">"Trash the Trash" Coastal Cleanup</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Joined Planet's Largest Cleanup spanning Kasimedu to Kovalam. Student volunteers collected over 70 bags of plastic waste with support from Communitree.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEAD: Volunteer Squad</span>
+              <a href="events/2024-25/coastal-cleanup.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 5: Rose Day -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="social">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2024-25/images/rose-day/page_24_img_3.jpeg" alt="Rose Day Children's Hospital Visit" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2024-25</span>
+              <span class="px-2.5 py-1 bg-pink-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Pediatric Care</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Sep 22, 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">"Rose Day" Children's Hospital Visit</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Outreach at Institute of Child Health, Egmore. Distributed coloring sets, interacted, and hosted a birthday celebration to comfort pediatric cancer fighters.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">CONVENER: Mrs. C. Manjula</span>
+              <a href="events/2024-25/rose-day.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 6: World Food Day -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="social">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2024-25/images/food-drive/page_25_img_3.jpeg" alt="Food Drive (World Food Day)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2024-25</span>
+              <span class="px-2.5 py-1 bg-amber-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Food Drive</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Oct 20, 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">Food Drive (World Food Day)</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Distributed 85+ fresh meals to homeless people across St. Thomas Mount, Saidapet, Guindy, and Porur, promoting basic dignity and hunger fighting.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEADS: Kishore, Mirjana, Gokul</span>
+              <a href="events/2024-25/food-drive.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 7: Blood Camp -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="health">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2024-25/images/blood-donation-camp/page_26_img_3.jpeg" alt="Annual Blood Donation Camp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2024-25</span>
+              <span class="px-2.5 py-1 bg-red-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Blood Donation</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Oct 24, 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">Annual Blood Donation Camp</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                In partnership with Royapettah Hospital, collected 312 units of blood. Coordinated with CSE Dept symposium "Kratos" at the Civil Drawing Hall.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">312 Units Collected</span>
+              <a href="events/2024-25/blood-donation-camp.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 8: Mathappu -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="social">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2024-25/images/mathappu/page_27_img_3.jpeg" alt="Mathappu Diwali Outreach" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2024-25</span>
+              <span class="px-2.5 py-1 bg-amber-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Diwali Campaign</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Oct 26, 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">"Mathappu" Diwali Outreach</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Celebration with orphans and elderly at Kalaiselvi Karunalaya. Donated groceries, held music interactions, and distributed fruits to old age residents.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEADS: Mirunalini, Dhivya</span>
+              <a href="events/2024-25/mathappu.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 9: Mission Crusader -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="health">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2024-25/images/mission-crusader/page_29_img_3.jpeg" alt="Mission Crusader 2025" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2024-25</span>
+              <span class="px-2.5 py-1 bg-red-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Flagship Cyclothon</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Jan 2025
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">Mission Crusader 2025</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                "Pedal to Fight Cancer" - 10km cycle rally from college to Sivan Park. Raised 2.75 lakhs total, donated to Adyar Cancer Institute.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">Dr. R. Shivakumar (Chairman)</span>
+              <a href="events/2024-25/mission-crusader.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ==========================================
+           EVENTS GRID: TENURE 2023 - 2024 (HIDDEN)
+           ========================================== -->
+      <div id="events-grid-23-24" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Event Card 1: Blood Camp 2023 -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="health">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2023-24/images/blood-donation-camp/page_21_img_3.jpeg" alt="Annual Blood Donation Camp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2023-24</span>
+              <span class="px-2.5 py-1 bg-red-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Blood Donation</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Oct 16, 2023
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">Annual Blood Donation Camp</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                YRC-EEC organized a massive blood donation camp at the EEC campus. Coordinated with student leads and blood bank medical professionals.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEADS: Kishore, Sriram, Navaneeth</span>
+              <a href="events/2023-24/blood-donation-camp.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 2: RRR 3.0 -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="eco">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2023-24/images/rrr/page_22_img_3.jpeg" alt="RRR - Rehab Return Rejoice 3.0" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2023-24</span>
+              <span class="px-2.5 py-1 bg-emerald-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Sustainability</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Oct 2023
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">RRR - Rehab Return Rejoice 3.0</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                A sustainability campaign focusing on recycling and environmental responsibility. Features talks and recycling drives in college and neighborhood.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEAD: Volunteer Squad</span>
+              <a href="events/2023-24/rrr.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 3: First Aid Event -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="health">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2023-24/images/first-aid/page_23_img_3.jpeg" alt="The First Aid Event" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2023-24</span>
+              <span class="px-2.5 py-1 bg-rose-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">First Aid</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Jan 25, 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">The First Aid Event</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Interactive first aid workshops held on First Aid Day, equipping students and volunteers with critical life-saving techniques and emergency protocols.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEAD: Executive Team</span>
+              <a href="events/2023-24/first-aid.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 4: Bridge Project -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="social">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2023-24/images/bridge-project/page_24_img_3.jpeg" alt="The Bridge Project Camp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2023-24</span>
+              <span class="px-2.5 py-1 bg-pink-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Education</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Feb 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">The Bridge Project Camp</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Collaborative community teaching initiative with Lure of Life, aiming to offer primary education tools and support to underprivileged children.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEADS: YRC & Lure of Life</span>
+              <a href="events/2023-24/bridge-project.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 5: Other Events -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="social">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2023-24/images/other-events/page_25_img_1.jpeg" alt="Special Events Portfolio" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2023-24</span>
+              <span class="px-2.5 py-1 bg-purple-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Portfolio</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              2023 - 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">Special Events Portfolio</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                Compilation of multiple social initiatives including sanitary napkin drives, Teacher's Day campaigns, and public health awareness programs.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEAD: Volunteer Squad</span>
+              <a href="events/2023-24/other-events.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Card 6: Mission Crusader 2024 -->
+        <div class="event-card bg-white rounded-2xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group hover:border-[#6a0815]/40 reveal" data-category="health">
+          <div class="relative h-48 w-full overflow-hidden bg-slate-900">
+            <img src="events/2023-24/images/mission-crusader/page_26_img_3.jpeg" alt="Mission Crusader 2024" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+              <span class="px-2.5 py-1 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm">Tenure 2023-24</span>
+              <span class="px-2.5 py-1 bg-red-600/90 text-white backdrop-blur-md text-[10px] font-extrabold rounded-lg uppercase tracking-wide">Flagship Cyclothon</span>
+            </div>
+            <div class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-bold rounded-md">
+              Mar 2024
+            </div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="text-xl font-extrabold text-slate-900 mb-2.5 group-hover:text-[#6a0815] transition-colors leading-snug">Mission Crusader 2024</h4>
+              <p class="text-slate-600 text-sm leading-relaxed mb-4 font-normal">
+                "Pedal to Fight Cancer" cyclothon rally raising funds for the Cancer Institute at Adyar. Coordinated with Chairman and external partners.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-slate-500">LEAD: YRC Cabinet</span>
+              <a href="events/2023-24/mission-crusader.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-[#6a0815] font-extrabold text-xs rounded-xl hover:bg-[#4a040d] hover:text-[#ebd86e] transition-all duration-200 group/btn">
+                <span>Details</span>
+                <svg class="w-3.5 h-3.5 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ==========================================
+       FOOTER & REACH US
+       ========================================== -->
+  <footer class="bg-[#1a0104] text-white pt-20 pb-10 border-t border-[#ebd86e]/20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-white/10 pb-16 mb-12">
+        <!-- Brand -->
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-white rounded-xl overflow-hidden flex items-center justify-center shadow-lg border border-white/20">
+              <img src="logo.png" alt="YRC Logo" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h4 class="text-sm font-black tracking-wide text-white">YOUTH RED CROSS</h4>
+              <span class="text-[10px] uppercase font-extrabold text-[#ebd86e]">Easwari Engineering College</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light">
+            Establishing compassionate actions, blood donation grids, coastal environmental support, and disaster response drills inside college campuses.
+          </p>
+          <div class="text-xs text-slate-400">
+            &copy; 2026 Easwari Engineering College YRC. <br>All rights reserved.
+          </div>
+        </div>
+
+        <!-- Quick Contacts -->
+        <div>
+          <h5 class="text-xs font-black uppercase tracking-widest text-[#ebd86e] mb-6">How to Reach Us?</h5>
+          <address class="not-italic space-y-4 text-sm text-slate-300">
+            <div>
+              <strong class="text-white block mb-1">Campus Address</strong>
+              Easwari Engineering College,<br>
+              Bharathi Salai, Ramapuram,<br>
+              Chennai – 600089, Tamil Nadu
+            </div>
+            <div>
+              <strong class="text-white block mb-1">Contact Office</strong>
+              Phone: 7010124979 / 8072081613 / 9345458267<br>
+              Email: <a href="mailto:yrc@eec.srmrmp.edu.in" class="hover:text-[#ebd86e] transition">yrc@eec.srmrmp.edu.in</a>
+            </div>
+          </address>
+        </div>
+
+        <!-- Links & Media -->
+        <div>
+          <h5 class="text-xs font-black uppercase tracking-widest text-[#ebd86e] mb-6">Connect With Us</h5>
+          <ul class="space-y-3 text-sm text-slate-300">
+            <li>
+              <a href="https://instagram.com/youth_red_cross_eec" target="_blank" class="hover:text-[#ebd86e] transition flex items-center gap-2">
+                <span>Instagram:</span> <span class="text-white font-medium">@youth_red_cross_eec</span>
+              </a>
+            </li>
+            <li>
+              <a href="http://www.yrceec.org.in" target="_blank" class="hover:text-[#ebd86e] transition flex items-center gap-2">
+                <span>Official Web:</span> <span class="text-white font-medium">www.yrceec.org.in</span>
+              </a>
+            </li>
+            <li>
+              <span class="flex items-center gap-2">
+                <span>Twitter / X:</span> <span class="text-white font-medium">@yrceec</span>
+              </span>
+            </li>
+            <li>
+              <span class="flex items-center gap-2">
+                <span>Facebook / YT:</span> <span class="text-white font-medium">Youth Red Cross EEC</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="text-center text-xs text-slate-400 font-light">
+        Designed for Easwari Engineering College YRC Club Chapter. Operating under standard Indian Red Cross principles.
+      </div>
+    </div>
+  </footer>
+
+  <!-- app script -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YRC Admin Portal | Easwari Engineering College</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <meta name="robots" content="noindex, nofollow">
+</head>
+<body class="bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-[#ebd86e] selection:text-[#4a040d]">
+
+  <!-- Top Header Navigation -->
+  <header class="bg-[#1a0104] border-b border-[#ebd86e]/20 sticky top-0 z-40 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white rounded-xl overflow-hidden p-0.5 shadow-lg border border-white/20">
+          <img src="logo.png" alt="YRC Logo" class="w-full h-full object-cover">
+        </div>
+        <div>
+          <h1 class="text-sm font-extrabold tracking-wider text-white uppercase">YRC Central Admin Portal</h1>
+          <p class="text-[10px] uppercase font-bold text-[#ebd86e]">Easwari Engineering College Chapter</p>
+        </div>
+      </div>
+
+      <div id="logged-in-actions" class="hidden flex items-center gap-3">
+        <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-full flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Admin Session Active
+        </span>
+        <button onclick="logoutAdmin()" class="px-4 py-2 bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/30 rounded-xl text-xs font-bold transition">
+          🔒 Lock & Exit
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
+
+    <!-- ==========================================
+         1. PASSWORD ACCESS LOCK SCREEN
+         ========================================== -->
+    <div id="admin-login-screen" class="max-w-md mx-auto my-16 bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden text-center">
+      <div class="h-2 bg-gradient-to-r from-[#8b0c1e] via-[#6a0815] to-[#ebd86e] absolute top-0 left-0 right-0"></div>
+      
+      <div class="w-16 h-16 bg-[#4a040d] text-[#ebd86e] rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-5 border border-[#ebd86e]/30 shadow-inner">
+        🔐
+      </div>
+
+      <h2 class="text-xl font-black text-white tracking-tight">Restricted Admin Access</h2>
+      <p class="text-xs text-slate-400 mt-1 mb-6">Enter the administrator security key to unlock registered user databases.</p>
+
+      <form id="admin-login-form" class="space-y-4">
+        <div>
+          <label for="admin-passcode" class="block text-[11px] font-extrabold uppercase tracking-wider text-slate-400 text-left mb-1.5">Admin Passcode *</label>
+          <input type="password" id="admin-passcode" required placeholder="Enter passcode (Default: yrc2026)" class="w-full px-4 py-3.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-[#ebd86e] transition">
+        </div>
+
+        <div id="login-error-msg" class="hidden p-3 bg-rose-950/60 border border-rose-500/30 text-rose-300 text-xs rounded-xl font-semibold">
+          ❌ Incorrect passcode. Please try again.
+        </div>
+
+        <button type="submit" class="btn-gold w-full py-3.5 text-xs font-black uppercase tracking-wider shadow-lg flex items-center justify-center gap-2">
+          <span>Unlock Admin Dashboard</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </form>
+      <p class="text-[10px] text-slate-500 mt-6">Default access key is set to: <code class="text-[#ebd86e] bg-slate-950 px-1.5 py-0.5 rounded font-mono">yrc2026</code></p>
+    </div>
+
+    <!-- ==========================================
+         2. AUTHENTICATED ADMIN DASHBOARD
+         ========================================== -->
+    <div id="admin-dashboard" class="hidden space-y-6">
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <button id="tab-btn-auditions" onclick="switchAdminTab('auditions')" class="px-5 py-2.5 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 font-bold text-xs rounded-xl transition flex items-center gap-2">
+          <span>🎭 Core Audition Applicants (2026-27)</span>
+          <span id="badge-audition-count" class="px-2 py-0.5 bg-white/10 rounded-full text-[10px]">0</span>
+        </button>
+
+        <button id="tab-btn-volunteers" onclick="switchAdminTab('volunteers')" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-400 font-bold text-xs rounded-xl transition flex items-center gap-2 border border-slate-800">
+          <span>🤝 General Volunteers</span>
+          <span id="badge-volunteer-count" class="px-2 py-0.5 bg-slate-800 rounded-full text-[10px]">0</span>
+        </button>
+      </div>
+
+      <!-- ==========================================
+           TAB 1: AUDITION APPLICANTS DATABASE
+           ========================================== -->
+      <div id="admin-section-auditions" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-4 mb-6 gap-4">
+          <div>
+            <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              Core Auditions 2026-27 Database
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Manage core team applicant preferences, status decisions, and excel reporting.</p>
+          </div>
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="exportAuditionsToExcel()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-extrabold rounded-xl text-xs transition shadow-md flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <span>Export Excel (.xlsx)</span>
+            </button>
+            <button onclick="exportAuditionsToCSV()" class="px-4 py-2.5 bg-[#4a040d] hover:bg-[#6a0815] text-[#ebd86e] border border-[#ebd86e]/30 font-extrabold rounded-xl text-xs transition shadow-md">
+              <span>Export CSV</span>
+            </button>
+            <button onclick="resetAuditionsDb()" class="px-3.5 py-2.5 bg-slate-950 hover:bg-rose-950 text-slate-400 hover:text-rose-300 font-semibold rounded-xl text-xs border border-slate-800 transition">
+              Reset Demo
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter & Search Controls -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div>
+            <label class="block text-[10px] font-extrabold uppercase text-slate-400 mb-1">Search Candidates</label>
+            <input type="text" id="admin-search-input" oninput="renderAuditionsAdminTable()" placeholder="Name, Reg. No, Dept, or Ref ID..." class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#ebd86e]">
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-extrabold uppercase text-slate-400 mb-1">Filter by Primary Domain</label>
+            <select id="admin-domain-filter" onchange="renderAuditionsAdminTable()" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#ebd86e]">
+              <option value="all">All Domains</option>
+              <option value="Media & Photography">Media & Photography</option>
+              <option value="Content & Editorial">Content & Editorial</option>
+              <option value="Visual & Graphic Design">Visual & Graphic Design</option>
+              <option value="Operations & Logistics">Operations & Logistics</option>
+              <option value="Public Relations & Anchoring">Public Relations & Anchoring</option>
+              <option value="Technical & Web Development">Technical & Web Development</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-extrabold uppercase text-slate-400 mb-1">Filter by Candidate Status</label>
+            <select id="admin-status-filter" onchange="renderAuditionsAdminTable()" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#ebd86e]">
+              <option value="all">All Candidate Statuses</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Shortlisted">Shortlisted</option>
+              <option value="Audition Scheduled">Audition Scheduled</option>
+              <option value="Selected">Selected</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Auditions Applicants Data Table -->
+        <div class="overflow-x-auto rounded-2xl border border-slate-800">
+          <table class="w-full text-left border-collapse min-w-[800px]">
+            <thead>
+              <tr class="bg-slate-950 text-slate-400 text-[10px] font-black uppercase tracking-widest border-b border-slate-800">
+                <th class="px-4 py-3.5">Ref ID</th>
+                <th class="px-4 py-3.5">Applicant Name & Contact</th>
+                <th class="px-4 py-3.5">Dept & Year</th>
+                <th class="px-4 py-3.5">Domain Preference</th>
+                <th class="px-4 py-3.5">Status Decision</th>
+                <th class="px-4 py-3.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="audition-admin-table-body" class="divide-y divide-slate-800 text-xs">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           TAB 2: GENERAL VOLUNTEERS DATABASE
+           ========================================== -->
+      <div id="admin-section-volunteers" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-4 mb-6 gap-4">
+          <div>
+            <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+              General Volunteer Registrations
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Review student volunteer signups from the main home portal.</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="exportVolunteersToCSV()" class="px-4 py-2.5 bg-[#4a040d] hover:bg-[#6a0815] text-[#ebd86e] border border-[#ebd86e]/30 font-extrabold rounded-xl text-xs transition shadow-md">
+              <span>Export CSV</span>
+            </button>
+            <button onclick="resetVolunteersDb()" class="px-3.5 py-2.5 bg-slate-950 hover:bg-rose-950 text-slate-400 hover:text-rose-300 font-semibold rounded-xl text-xs border border-slate-800 transition">
+              Reset Data
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter & Search Controls -->
+        <div class="max-w-md mb-6">
+          <label class="block text-[10px] font-extrabold uppercase text-slate-400 mb-1">Search Volunteers</label>
+          <input type="text" id="volunteer-search-input" oninput="renderVolunteersAdminTable()" placeholder="Name, Email, Department, or Skills..." class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#ebd86e]">
+        </div>
+
+        <!-- Volunteer Data Table -->
+        <div class="overflow-x-auto rounded-2xl border border-slate-800">
+          <table class="w-full text-left border-collapse min-w-[700px]">
+            <thead>
+              <tr class="bg-slate-950 text-slate-400 text-[10px] font-black uppercase tracking-widest border-b border-slate-800">
+                <th class="px-4 py-3.5">Volunteer Name</th>
+                <th class="px-4 py-3.5">Contact Details</th>
+                <th class="px-4 py-3.5">Dept & Year</th>
+                <th class="px-4 py-3.5">Interests / Skills</th>
+                <th class="px-4 py-3.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="volunteer-admin-table-body" class="divide-y divide-slate-800 text-xs">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- SheetJS Library for Excel (.xlsx) Export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Admin Controller Script -->
+  <script>
+    const ADMIN_PASSCODE = "yrc2026";
+
+    window.showCustomAlert = function(title, message, type = 'warning') {
+      let modal = document.getElementById('custom-alert-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'custom-alert-modal';
+        modal.className = 'fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4 transition-all duration-300';
+        modal.innerHTML = `
+          <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative overflow-hidden text-center transform scale-95 transition-all duration-300" id="custom-alert-card">
+            <div id="custom-alert-ribbon" class="h-2.5 bg-gradient-to-r from-[#8b0c1e] via-[#6a0815] to-[#ebd86e] absolute top-0 left-0 right-0"></div>
+            <div id="custom-alert-icon" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 border shadow-inner">
+              ⚠️
+            </div>
+            <h3 id="custom-alert-title" class="text-lg font-black text-white tracking-tight mb-2">Notice</h3>
+            <p id="custom-alert-msg" class="text-xs text-slate-300 leading-relaxed mb-6 font-medium whitespace-pre-line"></p>
+            <button id="custom-alert-close-btn" onclick="closeCustomAlert()" class="btn-gold w-full py-3.5 text-xs font-extrabold uppercase tracking-wider shadow-md hover:shadow-xl transition cursor-pointer">
+              Understood
+            </button>
+          </div>
+        `;
+        document.body.appendChild(modal);
+      }
+
+      const iconEl = document.getElementById('custom-alert-icon');
+      const titleEl = document.getElementById('custom-alert-title');
+      const msgEl = document.getElementById('custom-alert-msg');
+      const ribbonEl = document.getElementById('custom-alert-ribbon');
+
+      if (titleEl) titleEl.innerText = title;
+      if (msgEl) msgEl.innerText = message;
+
+      if (type === 'duplicate' || type === 'warning') {
+        if (iconEl) {
+          iconEl.className = 'w-14 h-14 bg-amber-950/80 text-amber-400 border border-amber-500/30 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-inner';
+          iconEl.innerText = '⚠️';
+        }
+        if (ribbonEl) ribbonEl.className = 'h-2.5 bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 absolute top-0 left-0 right-0';
+      } else if (type === 'error') {
+        if (iconEl) {
+          iconEl.className = 'w-14 h-14 bg-rose-950/80 text-rose-400 border border-rose-500/30 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-inner';
+          iconEl.innerText = '❌';
+        }
+        if (ribbonEl) ribbonEl.className = 'h-2.5 bg-gradient-to-r from-rose-600 to-rose-800 absolute top-0 left-0 right-0';
+      } else if (type === 'success') {
+        if (iconEl) {
+          iconEl.className = 'w-14 h-14 bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-inner';
+          iconEl.innerText = '✓';
+        }
+        if (ribbonEl) ribbonEl.className = 'h-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 absolute top-0 left-0 right-0';
+      } else {
+        if (iconEl) {
+          iconEl.className = 'w-14 h-14 bg-blue-950/80 text-blue-400 border border-blue-500/30 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-inner';
+          iconEl.innerText = 'ℹ️';
+        }
+        if (ribbonEl) ribbonEl.className = 'h-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 absolute top-0 left-0 right-0';
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setTimeout(() => {
+        const card = document.getElementById('custom-alert-card');
+        if (card) {
+          card.classList.remove('scale-95');
+          card.classList.add('scale-100');
+        }
+      }, 10);
+    };
+
+    window.closeCustomAlert = function() {
+      const modal = document.getElementById('custom-alert-modal');
+      if (modal) {
+        const card = document.getElementById('custom-alert-card');
+        if (card) {
+          card.classList.remove('scale-100');
+          card.classList.add('scale-95');
+        }
+        setTimeout(() => {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }, 150);
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAdminSession();
+
+      document.getElementById('admin-login-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const entered = document.getElementById('admin-passcode').value;
+        if (entered === ADMIN_PASSCODE) {
+          sessionStorage.setItem('yrc_admin_logged_in', 'true');
+          checkAdminSession();
+        } else {
+          document.getElementById('login-error-msg').classList.remove('hidden');
+        }
+      });
+    });
+
+    function checkAdminSession() {
+      const isLoggedIn = sessionStorage.getItem('yrc_admin_logged_in') === 'true';
+      const loginScreen = document.getElementById('admin-login-screen');
+      const dashboard = document.getElementById('admin-dashboard');
+      const loggedInActions = document.getElementById('logged-in-actions');
+
+      if (isLoggedIn) {
+        if (loginScreen) loginScreen.classList.add('hidden');
+        if (dashboard) dashboard.classList.remove('hidden');
+        if (loggedInActions) loggedInActions.classList.remove('hidden');
+        
+        // Initial render
+        renderAuditionsAdminTable();
+        renderVolunteersAdminTable();
+        updateCounts();
+      } else {
+        if (loginScreen) loginScreen.classList.remove('hidden');
+        if (dashboard) dashboard.classList.add('hidden');
+        if (loggedInActions) loggedInActions.classList.add('hidden');
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem('yrc_admin_logged_in');
+      checkAdminSession();
+    }
+
+    function switchAdminTab(tab) {
+      const auditionsSec = document.getElementById('admin-section-auditions');
+      const volunteersSec = document.getElementById('admin-section-volunteers');
+      const btnAuditions = document.getElementById('tab-btn-auditions');
+      const btnVolunteers = document.getElementById('tab-btn-volunteers');
+
+      if (tab === 'auditions') {
+        auditionsSec.classList.remove('hidden');
+        volunteersSec.classList.add('hidden');
+        btnAuditions.className = "px-5 py-2.5 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 font-bold text-xs rounded-xl transition flex items-center gap-2";
+        btnVolunteers.className = "px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-400 font-bold text-xs rounded-xl transition flex items-center gap-2 border border-slate-800";
+      } else {
+        auditionsSec.classList.add('hidden');
+        volunteersSec.classList.remove('hidden');
+        btnVolunteers.className = "px-5 py-2.5 bg-[#4a040d] text-[#ebd86e] border border-[#ebd86e]/30 font-bold text-xs rounded-xl transition flex items-center gap-2";
+        btnAuditions.className = "px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-400 font-bold text-xs rounded-xl transition flex items-center gap-2 border border-slate-800";
+      }
+    }
+
+    function updateCounts() {
+      const auditions = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+      const volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+
+      document.getElementById('badge-audition-count').innerText = auditions.length;
+      document.getElementById('badge-volunteer-count').innerText = volunteers.length;
+    }
+
+    /* Render Auditions Table */
+    function renderAuditionsAdminTable() {
+      const tableBody = document.getElementById('audition-admin-table-body');
+      if (!tableBody) return;
+
+      tableBody.innerHTML = '';
+      const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+
+      const searchVal = (document.getElementById('admin-search-input')?.value || '').toLowerCase();
+      const domainVal = document.getElementById('admin-domain-filter')?.value || 'all';
+      const statusVal = document.getElementById('admin-status-filter')?.value || 'all';
+
+      const filtered = applications.filter(app => {
+        const matchesSearch = app.name.toLowerCase().includes(searchVal) ||
+                              app.regNo.toLowerCase().includes(searchVal) ||
+                              app.dept.toLowerCase().includes(searchVal) ||
+                              app.refId.toLowerCase().includes(searchVal);
+        const matchesDomain = (domainVal === 'all') || (app.primaryDomainTitle === domainVal);
+        const matchesStatus = (statusVal === 'all') || (app.status === statusVal);
+
+        return matchesSearch && matchesDomain && matchesStatus;
+      });
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="px-6 py-8 text-center text-slate-500 italic">
+              No audition applications match the selected criteria.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach((app) => {
+        let statusBadge = 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+        if (app.status === 'Shortlisted') statusBadge = 'bg-blue-500/10 text-blue-400 border-blue-500/30';
+        if (app.status === 'Audition Scheduled') statusBadge = 'bg-purple-500/10 text-purple-400 border-purple-500/30';
+        if (app.status === 'Selected') statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+        if (app.status === 'Rejected') statusBadge = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
+
+        const row = document.createElement('tr');
+        row.className = "hover:bg-slate-800/50 transition-colors";
+        row.innerHTML = `
+          <td class="px-4 py-3.5 font-extrabold text-[#ebd86e] font-mono text-[11px]">${app.refId}</td>
+          <td class="px-4 py-3.5 font-bold text-white">
+            <div>${app.name}</div>
+            <div class="text-[10px] text-slate-400 font-normal">${app.email} &bull; ${app.phone}</div>
+          </td>
+          <td class="px-4 py-3.5 text-slate-300">
+            <div class="font-semibold text-slate-200">${app.dept}</div>
+            <div class="text-[10px] text-slate-400">${app.regNo} (${app.year})</div>
+          </td>
+          <td class="px-4 py-3.5">
+            <span class="px-2 py-0.5 bg-[#4a040d] text-[#ebd86e] font-bold text-[10px] rounded uppercase border border-[#ebd86e]/30">${app.primaryDomainTitle}</span>
+            <div class="text-[10px] text-slate-400 mt-0.5">Secondary: ${app.secondaryDomain || 'None'}</div>
+          </td>
+          <td class="px-4 py-3.5">
+            <select onchange="updateApplicantStatus('${app.refId}', this.value)" class="px-2 py-1 bg-slate-950 border text-[11px] font-bold rounded-lg ${statusBadge}">
+              <option value="Under Review" ${app.status === 'Under Review' ? 'selected' : ''}>Under Review</option>
+              <option value="Shortlisted" ${app.status === 'Shortlisted' ? 'selected' : ''}>Shortlisted</option>
+              <option value="Audition Scheduled" ${app.status === 'Audition Scheduled' ? 'selected' : ''}>Audition Scheduled</option>
+              <option value="Selected" ${app.status === 'Selected' ? 'selected' : ''}>Selected</option>
+              <option value="Rejected" ${app.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+            </select>
+          </td>
+          <td class="px-4 py-3.5 text-right">
+            <button onclick="deleteAuditionApplicant('${app.refId}')" class="text-rose-400 hover:text-rose-300 font-bold text-xs transition">
+              Remove
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      updateCounts();
+    }
+
+    function updateApplicantStatus(refId, newStatus) {
+      const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+      const target = applications.find(a => a.refId === refId);
+      if (target) {
+        target.status = newStatus;
+        localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
+        renderAuditionsAdminTable();
+      }
+    }
+
+    function deleteAuditionApplicant(refId) {
+      if (confirm(`Remove application ${refId}?`)) {
+        let applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+        applications = applications.filter(a => a.refId !== refId);
+        localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
+        renderAuditionsAdminTable();
+      }
+    }
+
+    function resetAuditionsDb() {
+      if (confirm('Reset audition applications DB?')) {
+        localStorage.removeItem('yrc_audition_applications');
+        location.reload();
+      }
+    }
+
+    function exportAuditionsToCSV() {
+      const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+      if (applications.length === 0) {
+        showCustomAlert('Export Notice', 'No audition application records to export.', 'info');
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+      csvContent += "Ref ID,Name,Reg No,Department,Year,Email,Phone,Primary Domain,Secondary Domain,Status,Applied At\n";
+
+      applications.forEach(a => {
+        const row = [
+          `"${a.refId}"`,
+          `"${a.name}"`,
+          `"${a.regNo}"`,
+          `"${a.dept}"`,
+          `"${a.year}"`,
+          `"${a.email}"`,
+          `"${a.phone}"`,
+          `"${a.primaryDomainTitle}"`,
+          `"${a.secondaryDomain || 'None'}"`,
+          `"${a.status}"`,
+          `"${a.appliedAt}"`
+        ].join(",");
+        csvContent += row + "\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `YRC_Audition_Applicants_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportAuditionsToExcel() {
+      const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+      if (applications.length === 0) {
+        showCustomAlert('Export Notice', 'No audition application records to export.', 'info');
+        return;
+      }
+
+      const exportData = applications.map(a => ({
+        "Ref ID": a.refId,
+        "Applicant Name": a.name,
+        "Register Number": a.regNo,
+        "Department": a.dept,
+        "Year of Study": a.year,
+        "Email ID": a.email,
+        "Phone Number": a.phone,
+        "Primary Domain": a.primaryDomainTitle,
+        "Secondary Domain": a.secondaryDomain || 'None',
+        "Application Status": a.status,
+        "Applied At": a.appliedAt
+      }));
+
+      if (window.XLSX) {
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Audition Applicants");
+        XLSX.writeFile(workbook, `YRC_Audition_Applicants_${new Date().toISOString().slice(0,10)}.xlsx`);
+      } else {
+        exportAuditionsToCSV();
+      }
+    }
+
+    /* Render Volunteers Table */
+    function renderVolunteersAdminTable() {
+      const tableBody = document.getElementById('volunteer-admin-table-body');
+      if (!tableBody) return;
+
+      tableBody.innerHTML = '';
+      const volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+      const searchVal = (document.getElementById('volunteer-search-input')?.value || '').toLowerCase();
+
+      const filtered = volunteers.filter(v => {
+        return v.name.toLowerCase().includes(searchVal) ||
+               v.email.toLowerCase().includes(searchVal) ||
+               v.dept.toLowerCase().includes(searchVal) ||
+               (v.skills && v.skills.toLowerCase().includes(searchVal));
+      });
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="px-6 py-8 text-center text-slate-500 italic">
+              No registered volunteers match the criteria.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach((v, index) => {
+        const row = document.createElement('tr');
+        row.className = "hover:bg-slate-800/50 transition-colors";
+        row.innerHTML = `
+          <td class="px-4 py-3.5 font-bold text-white">${v.name}</td>
+          <td class="px-4 py-3.5 text-slate-300">
+            <div>${v.email}</div>
+            <div class="text-[10px] text-slate-500">${v.phone}</div>
+          </td>
+          <td class="px-4 py-3.5 text-slate-300">
+            <div>${v.dept}</div>
+            <div class="text-[10px] text-slate-500">${v.year}</div>
+          </td>
+          <td class="px-4 py-3.5 text-slate-400 text-xs">${v.skills || 'General Volunteering'}</td>
+          <td class="px-4 py-3.5 text-right">
+            <button onclick="deleteVolunteer(${index})" class="text-rose-400 hover:text-rose-300 font-bold text-xs transition">
+              Remove
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      updateCounts();
+    }
+
+    function deleteVolunteer(index) {
+      if (confirm('Remove volunteer registration?')) {
+        let volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+        volunteers.splice(index, 1);
+        localStorage.setItem('yrc_volunteers', JSON.stringify(volunteers));
+        renderVolunteersAdminTable();
+      }
+    }
+
+    function resetVolunteersDb() {
+      if (confirm('Reset volunteer database?')) {
+        localStorage.removeItem('yrc_volunteers');
+        location.reload();
+      }
+    }
+
+    function exportVolunteersToCSV() {
+      const volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+      if (volunteers.length === 0) {
+        showCustomAlert('Export Notice', 'No volunteer records to export.', 'info');
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+      csvContent += "Name,Email,Phone,Department,Year,Skills\n";
+
+      volunteers.forEach(v => {
+        const row = [
+          `"${v.name}"`,
+          `"${v.email}"`,
+          `"${v.phone}"`,
+          `"${v.dept}"`,
+          `"${v.year}"`,
+          `"${v.skills || 'General'}"`
+        ].join(",");
+        csvContent += row + "\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `YRC_Registered_Volunteers_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>

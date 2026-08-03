@@ -1,0 +1,1177 @@
+// JavaScript for YRC Easwari Engineering College Website
+
+/* ==========================================================================
+   GLOBAL CUSTOM UI MODAL ALERT (Replaces native browser alerts)
+   ========================================================================== */
+window.showCustomAlert = function(title, message, type = 'warning') {
+  let modal = document.getElementById('custom-alert-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'custom-alert-modal';
+    modal.className = 'fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4 transition-all duration-300';
+    modal.innerHTML = `
+      <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative overflow-hidden text-center transform scale-95 transition-all duration-300" id="custom-alert-card">
+        <div id="custom-alert-ribbon" class="h-2.5 bg-gradient-to-r from-[#8b0c1e] via-[#6a0815] to-[#ebd86e] absolute top-0 left-0 right-0"></div>
+        <div id="custom-alert-icon" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 border shadow-inner">
+          ⚠️
+        </div>
+        <h3 id="custom-alert-title" class="text-lg font-black text-slate-900 tracking-tight mb-2">Notice</h3>
+        <p id="custom-alert-msg" class="text-xs text-slate-600 leading-relaxed mb-6 font-medium whitespace-pre-line"></p>
+        <button id="custom-alert-close-btn" onclick="closeCustomAlert()" class="btn-gold w-full py-3.5 text-xs font-extrabold uppercase tracking-wider shadow-md hover:shadow-xl transition cursor-pointer">
+          Understood
+        </button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  const iconEl = document.getElementById('custom-alert-icon');
+  const titleEl = document.getElementById('custom-alert-title');
+  const msgEl = document.getElementById('custom-alert-msg');
+  const ribbonEl = document.getElementById('custom-alert-ribbon');
+
+  if (titleEl) titleEl.innerText = title;
+  if (msgEl) msgEl.innerText = message;
+
+  if (type === 'duplicate' || type === 'warning') {
+    if (iconEl) {
+      iconEl.className = 'w-14 h-14 bg-amber-100 text-amber-700 border border-amber-300 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-inner';
+      iconEl.innerText = '⚠️';
+    }
+    if (ribbonEl) ribbonEl.className = 'h-2.5 bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 absolute top-0 left-0 right-0';
+  } else if (type === 'error') {
+    if (iconEl) {
+      iconEl.className = 'w-14 h-14 bg-rose-100 text-rose-700 border border-rose-300 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-inner';
+      iconEl.innerText = '❌';
+    }
+    if (ribbonEl) ribbonEl.className = 'h-2.5 bg-gradient-to-r from-rose-600 to-rose-800 absolute top-0 left-0 right-0';
+  } else if (type === 'success') {
+    if (iconEl) {
+      iconEl.className = 'w-14 h-14 bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-inner';
+      iconEl.innerText = '✓';
+    }
+    if (ribbonEl) ribbonEl.className = 'h-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 absolute top-0 left-0 right-0';
+  } else {
+    if (iconEl) {
+      iconEl.className = 'w-14 h-14 bg-blue-100 text-blue-700 border border-blue-300 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-inner';
+      iconEl.innerText = 'ℹ️';
+    }
+    if (ribbonEl) ribbonEl.className = 'h-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 absolute top-0 left-0 right-0';
+  }
+
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  setTimeout(() => {
+    const card = document.getElementById('custom-alert-card');
+    if (card) {
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+    }
+  }, 10);
+};
+
+window.closeCustomAlert = function() {
+  const modal = document.getElementById('custom-alert-modal');
+  if (modal) {
+    const card = document.getElementById('custom-alert-card');
+    if (card) {
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+    }
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }, 150);
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  initScrollAnimations();
+  initNavObserver();
+  initStatsCounter();
+  initEventFilter();
+  initEventsTenureToggle();
+  initCabinetToggle();
+  initVolunteerPortal();
+  initHeroCarousel();
+  initAuditionPortal();
+});
+
+/* ==========================================================================
+   1. Scroll Reveal Animations
+   ========================================================================== */
+function initScrollAnimations() {
+  const reveals = document.querySelectorAll('.reveal');
+  
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  reveals.forEach(el => revealObserver.observe(el));
+}
+
+/* ==========================================================================
+   2. Active Navigation Section Observer
+   ========================================================================== */
+function initNavObserver() {
+  const navLinks = document.querySelectorAll('.nav-link');
+  const hasLocalAnchors = Array.from(navLinks).some(link => {
+    const href = link.getAttribute('href');
+    return href && href.startsWith('#');
+  });
+  
+  if (!hasLocalAnchors) return;
+
+  const sections = document.querySelectorAll('section[id]');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === `#${id}`) {
+            link.classList.add('active-nav', 'text-red-600', 'font-semibold');
+            link.classList.remove('text-slate-600');
+          } else {
+            link.classList.remove('active-nav', 'text-red-600', 'font-semibold');
+            link.classList.add('text-slate-600');
+          }
+        });
+      }
+    });
+  }, {
+    threshold: 0.4,
+    rootMargin: '-20% 0px -60% 0px'
+  });
+
+  sections.forEach(sec => navObserver.observe(sec));
+}
+
+/* ==========================================================================
+   3. Stats Counter Animation
+   ========================================================================== */
+function initStatsCounter() {
+  const statsSection = document.getElementById('statistics');
+  if (!statsSection) return;
+
+  const counters = statsSection.querySelectorAll('.counter-val');
+  let animated = false;
+
+  const countUp = () => {
+    counters.forEach(counter => {
+      const target = parseInt(counter.getAttribute('data-target'), 10);
+      const suffix = counter.getAttribute('data-suffix') || '';
+      let count = 0;
+      const duration = 2000; // 2 seconds
+      const increment = target / (duration / 16); // ~60fps
+
+      const updateCount = () => {
+        count += increment;
+        if (count < target) {
+          counter.innerText = Math.floor(count) + suffix;
+          requestAnimationFrame(updateCount);
+        } else {
+          counter.innerText = target + suffix;
+        }
+      };
+      updateCount();
+    });
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !animated) {
+        countUp();
+        animated = true;
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(statsSection);
+}
+
+/* ==========================================================================
+   4. Events Filter Grid
+   ========================================================================== */
+function initEventFilter() {
+  const tabButtons = document.querySelectorAll('.filter-tab');
+  const eventCards = document.querySelectorAll('.event-card');
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Active Button Styling
+      tabButtons.forEach(t => {
+        t.classList.remove('bg-red-600', 'text-white', 'shadow-md');
+        t.classList.add('bg-white', 'text-slate-600', 'hover:bg-slate-100');
+      });
+      btn.classList.add('bg-red-600', 'text-white', 'shadow-md');
+      btn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-slate-100');
+
+      const filter = btn.getAttribute('data-filter');
+      
+      // Animate cards transition
+      eventCards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        if (filter === 'all' || category === filter) {
+          card.classList.remove('hidden-card');
+          setTimeout(() => {
+            card.style.display = 'flex';
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1)';
+          }, 50);
+        } else {
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.95)';
+          card.classList.add('hidden-card');
+          setTimeout(() => {
+            card.style.display = 'none';
+          }, 300);
+        }
+      });
+    });
+  });
+}
+
+/* ==========================================================================
+   4b. Events Tenure Toggle (2025-26, 2024-25, 2023-24)
+   ========================================================================== */
+function initEventsTenureToggle() {
+  const toggleEvents2526Btn = document.getElementById('toggle-events-2025-26');
+  const toggleEvents2425Btn = document.getElementById('toggle-events-2024-25');
+  const toggleEvents2324Btn = document.getElementById('toggle-events-2023-24');
+  const grid2526 = document.getElementById('events-grid-25-26');
+  const grid2425 = document.getElementById('events-grid-24-25');
+  const grid2324 = document.getElementById('events-grid-23-24');
+  const descText = document.getElementById('events-description-text');
+
+  if (!toggleEvents2526Btn && !toggleEvents2425Btn && !toggleEvents2324Btn) return;
+
+  const resetCategoryFilter = () => {
+    const allTabBtn = document.querySelector('.filter-tab[data-filter="all"]');
+    if (allTabBtn) {
+      allTabBtn.click();
+    }
+  };
+
+  const setTenure = (activeBtn, activeGrid, tenureText) => {
+    const buttons = [toggleEvents2526Btn, toggleEvents2425Btn, toggleEvents2324Btn];
+    const grids = [grid2526, grid2425, grid2324];
+
+    buttons.forEach(btn => {
+      if (!btn) return;
+      if (btn === activeBtn) {
+        btn.className = 'px-5 py-2.5 bg-[#4a040d] text-[#ebd86e] font-extrabold rounded-xl text-sm transition shadow-sm';
+      } else {
+        btn.className = 'px-5 py-2.5 text-slate-600 font-semibold rounded-xl text-sm transition hover:bg-slate-200/50';
+      }
+    });
+
+    grids.forEach(g => {
+      if (!g) return;
+      if (g === activeGrid) {
+        g.classList.remove('hidden');
+        g.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+      } else {
+        g.classList.add('hidden');
+      }
+    });
+
+    if (descText) {
+      descText.innerText = `Discover YRC Easwari Engineering College's events and campaigns spanning the academic term ${tenureText}.`;
+    }
+
+    resetCategoryFilter();
+  };
+
+  if (toggleEvents2526Btn) {
+    toggleEvents2526Btn.addEventListener('click', () => setTenure(toggleEvents2526Btn, grid2526, '2025-2026'));
+  }
+  if (toggleEvents2425Btn) {
+    toggleEvents2425Btn.addEventListener('click', () => setTenure(toggleEvents2425Btn, grid2425, '2024-2025'));
+  }
+  if (toggleEvents2324Btn) {
+    toggleEvents2324Btn.addEventListener('click', () => setTenure(toggleEvents2324Btn, grid2324, '2023-2024'));
+  }
+}
+
+/* ==========================================================================
+   5. Cabinet Toggle (Current vs Past)
+   ========================================================================== */
+function initCabinetToggle() {
+  const toggleCurrentBtn = document.getElementById('toggle-current-team');
+  const togglePastBtn = document.getElementById('toggle-past-team');
+  const team2024 = document.getElementById('team-2024-2025');
+  const team2023 = document.getElementById('team-2023-2024');
+
+  if (!toggleCurrentBtn || !togglePastBtn || !team2024 || !team2023) return;
+
+  toggleCurrentBtn.addEventListener('click', () => {
+    // Buttons styling
+    toggleCurrentBtn.classList.add('bg-red-600', 'text-white', 'shadow-sm');
+    toggleCurrentBtn.classList.remove('bg-slate-100', 'text-slate-600');
+    togglePastBtn.classList.add('bg-slate-100', 'text-slate-600');
+    togglePastBtn.classList.remove('bg-red-600', 'text-white', 'shadow-sm');
+
+    // Section Visibility with fade
+    team2023.classList.add('hidden');
+    team2024.classList.remove('hidden');
+    // Trigger scroll reveal refresh
+    team2024.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+  });
+
+  togglePastBtn.addEventListener('click', () => {
+    // Buttons styling
+    togglePastBtn.classList.add('bg-red-600', 'text-white', 'shadow-sm');
+    togglePastBtn.classList.remove('bg-slate-100', 'text-slate-600');
+    toggleCurrentBtn.classList.add('bg-slate-100', 'text-slate-600');
+    toggleCurrentBtn.classList.remove('bg-red-600', 'text-white', 'shadow-sm');
+
+    // Section Visibility with fade
+    team2024.classList.add('hidden');
+    team2023.classList.remove('hidden');
+    // Force reveal active on past team elements
+    team2023.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+  });
+}
+
+/* ==========================================================================
+   6. Volunteer Portal (Form Submission & Admin Dashboard)
+   ========================================================================== */
+function initVolunteerPortal() {
+  const joinForm = document.getElementById('volunteer-form');
+  const successModal = document.getElementById('success-modal');
+  const closeModalBtn = document.getElementById('close-modal-btn');
+  const adminToggle = document.getElementById('toggle-admin-panel');
+  const adminPanel = document.getElementById('admin-panel');
+  const adminTableBody = document.getElementById('admin-table-body');
+  const clearDbBtn = document.getElementById('clear-db-btn');
+  const adminCloseBtn = document.getElementById('close-admin-panel');
+
+  // Prepopulate mockup data if storage is empty
+  const defaultSubmissions = [
+    {
+      name: "Rohith S",
+      email: "rohith.s@eec.srmrmp.edu.in",
+      phone: "9840123456",
+      dept: "Computer Science & Engineering",
+      year: "III Year",
+      skills: "Event Coordination, Technical support"
+    },
+    {
+      name: "Abinaya K",
+      email: "abinaya.k@eec.srmrmp.edu.in",
+      phone: "8754213980",
+      dept: "Information Technology",
+      year: "III Year",
+      skills: "Design & Social Media, Documentation"
+    },
+    {
+      name: "Gokul V",
+      email: "gokul.v@eec.srmrmp.edu.in",
+      phone: "7639554012",
+      dept: "Electronics & Communication",
+      year: "IV Year",
+      skills: "Photography, Team Management"
+    }
+  ];
+
+  if (!localStorage.getItem('yrc_volunteers')) {
+    localStorage.setItem('yrc_volunteers', JSON.stringify(defaultSubmissions));
+  }
+
+  // Handle Form Submission
+  if (joinForm) {
+    joinForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const newRegistration = {
+        name: document.getElementById('reg-name').value,
+        email: document.getElementById('reg-email').value,
+        phone: document.getElementById('reg-phone').value,
+        dept: document.getElementById('reg-dept').value,
+        year: document.getElementById('reg-year').value,
+        skills: document.getElementById('reg-skills').value || 'General Volunteering'
+      };
+
+      // Save to localStorage
+      const volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+      volunteers.unshift(newRegistration); // Add to beginning
+      localStorage.setItem('yrc_volunteers', JSON.stringify(volunteers));
+
+      // Reset form
+      joinForm.reset();
+
+      // Show Success Modal
+      if (successModal) {
+        successModal.classList.remove('hidden');
+        successModal.classList.add('flex');
+      }
+      
+      // Update the admin dashboard table immediately
+      renderAdminTable();
+    });
+  }
+
+  // Close Success Modal
+  if (closeModalBtn && successModal) {
+    closeModalBtn.addEventListener('click', () => {
+      successModal.classList.add('hidden');
+      successModal.classList.remove('flex');
+    });
+  }
+
+  // Toggle Admin Panel View
+  if (adminToggle && adminPanel) {
+    adminToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      renderAdminTable();
+      adminPanel.classList.toggle('hidden');
+      if (!adminPanel.classList.contains('hidden')) {
+        adminPanel.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+
+  // Close Admin Panel
+  if (adminCloseBtn && adminPanel) {
+    adminCloseBtn.addEventListener('click', () => {
+      adminPanel.classList.add('hidden');
+    });
+  }
+
+  // Render registrations in Admin Panel Table
+  function renderAdminTable() {
+    if (!adminTableBody) return;
+    adminTableBody.innerHTML = '';
+    
+    const volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+    
+    if (volunteers.length === 0) {
+      adminTableBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="px-6 py-8 text-center text-slate-500 italic">
+            No volunteers registered yet. Be the first!
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    volunteers.forEach((v, index) => {
+      const row = document.createElement('tr');
+      row.className = "hover:bg-slate-50 border-b border-slate-100 transition-colors";
+      row.innerHTML = `
+        <td class="px-6 py-4 font-semibold text-slate-800">${v.name}</td>
+        <td class="px-6 py-4 text-slate-600">
+          <div class="font-medium">${v.dept}</div>
+          <div class="text-xs text-slate-400">${v.year}</div>
+        </td>
+        <td class="px-6 py-4 text-slate-600 text-sm">
+          <div>${v.email}</div>
+          <div class="text-xs text-slate-400">${v.phone}</div>
+        </td>
+        <td class="px-6 py-4 text-slate-600 text-sm max-w-xs truncate" title="${v.skills}">${v.skills}</td>
+        <td class="px-6 py-4 text-right">
+          <button class="delete-reg-btn text-red-500 hover:text-red-700 text-sm font-semibold transition" data-index="${index}">
+            Remove
+          </button>
+        </td>
+      `;
+      adminTableBody.appendChild(row);
+    });
+
+    // Wire up delete buttons
+    const deleteBtns = adminTableBody.querySelectorAll('.delete-reg-btn');
+    deleteBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const indexToDelete = parseInt(e.target.getAttribute('data-index'), 10);
+        const volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+        volunteers.splice(indexToDelete, 1);
+        localStorage.setItem('yrc_volunteers', JSON.stringify(volunteers));
+        renderAdminTable();
+      });
+    });
+  }
+
+  // Clear Database Button
+  if (clearDbBtn) {
+    clearDbBtn.addEventListener('click', () => {
+      if (confirm("Are you sure you want to clear the volunteer registration list? This will reset to default data.")) {
+        localStorage.setItem('yrc_volunteers', JSON.stringify(defaultSubmissions));
+        renderAdminTable();
+      }
+    });
+  }
+}
+
+/* ==========================================================================
+   7. Hero Section 5-Image Past Events Carousel
+   ========================================================================== */
+function initHeroCarousel() {
+  const slides = document.querySelectorAll('.hero-carousel-slide');
+  const dots = document.querySelectorAll('.hero-carousel-dot');
+  const prevBtn = document.getElementById('hero-carousel-prev');
+  const nextBtn = document.getElementById('hero-carousel-next');
+  const carouselContainer = document.getElementById('hero-carousel');
+
+  if (!slides.length || !carouselContainer) return;
+
+  let currentSlide = 0;
+  let slideInterval = null;
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      if (i === index) {
+        slide.classList.remove('opacity-0', 'pointer-events-none');
+        slide.classList.add('opacity-100', 'z-10');
+      } else {
+        slide.classList.remove('opacity-100', 'z-10');
+        slide.classList.add('opacity-0', 'pointer-events-none');
+      }
+    });
+
+    dots.forEach((dot, i) => {
+      if (i === index) {
+        dot.classList.add('bg-[#ebd86e]', 'w-6');
+        dot.classList.remove('bg-white/40', 'w-2');
+      } else {
+        dot.classList.remove('bg-[#ebd86e]', 'w-6');
+        dot.classList.add('bg-white/40', 'w-2');
+      }
+    });
+
+    currentSlide = index;
+  }
+
+  function nextSlide() {
+    let next = (currentSlide + 1) % slides.length;
+    showSlide(next);
+  }
+
+  function prevSlide() {
+    let prev = (currentSlide - 1 + slides.length) % slides.length;
+    showSlide(prev);
+  }
+
+  function startTimer() {
+    stopTimer();
+    slideInterval = setInterval(nextSlide, 3500);
+  }
+
+  function stopTimer() {
+    if (slideInterval) clearInterval(slideInterval);
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      nextSlide();
+      startTimer();
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      prevSlide();
+      startTimer();
+    });
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSlide(i);
+      startTimer();
+    });
+  });
+
+  carouselContainer.addEventListener('mouseenter', stopTimer);
+  carouselContainer.addEventListener('mouseleave', startTimer);
+
+  // Initialize
+  showSlide(0);
+  startTimer();
+}
+
+/* ==========================================================================
+   8. YRC Audition Recruitment Portal Controller
+   ========================================================================== */
+const DOMAIN_DATA = {
+  media: {
+    title: "Media & Photography",
+    icon: "📸",
+    questions: [
+      { id: "aud_q_equipment", label: "What camera equipment or phone camera model do you use for photography/videography?", type: "text", placeholder: "e.g. Canon EOS 200D / iPhone 15 Pro / OnePlus 11..." },
+      { id: "aud_q_software", label: "Which editing software/apps are you proficient in?", type: "text", placeholder: "e.g. Adobe Lightroom, Premiere Pro, CapCut, VN..." }
+    ]
+  },
+  content: {
+    title: "Content & Editorial",
+    icon: "✍️",
+    questions: [
+      { id: "aud_q_writing_type", label: "What type of writing do you enjoy most?", type: "text", placeholder: "e.g. Event Reports, Social Media Captions, Magazine Articles, Formal Circulars..." },
+      { id: "aud_q_sample_headline", label: "Write a 1-sentence catchy headline for our upcoming Annual Voluntary Blood Donation Camp:", type: "text", placeholder: "e.g. 'Be a Hero in Someone's Story: Donate Blood, Save Lives with YRC EEC!'" }
+    ]
+  },
+  design: {
+    title: "Visual & Graphic Design",
+    icon: "🎨",
+    questions: [
+      { id: "aud_q_design_tools", label: "Which graphic design tools do you use regularly?", type: "text", placeholder: "e.g. Canva, Adobe Photoshop, Illustrator, Figma..." },
+      { id: "aud_q_design_style", label: "Describe your preferred visual design aesthetic:", type: "text", placeholder: "e.g. Modern minimalist, bold typography, glassmorphism, vibrant vector illustrations..." }
+    ]
+  },
+  operations: {
+    title: "Operations & Logistics",
+    icon: "🎪",
+    questions: [
+      { id: "aud_q_crowd_mgmt", label: "How would you handle a large crowd delay during an on-ground blood donation camp?", type: "text", placeholder: "e.g. Organize structured token queuing, ensure water distribution, assign volunteer zones..." },
+      { id: "aud_q_availability", label: "Are you available for weekend out-of-campus events (e.g. Beach Cleanups, Cyclothon)?", type: "text", placeholder: "Yes, available on weekends / Partial weekend availability..." }
+    ]
+  },
+  anchoring: {
+    title: "Public Relations & Anchoring",
+    icon: "🎤",
+    questions: [
+      { id: "aud_q_stage_exp", label: "Describe any past stage hosting or public speaking experience you have:", type: "text", placeholder: "e.g. Hosted school annual day, college symposium inaugurations, debate competitions..." },
+      { id: "aud_q_lang", label: "Languages spoken fluently for stage hosting:", type: "text", placeholder: "e.g. English, Tamil, Hindi..." }
+    ]
+  },
+  technical: {
+    title: "Technical & Web Development",
+    icon: "💻",
+    questions: [
+      { id: "aud_q_tech_stack", label: "What tech stack / web frameworks do you work with?", type: "text", placeholder: "e.g. HTML5, CSS3, Tailwind CSS, JavaScript, React, Python, Git..." },
+      { id: "aud_q_github", label: "GitHub Profile URL or Web Project Link (Optional):", type: "text", placeholder: "e.g. https://github.com/username or project site URL..." }
+    ]
+  }
+};
+
+let currentAuditionStep = 1;
+
+function initAuditionPortal() {
+  const wizardForm = document.getElementById('audition-wizard-form');
+  const modal = document.getElementById('audition-modal');
+  const closeModalBtn = document.getElementById('close-audition-modal-btn');
+  const adminToggle = document.getElementById('toggle-audition-admin');
+  const adminPanel = document.getElementById('audition-admin-panel');
+  const adminCloseBtn = document.getElementById('close-audition-admin');
+  const searchInput = document.getElementById('admin-search-input');
+  const domainFilter = document.getElementById('admin-domain-filter');
+  const statusFilter = document.getElementById('admin-status-filter');
+  const exportCsvBtn = document.getElementById('export-csv-btn');
+  const exportExcelBtn = document.getElementById('export-excel-btn');
+  const resetDbBtn = document.getElementById('reset-auditions-db-btn');
+
+  if (!wizardForm) return;
+
+  // Pre-populate Mock Audition Data if empty
+  const defaultAuditions = [
+    {
+      refId: "YRC-AUD-2026-4821",
+      name: "Sanjay Raghavan",
+      regNo: "310623104112",
+      dept: "Computer Science & Engineering",
+      year: "II Year",
+      email: "sanjay.r@eec.srmrmp.edu.in",
+      phone: "9840192837",
+      primaryDomainKey: "media",
+      primaryDomainTitle: "Media & Photography",
+      secondaryDomain: "Visual & Graphic Design",
+      expLevel: "Intermediate",
+      pastExp: "Shot photos for school fest and edit reels on CapCut / Lightroom.",
+      domainQ1: "Sony A6400 with 35mm lens & iPhone 14",
+      domainQ2: "Lightroom Classic, Premiere Pro, CapCut",
+      portfolio: "https://drive.google.com/drive/folders/sample-photos",
+      motivation: "Passionate about capturing human emotions during blood camps and creating viral reels for YRC.",
+      slot: "Day 1 - Aug 5, 2026 (04:00 PM - 05:30 PM)",
+      status: "Shortlisted",
+      appliedAt: "2026-08-01 10:30 AM"
+    },
+    {
+      refId: "YRC-AUD-2026-9104",
+      name: "Harini Sundaram",
+      regNo: "310622205044",
+      dept: "Information Technology",
+      year: "III Year",
+      email: "harini.s@eec.srmrmp.edu.in",
+      phone: "8754129034",
+      primaryDomainKey: "anchoring",
+      primaryDomainTitle: "Public Relations & Anchoring",
+      secondaryDomain: "Content & Editorial",
+      expLevel: "Advanced / Experienced",
+      pastExp: "Anchored IT Department Symposium and inter-college cultural events.",
+      domainQ1: "Anchored 5+ major college symposium inaugurations in main auditorium.",
+      domainQ2: "English, Tamil, Hindi",
+      portfolio: "https://instagram.com/harini_anchors",
+      motivation: "I love connecting with audiences and bringing energy to humanitarian cause events.",
+      slot: "Day 2 - Aug 6, 2026 (12:30 PM - 02:00 PM)",
+      status: "Audition Scheduled",
+      appliedAt: "2026-08-01 02:15 PM"
+    },
+    {
+      refId: "YRC-AUD-2026-6352",
+      name: "Karthik Raja M",
+      regNo: "310624106021",
+      dept: "Artificial Intelligence & Data Science",
+      year: "I Year",
+      email: "karthik.m@eec.srmrmp.edu.in",
+      phone: "7639014522",
+      primaryDomainKey: "technical",
+      primaryDomainTitle: "Technical & Web Development",
+      secondaryDomain: "Operations & Logistics",
+      expLevel: "Intermediate",
+      pastExp: "Built personal portfolio and club websites using HTML, CSS, JavaScript, and Tailwind.",
+      domainQ1: "HTML5, CSS3, Tailwind, JS, Python, Git",
+      domainQ2: "https://github.com/karthikraja-dev",
+      portfolio: "https://github.com/karthikraja-dev",
+      motivation: "Want to contribute technically to YRC web portals, automated certificates, and QR entry forms.",
+      slot: "Day 2 - Aug 6, 2026 (04:00 PM - 05:30 PM)",
+      status: "Under Review",
+      appliedAt: "2026-08-01 04:45 PM"
+    }
+  ];
+
+  if (!localStorage.getItem('yrc_audition_applications')) {
+    localStorage.setItem('yrc_audition_applications', JSON.stringify(defaultAuditions));
+  }
+
+  // Handle Form Submission
+  wizardForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Step 1 Validation
+    const name = document.getElementById('aud-name')?.value?.trim();
+    const regNo = document.getElementById('aud-regno')?.value?.trim();
+    const dept = document.getElementById('aud-dept')?.value;
+    const year = document.getElementById('aud-year')?.value;
+    const email = document.getElementById('aud-email')?.value?.trim();
+    const phone = document.getElementById('aud-phone')?.value?.trim();
+
+    if (!name || !regNo || !dept || !year || !email || !phone) {
+      showCustomAlert('Incomplete Details', 'Please fill out all required personal and academic details in Step 1.', 'warning');
+      showWizardStepCard(1);
+      return;
+    }
+
+    // Check Unique User (By Register Number & Email)
+    const existingApplications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+
+    const duplicateReg = existingApplications.find(a => a.regNo && a.regNo.toLowerCase() === regNo.toLowerCase());
+    if (duplicateReg) {
+      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Register Number: ${regNo}\n\nReference ID: ${duplicateReg.refId}`, 'warning');
+      showWizardStepCard(1);
+      return;
+    }
+
+    const duplicateEmail = existingApplications.find(a => a.email && a.email.toLowerCase() === email.toLowerCase());
+    if (duplicateEmail) {
+      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Email ID: ${email}\n\nReference ID: ${duplicateEmail.refId}`, 'warning');
+      showWizardStepCard(1);
+      return;
+    }
+
+    // Step 2 Validation
+    const selectedDomainInput = document.querySelector('input[name="primary_domain"]:checked');
+    if (!selectedDomainInput) {
+      showCustomAlert('Domain Selection Required', 'Please select a primary domain choice in Step 2.', 'warning');
+      showWizardStepCard(2);
+      return;
+    }
+
+    const termsCheckbox = document.getElementById('aud-terms');
+    if (termsCheckbox && !termsCheckbox.checked) {
+      showCustomAlert('Confirmation Required', 'Please check the confirmation box in Step 2.', 'warning');
+      showWizardStepCard(2);
+      return;
+    }
+
+    const domainKey = selectedDomainInput.value;
+    const domainMeta = DOMAIN_DATA[domainKey] || { title: domainKey };
+
+    // Generate Application Reference ID
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    const refId = `YRC-AUD-2026-${randomNum}`;
+
+    const newApplication = {
+      refId: refId,
+      name: name,
+      regNo: regNo,
+      dept: dept,
+      year: year,
+      email: email,
+      phone: phone,
+      primaryDomainKey: domainKey,
+      primaryDomainTitle: domainMeta.title,
+      secondaryDomain: document.getElementById('aud-secondary-domain')?.value || 'None',
+      status: "Under Review",
+      appliedAt: new Date().toLocaleString()
+    };
+
+    // Save to LocalStorage
+    applications = [newApplication, ...existingApplications];
+    localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
+
+    // Populate Modal Ticket
+    const ticketRef = document.getElementById('ticket-ref-id');
+    const ticketName = document.getElementById('ticket-name');
+    const ticketDept = document.getElementById('ticket-dept');
+    const ticketDomain = document.getElementById('ticket-domain');
+
+    if (ticketRef) ticketRef.innerText = refId;
+    if (ticketName) ticketName.innerText = newApplication.name;
+    if (ticketDept) ticketDept.innerText = `${newApplication.regNo} (${newApplication.dept})`;
+    if (ticketDomain) ticketDomain.innerText = domainMeta.title;
+
+    // Show Ticket Modal
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    // Reset Form & Return to Step 1
+    wizardForm.reset();
+    showWizardStepCard(1);
+
+    // Refresh Admin Table if visible
+    renderAuditionsAdminTable();
+  });
+
+  // Close Modal
+  if (closeModalBtn && modal) {
+    closeModalBtn.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    });
+  }
+
+  // Domain Radio Card Click Listeners
+  const domainCards = document.querySelectorAll('.domain-radio-card');
+  domainCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const radio = card.querySelector('input[type="radio"]');
+      if (radio) {
+        radio.checked = true;
+        window.onPrimaryDomainChange(radio.value);
+      }
+    });
+  });
+  if (adminToggle && adminPanel) {
+    adminToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      renderAuditionsAdminTable();
+      adminPanel.classList.toggle('hidden');
+      if (!adminPanel.classList.contains('hidden')) {
+        adminPanel.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+
+  if (adminCloseBtn && adminPanel) {
+    adminCloseBtn.addEventListener('click', () => {
+      adminPanel.classList.add('hidden');
+    });
+  }
+
+  // Admin Search & Filter Listeners
+  if (searchInput) searchInput.addEventListener('input', renderAuditionsAdminTable);
+  if (domainFilter) domainFilter.addEventListener('change', renderAuditionsAdminTable);
+  if (statusFilter) statusFilter.addEventListener('change', renderAuditionsAdminTable);
+
+  if (exportCsvBtn) {
+    exportCsvBtn.addEventListener('click', exportAuditionsToCSV);
+  }
+
+  if (exportExcelBtn) {
+    exportExcelBtn.addEventListener('click', exportAuditionsToExcel);
+  }
+
+  if (resetDbBtn) {
+    resetDbBtn.addEventListener('click', () => {
+      if (confirm('Reset audition application database to default demo entries?')) {
+        localStorage.setItem('yrc_audition_applications', JSON.stringify(defaultAuditions));
+        renderAuditionsAdminTable();
+      }
+    });
+  }
+}
+
+/* Global Navigation Step Helpers */
+window.nextWizardStep = function(step) {
+  // Validate current step before advancing
+  if (step === 1) {
+    const name = document.getElementById('aud-name')?.value?.trim();
+    const regno = document.getElementById('aud-regno')?.value?.trim();
+    const dept = document.getElementById('aud-dept')?.value;
+    const year = document.getElementById('aud-year')?.value;
+    const email = document.getElementById('aud-email')?.value?.trim();
+    const phone = document.getElementById('aud-phone')?.value?.trim();
+
+    if (!name || !regno || !dept || !year || !email || !phone) {
+      showCustomAlert('Incomplete Details', 'Please fill out all required fields in Step 1 before proceeding.', 'warning');
+      return;
+    }
+
+    // Check unique before stepping forward to Step 2
+    const existingApplications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+    const duplicateReg = existingApplications.find(a => a.regNo && a.regNo.toLowerCase() === regno.toLowerCase());
+    if (duplicateReg) {
+      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Register Number: ${regno}\n\nReference ID: ${duplicateReg.refId}`, 'warning');
+      return;
+    }
+
+    const duplicateEmail = existingApplications.find(a => a.email && a.email.toLowerCase() === email.toLowerCase());
+    if (duplicateEmail) {
+      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Email ID: ${email}\n\nReference ID: ${duplicateEmail.refId}`, 'warning');
+      return;
+    }
+  }
+
+  const nextStepNum = step + 1;
+  showWizardStepCard(nextStepNum);
+};
+
+window.prevWizardStep = function(step) {
+  const prevStepNum = step - 1;
+  showWizardStepCard(prevStepNum);
+};
+
+function showWizardStepCard(targetStep) {
+  currentAuditionStep = targetStep;
+
+  // Toggle step cards (2 steps total)
+  for (let i = 1; i <= 2; i++) {
+    const card = document.getElementById(`step-card-${i}`);
+    if (card) {
+      if (i === targetStep) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    }
+  }
+
+  // Update progress bar width
+  const progressBar = document.getElementById('wizard-progress-bar');
+  if (progressBar) {
+    const percentage = ((targetStep - 1) / 1) * 100;
+    progressBar.style.width = `${percentage}%`;
+  }
+
+  // Update step nodes
+  const nodes = document.querySelectorAll('.wizard-step-node');
+  nodes.forEach(node => {
+    const stepNum = parseInt(node.getAttribute('data-step'), 10);
+    const circle = node.querySelector('div');
+    const label = node.querySelector('span');
+
+    if (stepNum <= targetStep) {
+      if (circle) circle.className = 'w-10 h-10 rounded-full bg-[#4a040d] text-[#ebd86e] font-extrabold text-sm flex items-center justify-center shadow-md border-2 border-white transition-all';
+      if (label) label.className = 'text-[11px] font-bold text-slate-900';
+    } else {
+      if (circle) circle.className = 'w-10 h-10 rounded-full bg-slate-200 text-slate-600 font-extrabold text-sm flex items-center justify-center border-2 border-white transition-all';
+      if (label) label.className = 'text-[11px] font-bold text-slate-500';
+    }
+  });
+
+  // Scroll to form top smoothly
+  const section = document.getElementById('audition-form-section');
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+window.onPrimaryDomainChange = function(domainKey) {
+  // Update Radio Card Styling
+  const cards = document.querySelectorAll('.domain-radio-card');
+  cards.forEach(card => {
+    const radio = card.querySelector('input[type="radio"]');
+    if (radio && radio.value === domainKey) {
+      card.classList.add('active-domain-card');
+    } else {
+      card.classList.remove('active-domain-card');
+    }
+  });
+};
+
+window.selectDomainInForm = function(domainKey) {
+  const radio = document.querySelector(`input[name="primary_domain"][value="${domainKey}"]`);
+  if (radio) {
+    radio.checked = true;
+    window.onPrimaryDomainChange(domainKey);
+  }
+  showWizardStepCard(2);
+};
+
+/* Render Admin Management Table */
+function renderAuditionsAdminTable() {
+  const tableBody = document.getElementById('audition-admin-table-body');
+  if (!tableBody) return;
+
+  tableBody.innerHTML = '';
+  const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+
+  const searchVal = (document.getElementById('admin-search-input')?.value || '').toLowerCase();
+  const domainVal = document.getElementById('admin-domain-filter')?.value || 'all';
+  const statusVal = document.getElementById('admin-status-filter')?.value || 'all';
+
+  const filtered = applications.filter(app => {
+    const matchesSearch = app.name.toLowerCase().includes(searchVal) ||
+                          app.regNo.toLowerCase().includes(searchVal) ||
+                          app.dept.toLowerCase().includes(searchVal) ||
+                          app.refId.toLowerCase().includes(searchVal);
+    const matchesDomain = (domainVal === 'all') || (app.primaryDomainTitle === domainVal);
+    const matchesStatus = (statusVal === 'all') || (app.status === statusVal);
+
+    return matchesSearch && matchesDomain && matchesStatus;
+  });
+
+  if (filtered.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="6" class="px-6 py-8 text-center text-slate-400 italic">
+          No audition applications match the selected criteria.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  filtered.forEach((app) => {
+    let statusClass = 'status-badge-under-review';
+    if (app.status === 'Shortlisted') statusClass = 'status-badge-shortlisted';
+    if (app.status === 'Audition Scheduled') statusClass = 'status-badge-scheduled';
+    if (app.status === 'Selected') statusClass = 'status-badge-selected';
+    if (app.status === 'Rejected') statusClass = 'status-badge-rejected';
+
+    const row = document.createElement('tr');
+    row.className = "hover:bg-slate-50 border-b border-slate-100 transition-colors";
+    row.innerHTML = `
+      <td class="px-4 py-3.5 font-extrabold text-[#6a0815] font-mono text-[11px]">${app.refId}</td>
+      <td class="px-4 py-3.5 font-bold text-slate-900">
+        <div>${app.name}</div>
+        <div class="text-[10px] text-slate-400 font-normal">${app.email} &bull; ${app.phone}</div>
+      </td>
+      <td class="px-4 py-3.5 text-slate-600">
+        <div class="font-semibold text-slate-800">${app.dept}</div>
+        <div class="text-[10px] text-slate-400">${app.regNo} (${app.year})</div>
+      </td>
+      <td class="px-4 py-3.5">
+        <span class="px-2 py-0.5 bg-[#4a040d]/10 text-[#6a0815] font-bold text-[10px] rounded uppercase">${app.primaryDomainTitle}</span>
+        <div class="text-[10px] text-slate-400 mt-0.5">Secondary: ${app.secondaryDomain || 'None'}</div>
+      </td>
+      <td class="px-4 py-3.5">
+        <select onchange="updateApplicantStatus('${app.refId}', this.value)" class="px-2 py-1 bg-white border border-slate-200 rounded-lg text-[11px] font-bold ${statusClass}">
+          <option value="Under Review" ${app.status === 'Under Review' ? 'selected' : ''}>Under Review</option>
+          <option value="Shortlisted" ${app.status === 'Shortlisted' ? 'selected' : ''}>Shortlisted</option>
+          <option value="Audition Scheduled" ${app.status === 'Audition Scheduled' ? 'selected' : ''}>Audition Scheduled</option>
+          <option value="Selected" ${app.status === 'Selected' ? 'selected' : ''}>Selected</option>
+          <option value="Rejected" ${app.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+        </select>
+      </td>
+      <td class="px-4 py-3.5 text-right">
+        <button onclick="deleteAuditionApplicant('${app.refId}')" class="text-rose-500 hover:text-rose-700 font-bold text-xs transition">
+          Remove
+        </button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+
+window.updateApplicantStatus = function(refId, newStatus) {
+  const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+  const target = applications.find(a => a.refId === refId);
+  if (target) {
+    target.status = newStatus;
+    localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
+    renderAuditionsAdminTable();
+  }
+};
+
+window.deleteAuditionApplicant = function(refId) {
+  if (confirm(`Remove application ${refId}?`)) {
+    let applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+    applications = applications.filter(a => a.refId !== refId);
+    localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
+    renderAuditionsAdminTable();
+  }
+};
+
+function exportAuditionsToCSV() {
+  const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+  if (applications.length === 0) {
+    showCustomAlert('Export Notice', 'No audition application records to export.', 'info');
+    return;
+  }
+
+  let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+  csvContent += "Ref ID,Name,Reg No,Department,Year,Email,Phone,Primary Domain,Secondary Domain,Status,Applied At\n";
+
+  applications.forEach(a => {
+    const row = [
+      `"${a.refId}"`,
+      `"${a.name}"`,
+      `"${a.regNo}"`,
+      `"${a.dept}"`,
+      `"${a.year}"`,
+      `"${a.email}"`,
+      `"${a.phone}"`,
+      `"${a.primaryDomainTitle}"`,
+      `"${a.secondaryDomain || 'None'}"`,
+      `"${a.status}"`,
+      `"${a.appliedAt}"`
+    ].join(",");
+    csvContent += row + "\n";
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `YRC_Audition_Applicants_${new Date().toISOString().slice(0,10)}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function exportAuditionsToExcel() {
+  const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+  if (applications.length === 0) {
+    showCustomAlert('Export Notice', 'No audition application records to export.', 'info');
+    return;
+  }
+
+  const exportData = applications.map(a => ({
+    "Ref ID": a.refId,
+    "Applicant Name": a.name,
+    "Register Number": a.regNo,
+    "Department": a.dept,
+    "Year of Study": a.year,
+    "Email ID": a.email,
+    "Phone Number": a.phone,
+    "Primary Domain": a.primaryDomainTitle,
+    "Secondary Domain": a.secondaryDomain || 'None',
+    "Application Status": a.status,
+    "Applied At": a.appliedAt
+  }));
+
+  if (window.XLSX) {
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Audition Applicants");
+    XLSX.writeFile(workbook, `YRC_Audition_Applicants_${new Date().toISOString().slice(0,10)}.xlsx`);
+  } else {
+    exportAuditionsToCSV();
+  }
+}
+

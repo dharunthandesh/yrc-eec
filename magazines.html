@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magazines & Publications | YRC Easwari Engineering College</title>
+  <meta name="description" content="Read and download the official Youth Red Cross magazines compiled by student coordinators at Easwari Engineering College.">
+  <meta name="author" content="YRC EEC">
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            red: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              200: '#fecaca',
+              300: '#fca5a5',
+              400: '#f87171',
+              500: '#ef4444',
+              600: '#dc2626',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+            },
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo.png">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50/50 text-slate-900 font-sans selection:bg-red-500 selection:text-white antialiased min-h-screen flex flex-col">
+
+  <!-- ==========================================
+       HEADER & NAVIGATION
+       ========================================== -->
+  <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass-nav">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <!-- Logo and Brand -->
+      <a href="index.html#home" class="flex items-center gap-3.5 group">
+        <div class="w-11 h-11 bg-white rounded-xl overflow-hidden flex items-center justify-center border border-slate-200/80 shadow-sm group-hover:scale-105 group-hover:border-red-500/30 transition-all duration-300">
+          <img src="logo.png" alt="YRC Logo" class="w-full h-full object-cover">
+        </div>
+        <div class="leading-tight">
+          <span class="text-[10px] font-black uppercase tracking-widest text-red-600 block">Youth Red Cross</span>
+          <h1 class="text-sm font-extrabold text-slate-900 tracking-tight">Easwari Eng. College</h1>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-7">
+        <a href="index.html#home" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Home</a>
+        <a href="index.html#about" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">About Us</a>
+        <a href="events.html" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Events</a>
+        <a href="team.html" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Our Team</a>
+        <a href="magazines.html" class="nav-link active-nav text-sm font-semibold text-red-600 transition-colors">Magazines</a>
+        <a href="auditions.html" class="nav-link text-sm font-bold text-red-600 hover:text-red-700 transition-colors flex items-center gap-1.5">
+          <span>Auditions</span>
+          <span class="px-1.5 py-0.5 bg-red-600 text-white text-[9px] font-black uppercase tracking-wider rounded-md animate-pulse">Hiring</span>
+        </a>
+        <a href="index.html#join" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-md shadow-red-600/15 hover:shadow-red-700/25 hover:-translate-y-0.5">Join Us</a>
+      </nav>
+
+      <!-- Mobile Nav Button -->
+      <button id="mobile-menu-btn" aria-label="Toggle Menu" class="md:hidden p-2.5 text-slate-600 hover:text-red-600 focus:outline-none rounded-xl hover:bg-slate-100/80 transition" onclick="document.getElementById('mobile-nav').classList.toggle('hidden')">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Nav Grid -->
+    <div id="mobile-nav" class="hidden md:hidden border-t border-slate-200/80 bg-white/95 backdrop-blur-md px-6 py-5 shadow-xl">
+      <nav class="flex flex-col gap-4">
+        <a href="index.html#home" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Home</a>
+        <a href="index.html#about" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">About Us</a>
+        <a href="events.html" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Events</a>
+        <a href="team.html" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Our Team</a>
+        <a href="magazines.html" class="text-sm font-semibold text-red-600 py-1" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Magazines</a>
+        <a href="auditions.html" class="text-sm font-bold text-red-600 py-1 flex items-center justify-between" onclick="document.getElementById('mobile-nav').classList.add('hidden')">
+          <span>Auditions 2026-27</span>
+          <span class="px-2 py-0.5 bg-red-600 text-white text-[10px] font-black rounded">APPLY</span>
+        </a>
+        <a href="index.html#join" class="w-full text-center py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition shadow-md" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Join Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       HERO / TITLE SECTION
+       ========================================== -->
+  <section class="pt-36 pb-12 bg-gradient-to-b from-[#270206]/5 via-slate-50 to-slate-50 border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-3xl mx-auto reveal active">
+        <span class="inline-block px-3.5 py-1 bg-[#4a040d]/10 text-[#6a0815] border border-[#6a0815]/20 rounded-full text-xs font-black uppercase tracking-widest mb-3">Our Publications</span>
+        <h3 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">YRC Magazines</h3>
+        <p class="mt-4 text-slate-600 text-base sm:text-lg font-normal leading-relaxed">
+          Download and read the annual print magazine editions compiled by our design and editorial teams.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       MAGAZINES LIST
+       ========================================== -->
+  <main class="flex-grow py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+        
+        <!-- Magazine 1: Echoes of Youth -->
+        <div class="bg-white border border-slate-200/80 rounded-3xl p-8 flex flex-col sm:flex-row gap-6 shadow-sm hover:shadow-2xl transition-all duration-300 reveal active hover:border-[#6a0815]/30">
+          <!-- Mock Cover Page -->
+          <div class="w-full sm:w-40 h-56 bg-gradient-to-br from-[#8b0c1e] via-[#6a0815] to-[#4a040d] rounded-2xl flex flex-col justify-between p-4 text-white shrink-0 shadow-xl border border-[#ebd86e]/40">
+            <div>
+              <div class="text-[10px] font-extrabold tracking-widest uppercase text-[#ebd86e]">YRC EEC</div>
+              <h5 class="text-base font-black leading-tight mt-1 text-white">Echoes of Youth</h5>
+            </div>
+            <div class="text-right border-t border-white/10 pt-2">
+              <span class="text-xs font-bold block text-[#ebd86e]">Tenure 24-25</span>
+              <span class="text-[9px] opacity-75">Read Report</span>
+            </div>
+          </div>
+          <!-- Info -->
+          <div class="flex flex-col justify-between">
+            <div>
+              <span class="px-2.5 py-1 bg-[#4a040d]/10 text-[#6a0815] border border-[#4a040d]/20 text-[9px] font-extrabold rounded uppercase tracking-wide">Latest Edition</span>
+              <h4 class="text-lg font-extrabold text-slate-900 mt-2">Echoes of Youth (2024-2025)</h4>
+              <p class="text-slate-600 text-xs mt-2 leading-relaxed font-normal">
+                Highlights our annual blood camps, Suicide Prevention programs with NIMHANS, Diwali outreaches, and environmental initiatives in Ramapuram.
+              </p>
+            </div>
+            <a href="./YRC_magazine_24-25_ECHOES-OF-YOUTH.pdf" target="_blank" class="inline-flex items-center gap-2 text-[#6a0815] hover:text-[#270206] font-extrabold text-sm mt-4 transition group">
+              <span>View Magazine PDF</span>
+              <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Magazine 2: Magsjam -->
+        <div class="bg-white border border-slate-200/80 rounded-3xl p-8 flex flex-col sm:flex-row gap-6 shadow-sm hover:shadow-2xl transition-all duration-300 reveal active hover:border-[#6a0815]/30">
+          <!-- Mock Cover Page -->
+          <div class="w-full sm:w-40 h-56 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 rounded-2xl flex flex-col justify-between p-4 text-white shrink-0 shadow-xl border border-white/10">
+            <div>
+              <div class="text-[10px] font-extrabold tracking-widest uppercase opacity-70">YRC EEC</div>
+              <h5 class="text-base font-black leading-tight mt-1">MAGSJAM</h5>
+            </div>
+            <div class="text-right border-t border-white/10 pt-2">
+              <span class="text-xs font-bold block opacity-90">Tenure 23-24</span>
+              <span class="text-[9px] opacity-75">Archived</span>
+            </div>
+          </div>
+          <!-- Info -->
+          <div class="flex flex-col justify-between">
+            <div>
+              <span class="px-2.5 py-1 bg-slate-100 text-slate-600 border border-slate-200 text-[9px] font-extrabold rounded uppercase tracking-wide">Archived Edition</span>
+              <h4 class="text-lg font-extrabold text-slate-900 mt-2">MAGSJAM (2023-2024)</h4>
+              <p class="text-slate-600 text-xs mt-2 leading-relaxed font-normal">
+                A compilation of thoughts ("mag" and "jasm"), covering first-aid events, RRR environmental programs, and the Bridge Project.
+              </p>
+            </div>
+            <a href="./MAGSJAM 23-24.pdf" target="_blank" class="inline-flex items-center gap-2 text-[#6a0815] hover:text-[#270206] font-extrabold text-sm mt-4 transition group">
+              <span>View Magazine PDF</span>
+              <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ==========================================
+       FOOTER & REACH US
+       ========================================== -->
+  <footer class="bg-[#1a0104] text-white pt-20 pb-10 border-t border-[#ebd86e]/20">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-white/10 pb-16 mb-12">
+        <!-- Brand -->
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-white rounded-xl overflow-hidden flex items-center justify-center shadow-lg border border-white/20">
+              <img src="logo.png" alt="YRC Logo" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h4 class="text-sm font-black tracking-wide text-white">YOUTH RED CROSS</h4>
+              <span class="text-[10px] uppercase font-extrabold text-[#ebd86e]">Easwari Engineering College</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light">
+            Establishing compassionate actions, blood donation grids, coastal environmental support, and disaster response drills inside college campuses.
+          </p>
+          <div class="text-xs text-slate-400">
+            &copy; 2026 Easwari Engineering College YRC. <br>All rights reserved.
+          </div>
+        </div>
+
+        <!-- Quick Contacts -->
+        <div>
+          <h5 class="text-xs font-black uppercase tracking-widest text-[#ebd86e] mb-6">How to Reach Us?</h5>
+          <address class="not-italic space-y-4 text-sm text-slate-300">
+            <div>
+              <strong class="text-white block mb-1">Campus Address</strong>
+              Easwari Engineering College,<br>
+              Bharathi Salai, Ramapuram,<br>
+              Chennai – 600089, Tamil Nadu
+            </div>
+            <div>
+              <strong class="text-white block mb-1">Contact Office</strong>
+              Phone: 7010124979 / 8072081613 / 9345458267<br>
+              Email: <a href="mailto:yrc@eec.srmrmp.edu.in" class="hover:text-[#ebd86e] transition">yrc@eec.srmrmp.edu.in</a>
+            </div>
+          </address>
+        </div>
+
+        <!-- Links & Media -->
+        <div>
+          <h5 class="text-xs font-black uppercase tracking-widest text-[#ebd86e] mb-6">Connect With Us</h5>
+          <ul class="space-y-3 text-sm text-slate-300">
+            <li>
+              <a href="https://instagram.com/youth_red_cross_eec" target="_blank" class="hover:text-[#ebd86e] transition flex items-center gap-2">
+                <span>Instagram:</span> <span class="text-white font-medium">@youth_red_cross_eec</span>
+              </a>
+            </li>
+            <li>
+              <a href="http://www.yrceec.org.in" target="_blank" class="hover:text-[#ebd86e] transition flex items-center gap-2">
+                <span>Official Web:</span> <span class="text-white font-medium">www.yrceec.org.in</span>
+              </a>
+            </li>
+            <li>
+              <span class="flex items-center gap-2">
+                <span>Twitter / X:</span> <span class="text-white font-medium">@yrceec</span>
+              </span>
+            </li>
+            <li>
+              <span class="flex items-center gap-2">
+                <span>Facebook / YT:</span> <span class="text-white font-medium">Youth Red Cross EEC</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="text-center text-xs text-slate-400 font-light">
+        Designed for Easwari Engineering College YRC Club Chapter. Operating under standard Indian Red Cross principles.
+      </div>
+    </div>
+  </footer>
+
+  <!-- app script -->
+  <script src="app.js"></script>
+</body>
+</html>

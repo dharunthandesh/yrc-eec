@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Team Auditions 2026-27 | YRC Easwari Engineering College</title>
+  <meta name="description" content="Apply for the Youth Red Cross (YRC) Core Committee & Domain Wings at Easwari Engineering College. Join Media, Content, Design, Operations, Anchoring, and Tech teams.">
+  <meta name="author" content="YRC EEC">
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            red: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              200: '#fecaca',
+              300: '#fca5a5',
+              400: '#f87171',
+              500: '#ef4444',
+              600: '#dc2626',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+            },
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo.png">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50/50 text-slate-900 font-sans selection:bg-red-500 selection:text-white antialiased min-h-screen flex flex-col">
+
+  <!-- ==========================================
+       HEADER & NAVIGATION
+       ========================================== -->
+  <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass-nav">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <!-- Logo and Brand -->
+      <a href="index.html#home" class="flex items-center gap-3.5 group">
+        <div class="w-11 h-11 bg-white rounded-xl overflow-hidden flex items-center justify-center border border-slate-200/80 shadow-sm group-hover:scale-105 group-hover:border-red-500/30 transition-all duration-300">
+          <img src="logo.png" alt="YRC Logo" class="w-full h-full object-cover">
+        </div>
+        <div class="leading-tight">
+          <span class="text-[10px] font-black uppercase tracking-widest text-red-600 block">Youth Red Cross</span>
+          <h1 class="text-sm font-extrabold text-slate-900 tracking-tight">Easwari Eng. College</h1>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-7">
+        <a href="index.html#home" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Home</a>
+        <a href="index.html#about" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">About Us</a>
+        <a href="events.html" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Events</a>
+        <a href="team.html" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Our Team</a>
+        <a href="magazines.html" class="nav-link text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Magazines</a>
+        <a href="auditions.html" class="nav-link active-nav text-sm font-extrabold text-red-600 transition-colors flex items-center gap-1.5">
+          <span>Auditions</span>
+          <span class="px-1.5 py-0.5 bg-red-600 text-white text-[9px] font-black uppercase tracking-wider rounded-md animate-pulse">Hiring</span>
+        </a>
+        <a href="index.html#join" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-md shadow-red-600/15 hover:shadow-red-700/25 hover:-translate-y-0.5">Join Us</a>
+      </nav>
+
+      <!-- Mobile Nav Button -->
+      <button id="mobile-menu-btn" aria-label="Toggle Menu" class="md:hidden p-2.5 text-slate-600 hover:text-red-600 focus:outline-none rounded-xl hover:bg-slate-100/80 transition" onclick="document.getElementById('mobile-nav').classList.toggle('hidden')">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Nav Grid -->
+    <div id="mobile-nav" class="hidden md:hidden border-t border-slate-200/80 bg-white/95 backdrop-blur-md px-6 py-5 shadow-xl">
+      <nav class="flex flex-col gap-4">
+        <a href="index.html#home" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Home</a>
+        <a href="index.html#about" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">About Us</a>
+        <a href="events.html" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Events</a>
+        <a href="team.html" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Our Team</a>
+        <a href="magazines.html" class="text-sm font-semibold text-slate-700 hover:text-red-600 py-1 transition" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Magazines</a>
+        <a href="auditions.html" class="text-sm font-bold text-red-600 py-1 flex items-center justify-between" onclick="document.getElementById('mobile-nav').classList.add('hidden')">
+          <span>Auditions 2026-27</span>
+          <span class="px-2 py-0.5 bg-red-600 text-white text-[10px] font-black rounded">APPLY NOW</span>
+        </a>
+        <a href="index.html#join" class="w-full text-center py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition shadow-md" onclick="document.getElementById('mobile-nav').classList.add('hidden')">Join Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       HERO SECTION: YRC AUDITIONS PORTAL
+       ========================================== -->
+  <section id="auditions-hero" class="relative pt-36 pb-20 overflow-hidden hero-yrc-burgundy min-h-[70vh] flex flex-col justify-between border-b border-red-950/80">
+    <div class="sunburst-overlay"></div>
+    <div class="hero-vignette"></div>
+
+    <div class="max-w-7xl mx-auto px-6 w-full flex-grow flex flex-col items-center justify-center text-center relative z-10 my-auto">
+      
+      <!-- Announcement Tagline -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-[#ebd86e]/40 backdrop-blur-md mb-6 reveal active">
+        <span class="w-2 h-2 rounded-full bg-[#ebd86e] animate-ping"></span>
+        <span class="text-[#ebd86e] font-extrabold text-xs sm:text-sm tracking-[0.18em] uppercase">
+          CORE COMMITTEE RECRUITMENT &bull; TENURE 2026–27
+        </span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-white font-extrabold text-4xl sm:text-6xl lg:text-7xl tracking-tight leading-tight mb-4 font-heading reveal active">
+        Shape the Future of <br class="hidden sm:inline">
+        <span class="text-[#ebd86e]">Youth Red Cross</span>
+      </h1>
+
+      <p class="text-slate-200 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed font-normal reveal active">
+        Step into leadership. We are recruiting passionate creators, organizers, anchors, writers, designers, and tech minds to lead YRC EEC's flagship campaigns and humanitarian initiatives.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal active">
+        <a href="#audition-form-section" class="w-full sm:w-auto btn-gold shadow-2xl flex items-center justify-center gap-2">
+          <span>FILL AUDITION FORM</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+          </svg>
+        </a>
+        <a href="#domains" class="w-full sm:w-auto btn-maroon-outline flex items-center justify-center gap-2">
+          <span>EXPLORE DOMAIN WINGS</span>
+        </a>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl w-full mt-14 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-6 reveal active">
+        <div class="p-2 border-r border-white/10 last:border-0">
+          <div class="text-2xl sm:text-3xl font-black text-[#ebd86e]">6</div>
+          <div class="text-[10px] uppercase font-bold text-slate-300 tracking-wider">Domain Wings</div>
+        </div>
+        <div class="p-2 border-r border-white/10 last:border-0">
+          <div class="text-2xl sm:text-3xl font-black text-rose-400">15+</div>
+          <div class="text-[10px] uppercase font-bold text-slate-300 tracking-wider">Annual Projects</div>
+        </div>
+        <div class="p-2 border-r border-white/10 last:border-0">
+          <div class="text-2xl sm:text-3xl font-black text-[#ebd86e]">500+</div>
+          <div class="text-[10px] uppercase font-bold text-slate-300 tracking-wider">Active Members</div>
+        </div>
+        <div class="p-2 last:border-0">
+          <div class="text-2xl sm:text-3xl font-black text-rose-400">100%</div>
+          <div class="text-[10px] uppercase font-bold text-slate-300 tracking-wider">Student Driven</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       DOMAIN WINGS EXPLORER
+       ========================================== -->
+  <section id="domains" class="py-24 bg-white border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+        <span class="inline-block px-3.5 py-1 bg-[#4a040d]/10 text-[#6a0815] border border-[#6a0815]/20 rounded-full text-xs font-black uppercase tracking-widest mb-3">Core Opportunities</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Choose Your Domain Wing</h2>
+        <p class="mt-4 text-slate-600 text-base leading-relaxed">
+          Select the domain where you want to make an impact. You can pick a primary domain and an optional secondary choice during your application.
+        </p>
+      </div>
+
+      <!-- Domains Grid (6 Wings) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Domain 1: Media & Photography -->
+        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-7 hover:shadow-xl hover:border-[#6a0815]/40 transition-all duration-300 flex flex-col justify-between group reveal">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-[#4a040d] text-[#ebd86e] flex items-center justify-center text-2xl font-black mb-6 shadow-md group-hover:scale-110 transition-transform">
+              📸
+            </div>
+            <span class="px-2.5 py-1 bg-[#4a040d]/10 text-[#6a0815] text-[10px] font-black uppercase tracking-wider rounded-md">Visual Media</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-2.5 mb-2">Media & Photography</h3>
+            <p class="text-slate-600 text-xs leading-relaxed mb-4">
+              Capture official event photos, film video recaps, shoot Instagram reels, and edit high-quality media for YRC archives.
+            </p>
+            <div class="space-y-1.5 border-t border-slate-200/60 pt-4 mb-6">
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> DSLR / Phone Camera Handling
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Lightroom / Premiere / CapCut / VN
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Reel Framing & Event Angles
+              </div>
+            </div>
+          </div>
+          <button onclick="selectDomainInForm('media')" class="w-full py-3 bg-white hover:bg-[#4a040d] hover:text-[#ebd86e] border border-slate-200 text-slate-800 text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+            <span>Apply for Media</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
+        <!-- Domain 2: Content & Editorial -->
+        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-7 hover:shadow-xl hover:border-[#6a0815]/40 transition-all duration-300 flex flex-col justify-between group reveal">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-[#4a040d] text-[#ebd86e] flex items-center justify-center text-2xl font-black mb-6 shadow-md group-hover:scale-110 transition-transform">
+              ✍️
+            </div>
+            <span class="px-2.5 py-1 bg-[#4a040d]/10 text-[#6a0815] text-[10px] font-black uppercase tracking-wider rounded-md">Editorial</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-2.5 mb-2">Content & Editorial</h3>
+            <p class="text-slate-600 text-xs leading-relaxed mb-4">
+              Write official event reports, press releases, social media captions, circulars, and articles for annual YRC magazines.
+            </p>
+            <div class="space-y-1.5 border-t border-slate-200/60 pt-4 mb-6">
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> High English Writing Standards
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Event Report & Magazine Writing
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Creative Social Copywriting
+              </div>
+            </div>
+          </div>
+          <button onclick="selectDomainInForm('content')" class="w-full py-3 bg-white hover:bg-[#4a040d] hover:text-[#ebd86e] border border-slate-200 text-slate-800 text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+            <span>Apply for Content</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
+        <!-- Domain 3: Visual & Graphic Design -->
+        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-7 hover:shadow-xl hover:border-[#6a0815]/40 transition-all duration-300 flex flex-col justify-between group reveal">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-[#4a040d] text-[#ebd86e] flex items-center justify-center text-2xl font-black mb-6 shadow-md group-hover:scale-110 transition-transform">
+              🎨
+            </div>
+            <span class="px-2.5 py-1 bg-[#4a040d]/10 text-[#6a0815] text-[10px] font-black uppercase tracking-wider rounded-md">Creative Design</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-2.5 mb-2">Visual & Graphic Design</h3>
+            <p class="text-slate-600 text-xs leading-relaxed mb-4">
+              Design event posters, banners, ID badges, Instagram carousels, and layout structures for print publications.
+            </p>
+            <div class="space-y-1.5 border-t border-slate-200/60 pt-4 mb-6">
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Canva / Photoshop / Illustrator
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Typography & Color Branding
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Social Media Poster Aesthetics
+              </div>
+            </div>
+          </div>
+          <button onclick="selectDomainInForm('design')" class="w-full py-3 bg-white hover:bg-[#4a040d] hover:text-[#ebd86e] border border-slate-200 text-slate-800 text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+            <span>Apply for Design</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
+        <!-- Domain 4: Event Operations & Logistics -->
+        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-7 hover:shadow-xl hover:border-[#6a0815]/40 transition-all duration-300 flex flex-col justify-between group reveal">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-[#4a040d] text-[#ebd86e] flex items-center justify-center text-2xl font-black mb-6 shadow-md group-hover:scale-110 transition-transform">
+              🎪
+            </div>
+            <span class="px-2.5 py-1 bg-[#4a040d]/10 text-[#6a0815] text-[10px] font-black uppercase tracking-wider rounded-md">Management</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-2.5 mb-2">Operations & Logistics</h3>
+            <p class="text-slate-600 text-xs leading-relaxed mb-4">
+              Lead on-ground event management, hall booking, permissions, donor queuing at blood camps, and volunteer deployment.
+            </p>
+            <div class="space-y-1.5 border-t border-slate-200/60 pt-4 mb-6">
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> On-Ground Problem Solving
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Volunteer Coordination
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Hall & Resource Management
+              </div>
+            </div>
+          </div>
+          <button onclick="selectDomainInForm('operations')" class="w-full py-3 bg-white hover:bg-[#4a040d] hover:text-[#ebd86e] border border-slate-200 text-slate-800 text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+            <span>Apply for Operations</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
+        <!-- Domain 5: Public Relations & Anchoring -->
+        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-7 hover:shadow-xl hover:border-[#6a0815]/40 transition-all duration-300 flex flex-col justify-between group reveal">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-[#4a040d] text-[#ebd86e] flex items-center justify-center text-2xl font-black mb-6 shadow-md group-hover:scale-110 transition-transform">
+              🎤
+            </div>
+            <span class="px-2.5 py-1 bg-[#4a040d]/10 text-[#6a0815] text-[10px] font-black uppercase tracking-wider rounded-md">Stage & PR</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-2.5 mb-2">Public Relations & Anchoring</h3>
+            <p class="text-slate-600 text-xs leading-relaxed mb-4">
+              Host official YRC stage ceremonies, emcee webinars, welcome chief guests, and handle inter-college communications.
+            </p>
+            <div class="space-[#ebd86e] space-y-1.5 border-t border-slate-200/60 pt-4 mb-6">
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Confident Stage Hosting
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Public Speaking Skills
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Guest & Speaker Hospitality
+              </div>
+            </div>
+          </div>
+          <button onclick="selectDomainInForm('anchoring')" class="w-full py-3 bg-white hover:bg-[#4a040d] hover:text-[#ebd86e] border border-slate-200 text-slate-800 text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+            <span>Apply for Anchoring/PR</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
+        <!-- Domain 6: Technical & Web Development -->
+        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-7 hover:shadow-xl hover:border-[#6a0815]/40 transition-all duration-300 flex flex-col justify-between group reveal">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-[#4a040d] text-[#ebd86e] flex items-center justify-center text-2xl font-black mb-6 shadow-md group-hover:scale-110 transition-transform">
+              💻
+            </div>
+            <span class="px-2.5 py-1 bg-[#4a040d]/10 text-[#6a0815] text-[10px] font-black uppercase tracking-wider rounded-md">Technology</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-2.5 mb-2">Technical & Web Dev</h3>
+            <p class="text-slate-600 text-xs leading-relaxed mb-4">
+              Maintain the YRC official website portal, build registration forms, create QR attendance systems, and manage web assets.
+            </p>
+            <div class="space-y-1.5 border-t border-slate-200/60 pt-4 mb-6">
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> HTML5, CSS3, Tailwind, JavaScript
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Git / GitHub & Web Hosting
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Web Form & Portal Management
+              </div>
+            </div>
+          </div>
+          <button onclick="selectDomainInForm('technical')" class="w-full py-3 bg-white hover:bg-[#4a040d] hover:text-[#ebd86e] border border-slate-200 text-slate-800 text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+            <span>Apply for Tech/Web</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       MULTI-STEP AUDITION FORM SECTION
+       ========================================== -->
+  <section id="audition-form-section" class="py-24 bg-slate-50 border-b border-slate-200/80">
+    <div class="max-w-4xl mx-auto px-6">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-2xl mx-auto mb-12 reveal">
+        <span class="inline-block px-3.5 py-1 bg-[#4a040d]/10 text-[#6a0815] border border-[#6a0815]/20 rounded-full text-xs font-black uppercase tracking-widest mb-3">Application Form</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">YRC Core Audition Form</h2>
+        <p class="mt-2 text-slate-600 text-sm">Fill in your details accurately to generate your Audition Reference Ticket.</p>
+      </div>
+
+      <!-- Step Wizard Progress Bar (2-Step Streamlined) -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-lg mb-8 reveal">
+        <div class="flex items-center justify-between relative max-w-md mx-auto">
+          <!-- Connecting Line -->
+          <div class="absolute top-1/2 left-0 right-0 h-1 bg-slate-200 -translate-y-1/2 z-0"></div>
+          <div id="wizard-progress-bar" class="absolute top-1/2 left-0 h-1 bg-[#6a0815] -translate-y-1/2 z-0 transition-all duration-500 w-0"></div>
+
+          <!-- Step 1 Indicator -->
+          <div class="wizard-step-node relative z-10 flex flex-col items-center gap-1.5" data-step="1">
+            <div class="w-10 h-10 rounded-full bg-[#4a040d] text-[#ebd86e] font-extrabold text-sm flex items-center justify-center shadow-md border-2 border-white transition-all">1</div>
+            <span class="text-[11px] font-bold text-slate-800">Student Details</span>
+          </div>
+
+          <!-- Step 2 Indicator -->
+          <div class="wizard-step-node relative z-10 flex flex-col items-center gap-1.5" data-step="2">
+            <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-600 font-extrabold text-sm flex items-center justify-center border-2 border-white transition-all">2</div>
+            <span class="text-[11px] font-bold text-slate-500">Domain Choice</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Form Container -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-xl reveal">
+        <form id="audition-wizard-form" novalidate>
+          
+          <!-- STEP 1: Personal & Academic Details -->
+          <div id="step-card-1" class="wizard-step-card space-y-6">
+            <div class="border-b border-slate-100 pb-4 mb-6">
+              <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#6a0815]"></span>
+                Step 1: Student Information
+              </h3>
+              <p class="text-xs text-slate-500 mt-1">Enter your personal and college academic contact details.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="aud-name" class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5">Full Name *</label>
+                <input type="text" id="aud-name" required placeholder="e.g. Vignesh K" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#6a0815] focus:bg-white transition">
+              </div>
+              <div>
+                <label for="aud-regno" class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5">Register Number * (Must be Unique)</label>
+                <input type="text" id="aud-regno" required placeholder="e.g. 310622104089" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#6a0815] focus:bg-white transition">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              <div class="sm:col-span-2">
+                <label for="aud-dept" class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5">Department / Branch *</label>
+                <select id="aud-dept" required class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#6a0815] focus:bg-white transition">
+                  <option value="" disabled selected>Select Department / Course</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Biomedical Engineering">Biomedical Engineering</option>
+                  <option value="Automobile Engineering">Automobile Engineering</option>
+                  <option value="AI and Data Science Engineering">AI and Data Science Engineering</option>
+                  <option value="Computer Science Engineering">Computer Science Engineering</option>
+                  <option value="Robotics and Automation Engineering">Robotics and Automation Engineering</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Electrical & Electronics">Electrical & Electronics</option>
+                  <option value="Electronics & Communication Engineering">Electronics & Communication Engineering</option>
+                  <option value="CSE (AI & ML)">CSE (Artificial Intelligence & Machine Learning)</option>
+                  <option value="CSE (Cyber Security)">CSE (Cyber Security)</option>
+                  <option value="B.E. Computer Science and Design">B.E. Computer Science and Design</option>
+                  <option value="B.Tech. Biotechnology">B.Tech. Biotechnology</option>
+                  <option value="B.Tech. CS & Business System (TCS)">B.Tech. Computer Science and Business System (TCS)</option>
+                </select>
+              </div>
+              <div>
+                <label for="aud-year" class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5">Year of Study *</label>
+                <select id="aud-year" required class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#6a0815] focus:bg-white transition">
+                  <option value="" disabled selected>Select Year</option>
+                  <option value="I Year">I Year</option>
+                  <option value="II Year">II Year</option>
+                  <option value="III Year">III Year</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="aud-email" class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5">College Email ID * (Must be Unique)</label>
+                <input type="email" id="aud-email" required placeholder="e.g. name@eec.srmrmp.edu.in" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#6a0815] focus:bg-white transition">
+              </div>
+              <div>
+                <label for="aud-phone" class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5">WhatsApp Phone Number *</label>
+                <input type="tel" id="aud-phone" required placeholder="e.g. 9876543210" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#6a0815] focus:bg-white transition">
+              </div>
+            </div>
+
+            <div class="flex justify-end pt-4">
+              <button type="button" onclick="nextWizardStep(1)" class="btn-gold px-8 py-3.5 flex items-center gap-2">
+                <span>Continue to Domain Choice</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Domain Choice & Submit -->
+          <div id="step-card-2" class="wizard-step-card hidden space-y-6">
+            <div class="border-b border-slate-100 pb-4 mb-6">
+              <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#6a0815]"></span>
+                Step 2: Select Primary & Secondary Domain
+              </h3>
+              <p class="text-xs text-slate-500 mt-1">Choose your preferred team domain for YRC Core Auditions 2026-27.</p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-extrabold uppercase text-slate-700 mb-3">Primary Domain Choice *</label>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                
+                <label class="domain-radio-card relative cursor-pointer border-2 border-slate-200 rounded-2xl p-4 transition-all hover:border-[#6a0815] flex flex-col justify-between">
+                  <input type="radio" name="primary_domain" value="media" required onchange="onPrimaryDomainChange(this.value)" class="sr-only">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-2xl">📸</span>
+                    <span class="domain-check-badge w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center text-[10px] font-bold text-transparent transition-all">✓</span>
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-slate-900">Media & Photo</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Camera / Reels</div>
+                  </div>
+                </label>
+
+                <label class="domain-radio-card relative cursor-pointer border-2 border-slate-200 rounded-2xl p-4 transition-all hover:border-[#6a0815] flex flex-col justify-between">
+                  <input type="radio" name="primary_domain" value="content" required onchange="onPrimaryDomainChange(this.value)" class="sr-only">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-2xl">✍️</span>
+                    <span class="domain-check-badge w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center text-[10px] font-bold text-transparent transition-all">✓</span>
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-slate-900">Content & Editorial</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Reports / Copy</div>
+                  </div>
+                </label>
+
+                <label class="domain-radio-card relative cursor-pointer border-2 border-slate-200 rounded-2xl p-4 transition-all hover:border-[#6a0815] flex flex-col justify-between">
+                  <input type="radio" name="primary_domain" value="design" required onchange="onPrimaryDomainChange(this.value)" class="sr-only">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-2xl">🎨</span>
+                    <span class="domain-check-badge w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center text-[10px] font-bold text-transparent transition-all">✓</span>
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-slate-900">Visual Design</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Posters / Graphics</div>
+                  </div>
+                </label>
+
+                <label class="domain-radio-card relative cursor-pointer border-2 border-slate-200 rounded-2xl p-4 transition-all hover:border-[#6a0815] flex flex-col justify-between">
+                  <input type="radio" name="primary_domain" value="operations" required onchange="onPrimaryDomainChange(this.value)" class="sr-only">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-2xl">🎪</span>
+                    <span class="domain-check-badge w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center text-[10px] font-bold text-transparent transition-all">✓</span>
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-slate-900">Operations</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Event Execution</div>
+                  </div>
+                </label>
+
+                <label class="domain-radio-card relative cursor-pointer border-2 border-slate-200 rounded-2xl p-4 transition-all hover:border-[#6a0815] flex flex-col justify-between">
+                  <input type="radio" name="primary_domain" value="anchoring" required onchange="onPrimaryDomainChange(this.value)" class="sr-only">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-2xl">🎤</span>
+                    <span class="domain-check-badge w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center text-[10px] font-bold text-transparent transition-all">✓</span>
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-slate-900">Anchoring & PR</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Stage Hosting</div>
+                  </div>
+                </label>
+
+                <label class="domain-radio-card relative cursor-pointer border-2 border-slate-200 rounded-2xl p-4 transition-all hover:border-[#6a0815] flex flex-col justify-between">
+                  <input type="radio" name="primary_domain" value="technical" required onchange="onPrimaryDomainChange(this.value)" class="sr-only">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-2xl">💻</span>
+                    <span class="domain-check-badge w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center text-[10px] font-bold text-transparent transition-all">✓</span>
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-slate-900">Tech & Web Dev</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Website / Forms</div>
+                  </div>
+                </label>
+
+              </div>
+            </div>
+
+            <div>
+              <label for="aud-secondary-domain" class="block text-xs font-extrabold uppercase text-slate-700 mb-1.5">Secondary Domain Preference (Optional)</label>
+              <select id="aud-secondary-domain" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#6a0815] focus:bg-white transition">
+                <option value="None" selected>None (Focus solely on Primary Domain)</option>
+                <option value="Media & Photography">Media & Photography</option>
+                <option value="Content & Editorial">Content & Editorial</option>
+                <option value="Visual & Graphic Design">Visual & Graphic Design</option>
+                <option value="Operations & Logistics">Operations & Logistics</option>
+                <option value="Anchoring & PR">Anchoring & PR</option>
+                <option value="Technical & Web Dev">Technical & Web Dev</option>
+              </select>
+            </div>
+
+            <!-- Confirmation Checkbox -->
+            <div class="flex items-start gap-3 pt-2">
+              <input type="checkbox" id="aud-terms" required class="mt-1 w-4 h-4 text-red-600 border-slate-300 rounded focus:ring-red-500">
+              <label for="aud-terms" class="text-xs text-slate-600 leading-relaxed">
+                I confirm that I am an active student of Easwari Engineering College and that all provided information is accurate.
+              </label>
+            </div>
+
+            <div class="flex items-center justify-between pt-4">
+              <button type="button" onclick="prevWizardStep(2)" class="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase tracking-wider transition">
+                Back
+              </button>
+              <button type="submit" class="btn-gold px-10 py-4 text-sm shadow-xl flex items-center gap-2">
+                <span>SUBMIT AUDITION APPLICATION</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       AUDITION SUCCESS RECEIPT TICKET MODAL
+       ========================================== -->
+  <div id="audition-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 relative overflow-hidden text-center animate-fade-in">
+      <!-- Decorative Header Ribbon -->
+      <div class="h-3 bg-gradient-to-r from-[#8b0c1e] via-[#6a0815] to-[#4a040d] absolute top-0 left-0 right-0"></div>
+
+      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 border-4 border-emerald-50 shadow-inner">
+        ✓
+      </div>
+
+      <span class="px-3 py-1 bg-[#4a040d]/10 text-[#6a0815] text-[10px] font-black uppercase tracking-widest rounded-full">
+        Application Submitted
+      </span>
+
+      <h3 class="text-2xl font-extrabold text-slate-900 mt-2">Audition Reference Ticket</h3>
+      <p class="text-slate-500 text-xs mt-1">Keep this Reference ID handy for your audition interview.</p>
+
+      <!-- Ticket Card Container -->
+      <div id="ticket-summary-content" class="my-6 p-6 bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl text-left space-y-3 relative">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">REFERENCE ID</span>
+          <span id="ticket-ref-id" class="text-lg font-black text-[#6a0815] tracking-wider">YRC-AUD-2026-0000</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase block">Applicant</span>
+            <span id="ticket-name" class="font-extrabold text-slate-900 block truncate">-</span>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase block">Reg No / Dept</span>
+            <span id="ticket-dept" class="font-extrabold text-slate-900 block truncate">-</span>
+          </div>
+          <div class="col-span-2 border-t border-slate-200/80 pt-2">
+            <span class="text-[10px] font-bold text-slate-400 uppercase block">Primary Domain Preference</span>
+            <span id="ticket-domain" class="font-extrabold text-red-600 block uppercase tracking-wide">-</span>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-200 pt-3 text-[11px] text-slate-600 flex items-center gap-2">
+          <span>📍</span>
+          <span><strong>Venue:</strong> EEC Campus &bull; Block 3 MBA Hall (Ground Floor)</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button onclick="window.print()" class="w-full py-3 bg-[#4a040d] text-[#ebd86e] font-extrabold text-xs uppercase tracking-wider rounded-xl hover:bg-[#270206] transition shadow-md">
+          Print / Save Ticket PDF
+        </button>
+        <button id="close-audition-modal-btn" class="w-full py-3 bg-slate-100 text-slate-700 font-extrabold text-xs uppercase tracking-wider rounded-xl hover:bg-slate-200 transition">
+          Done & Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================
+       FOOTER & REACH US
+       ========================================== -->
+  <footer class="bg-[#1a0104] text-white pt-20 pb-10 border-t border-[#ebd86e]/20 mt-auto">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-white/10 pb-16 mb-12">
+        <!-- Brand -->
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-white rounded-xl overflow-hidden flex items-center justify-center shadow-lg border border-white/20">
+              <img src="logo.png" alt="YRC Logo" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h4 class="text-sm font-black tracking-wide text-white">YOUTH RED CROSS</h4>
+              <span class="text-[10px] uppercase font-extrabold text-[#ebd86e]">Easwari Engineering College</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light">
+            Establishing compassionate actions, blood donation grids, coastal environmental support, and disaster response drills inside college campuses.
+          </p>
+          <div class="text-xs text-slate-400">
+            &copy; 2026 Easwari Engineering College YRC. <br>All rights reserved.
+          </div>
+        </div>
+
+        <!-- Quick Contacts -->
+        <div>
+          <h5 class="text-xs font-black uppercase tracking-widest text-[#ebd86e] mb-6">How to Reach Us?</h5>
+          <address class="not-italic space-y-4 text-sm text-slate-300">
+            <div>
+              <strong class="text-white block mb-1">Campus Address</strong>
+              Easwari Engineering College,<br>
+              Bharathi Salai, Ramapuram,<br>
+              Chennai – 600089, Tamil Nadu
+            </div>
+            <div>
+              <strong class="text-white block mb-1">Contact Office</strong>
+              Phone: 7010124979 / 8072081613 / 9345458267<br>
+              Email: <a href="mailto:yrc@eec.srmrmp.edu.in" class="hover:text-[#ebd86e] transition">yrc@eec.srmrmp.edu.in</a>
+            </div>
+          </address>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h5 class="text-xs font-black uppercase tracking-widest text-[#ebd86e] mb-6">Quick Navigation</h5>
+          <ul class="space-y-3 text-sm text-slate-300">
+            <li><a href="index.html#home" class="hover:text-[#ebd86e] transition">Home</a></li>
+            <li><a href="events.html" class="hover:text-[#ebd86e] transition">Events & Initiatives</a></li>
+            <li><a href="team.html" class="hover:text-[#ebd86e] transition">Executive Committee</a></li>
+            <li><a href="magazines.html" class="hover:text-[#ebd86e] transition">Annual Magazines</a></li>
+            <li><a href="auditions.html" class="hover:text-[#ebd86e] transition font-bold text-[#ebd86e]">Core Auditions 2026-27</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="text-center text-xs text-slate-400">
+        Easwari Engineering College Youth Red Cross Chapter &bull; Affiliated with IRCS Tamil Nadu State Branch
+      </div>
+    </div>
+  </footer>
+
+  <!-- SheetJS Library for Native Excel (.xlsx) Export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Main JavaScript File -->
+  <script src="app.js"></script>
+</body>
+</html>
