@@ -754,7 +754,7 @@ function initAuditionPortal() {
   // Pre-populate Mock Audition Data if empty
   const defaultAuditions = [
     {
-      refId: "YRC-AUD-2026-4821",
+      refId: "YRC-AUD-2026-1497",
       name: "Sanjay Raghavan",
       regNo: "310623104112",
       dept: "Computer Science & Engineering",
@@ -775,7 +775,7 @@ function initAuditionPortal() {
       appliedAt: "2026-08-01 10:30 AM"
     },
     {
-      refId: "YRC-AUD-2026-9104",
+      refId: "YRC-AUD-2026-1498",
       name: "Harini Sundaram",
       regNo: "310622205044",
       dept: "Information Technology",
@@ -796,7 +796,7 @@ function initAuditionPortal() {
       appliedAt: "2026-08-01 02:15 PM"
     },
     {
-      refId: "YRC-AUD-2026-6352",
+      refId: "YRC-AUD-2026-1499",
       name: "Karthik Raja M",
       regNo: "310624106021",
       dept: "Artificial Intelligence & Data Science",
@@ -868,9 +868,22 @@ function initAuditionPortal() {
     const domainKey = selectedDomainInput.value;
     const domainMeta = DOMAIN_DATA[domainKey] || { title: domainKey };
 
-    // Generate Application Reference ID
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    const refId = `YRC-AUD-2026-${randomNum}`;
+    // Generate Sequential Application Reference ID (starting from 1500)
+    let maxTicketNum = 1499;
+    existingApplications.forEach(a => {
+      if (a && a.refId) {
+        const match = a.refId.match(/YRC-AUD-2026-(\d+)/);
+        if (match) {
+          const num = parseInt(match[1], 10);
+          if (!isNaN(num) && num > maxTicketNum) {
+            maxTicketNum = num;
+          }
+        }
+      }
+    });
+
+    const nextTicketNum = maxTicketNum + 1;
+    const refId = `YRC-AUD-2026-${nextTicketNum}`;
 
     const newApplication = {
       refId: refId,
