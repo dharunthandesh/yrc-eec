@@ -104,6 +104,10 @@
           </div>
 
           <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="syncCloudData(true)" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-xl text-xs transition shadow-md flex items-center gap-1.5">
+              <svg class="w-4 h-4 animate-spin-hover" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>Sync Cloud Data 🔄</span>
+            </button>
             <button onclick="exportAuditionsToExcel()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-extrabold rounded-xl text-xs transition shadow-md flex items-center gap-2">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
               <span>Export Excel (.xlsx)</span>
@@ -183,11 +187,15 @@
             <p class="text-xs text-slate-400 mt-1">Review student volunteer signups from the main home portal.</p>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="syncCloudData(true)" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-xl text-xs transition shadow-md flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>Sync Cloud Data 🔄</span>
+            </button>
             <button onclick="exportVolunteersToCSV()" class="px-4 py-2.5 bg-[#4a040d] hover:bg-[#6a0815] text-[#ebd86e] border border-[#ebd86e]/30 font-extrabold rounded-xl text-xs transition shadow-md">
               <span>Export CSV</span>
             </button>
-            <button onclick="resetVolunteersDb()" class="px-3.5 py-2.5 bg-slate-950 hover:bg-rose-950 text-slate-400 hover:text-rose-300 font-semibold rounded-xl text-xs border border-slate-800 transition">
+            <button onclick="resetVolunteersDb()" class="px-3.5 py-2.5 bg-slate-950 hover:bg-rose-950 text-slate-400 hover:text-rose-[#300] font-semibold rounded-xl text-xs border border-slate-800 transition">
               Reset Data
             </button>
           </div>

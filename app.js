@@ -85,6 +85,71 @@ window.closeCustomAlert = function() {
   }
 };
 
+/* ==========================================================================
+   CLOUD DATABASE REST SYNC FOR VERCEL (Multi-device Realtime Data Store)
+   ========================================================================== */
+const CLOUD_DB_BASE = "https://yrc-eec-2026-default-rtdb.firebaseio.com";
+
+window.syncCloudData = async function(showNotice = false) {
+  try {
+    // 1. Sync Auditions from Cloud Database
+    const resAud = await fetch(`${CLOUD_DB_BASE}/auditions.json`);
+    if (resAud.ok) {
+      const dataAud = await resAud.json();
+      if (dataAud) {
+        const cloudList = Object.values(dataAud);
+        const localList = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+        
+        const mergedMap = new Map();
+        [...localList, ...cloudList].forEach(item => {
+          if (item && item.email) {
+            const key = item.email.toLowerCase().trim();
+            mergedMap.set(key, item);
+          }
+        });
+        const mergedAuditions = Array.from(mergedMap.values());
+        localStorage.setItem('yrc_audition_applications', JSON.stringify(mergedAuditions));
+      }
+    }
+
+    // 2. Sync Volunteers from Cloud Database
+    const resVol = await fetch(`${CLOUD_DB_BASE}/volunteers.json`);
+    if (resVol.ok) {
+      const dataVol = await resVol.json();
+      if (dataVol) {
+        const cloudVolList = Object.values(dataVol);
+        const localVolList = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+        
+        const mergedVolMap = new Map();
+        [...localVolList, ...cloudVolList].forEach(item => {
+          if (item && item.email) {
+            const key = item.email.toLowerCase().trim();
+            mergedVolMap.set(key, item);
+          }
+        });
+        const mergedVolunteers = Array.from(mergedVolMap.values());
+        localStorage.setItem('yrc_volunteers', JSON.stringify(mergedVolunteers));
+      }
+    }
+
+    if (typeof renderAuditionsAdminTable === 'function') renderAuditionsAdminTable();
+    if (typeof renderVolunteersAdminTable === 'function') renderVolunteersAdminTable();
+
+    if (showNotice && typeof showCustomAlert === 'function') {
+      showCustomAlert('Cloud Sync Complete', 'Successfully fetched and merged live candidate registrations across all mobile devices & browsers!', 'success');
+    }
+  } catch (err) {
+    console.warn('Cloud Database fetch offline/fallback:', err);
+  }
+};
+
+// Trigger Cloud DB fetch on page load automatically
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => window.syncCloudData(false));
+} else {
+  window.syncCloudData(false);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimations();
   initNavObserver();
@@ -393,19 +458,36 @@ function initVolunteerPortal() {
     joinForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
+      const email = document.getElementById('reg-email').value?.trim();
+      const volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+
+      // Check unique personal email ID
+      const duplicateEmail = volunteers.find(v => v.email && v.email.toLowerCase().trim() === email.toLowerCase());
+      if (duplicateEmail) {
+        showCustomAlert('Duplicate Registration Detected', `A volunteer registration has already been submitted for Personal Email ID: ${email}`, 'warning');
+        return;
+      }
+
       const newRegistration = {
         name: document.getElementById('reg-name').value,
-        email: document.getElementById('reg-email').value,
+        email: email,
         phone: document.getElementById('reg-phone').value,
         dept: document.getElementById('reg-dept').value,
         year: document.getElementById('reg-year').value,
-        skills: document.getElementById('reg-skills').value || 'General Volunteering'
+        skills: document.getElementById('reg-skills').value || 'General Volunteering',
+        registeredAt: new Date().toLocaleString()
       };
 
       // Save to localStorage
-      const volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
-      volunteers.unshift(newRegistration); // Add to beginning
+      volunteers.unshift(newRegistration);
       localStorage.setItem('yrc_volunteers', JSON.stringify(volunteers));
+
+      // Post to Cloud DB REST Endpoint for multi-device live sync
+      fetch(`${CLOUD_DB_BASE}/volunteers.json`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRegistration)
+      }).catch(err => console.warn('Cloud save error:', err));
 
       // Reset form
       joinForm.reset();
@@ -764,19 +846,12 @@ function initAuditionPortal() {
       return;
     }
 
-    // Check Unique User (By Register Number & Email)
+    // Check Unique User (Exclusively By Personal Email ID)
     const existingApplications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
 
-    const duplicateReg = existingApplications.find(a => a.regNo && a.regNo.toLowerCase() === regNo.toLowerCase());
-    if (duplicateReg) {
-      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Register Number: ${regNo}\n\nReference ID: ${duplicateReg.refId}`, 'warning');
-      showWizardStepCard(1);
-      return;
-    }
-
-    const duplicateEmail = existingApplications.find(a => a.email && a.email.toLowerCase() === email.toLowerCase());
+    const duplicateEmail = existingApplications.find(a => a.email && a.email.toLowerCase().trim() === email.toLowerCase().trim());
     if (duplicateEmail) {
-      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Email ID: ${email}\n\nReference ID: ${duplicateEmail.refId}`, 'warning');
+      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Personal Email ID: ${email}\n\nReference ID: ${duplicateEmail.refId}`, 'warning');
       showWizardStepCard(1);
       return;
     }
@@ -821,6 +896,13 @@ function initAuditionPortal() {
     // Save to LocalStorage
     applications = [newApplication, ...existingApplications];
     localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
+
+    // Post to Cloud DB REST Endpoint for multi-device sync across Vercel
+    fetch(`${CLOUD_DB_BASE}/auditions.json`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newApplication)
+    }).catch(err => console.warn('Cloud DB audition save error:', err));
 
     // Populate Modal Ticket
     const ticketRef = document.getElementById('ticket-ref-id');
@@ -922,17 +1004,11 @@ window.nextWizardStep = function(step) {
       return;
     }
 
-    // Check unique before stepping forward to Step 2
+    // Check unique exclusively by Personal Email ID before stepping forward
     const existingApplications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-    const duplicateReg = existingApplications.find(a => a.regNo && a.regNo.toLowerCase() === regno.toLowerCase());
-    if (duplicateReg) {
-      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Register Number: ${regno}\n\nReference ID: ${duplicateReg.refId}`, 'warning');
-      return;
-    }
-
-    const duplicateEmail = existingApplications.find(a => a.email && a.email.toLowerCase() === email.toLowerCase());
+    const duplicateEmail = existingApplications.find(a => a.email && a.email.toLowerCase().trim() === email.toLowerCase().trim());
     if (duplicateEmail) {
-      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Email ID: ${email}\n\nReference ID: ${duplicateEmail.refId}`, 'warning');
+      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Personal Email ID: ${email}\n\nReference ID: ${duplicateEmail.refId}`, 'warning');
       return;
     }
   }
