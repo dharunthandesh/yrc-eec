@@ -884,6 +884,13 @@ function initAuditionPortal() {
       return;
     }
 
+    const selectedSlotInput = document.querySelector('input[name="audition_slot"]:checked');
+    if (!selectedSlotInput) {
+      showCustomAlert('Time Slot Required', 'Please select your preferred audition time slot in Step 2.', 'warning');
+      showWizardStepCard(2);
+      return;
+    }
+
     const termsCheckbox = document.getElementById('aud-terms');
     if (termsCheckbox && !termsCheckbox.checked) {
       showCustomAlert('Confirmation Required', 'Please check the confirmation box in Step 2.', 'warning');
@@ -893,6 +900,7 @@ function initAuditionPortal() {
 
     const domainKey = selectedDomainInput.value;
     const domainMeta = DOMAIN_DATA[domainKey] || { title: domainKey };
+    const chosenSlot = selectedSlotInput.value;
 
     // Generate Sequential Application Reference ID (starting from 1500)
     let maxTicketNum = 1499;
@@ -922,6 +930,7 @@ function initAuditionPortal() {
       primaryDomainKey: domainKey,
       primaryDomainTitle: domainMeta.title,
       secondaryDomain: document.getElementById('aud-secondary-domain')?.value || 'None',
+      slot: chosenSlot,
       status: "Under Review",
       appliedAt: new Date().toLocaleString()
     };
@@ -959,11 +968,13 @@ function initAuditionPortal() {
     const ticketName = document.getElementById('ticket-name');
     const ticketDept = document.getElementById('ticket-dept');
     const ticketDomain = document.getElementById('ticket-domain');
+    const ticketSlot = document.getElementById('ticket-slot');
 
     if (ticketRef) ticketRef.innerText = refId;
     if (ticketName) ticketName.innerText = newApplication.name;
     if (ticketDept) ticketDept.innerText = `${newApplication.regNo} (${newApplication.dept})`;
     if (ticketDomain) ticketDomain.innerText = domainMeta.title;
+    if (ticketSlot) ticketSlot.innerText = newApplication.slot;
 
     // Show Ticket Modal
     if (modal) {
@@ -1117,6 +1128,28 @@ function showWizardStepCard(targetStep) {
   }
 }
 
+window.onAuditionSlotChange = function(radioInput) {
+  const cards = document.querySelectorAll('.slot-radio-card');
+  cards.forEach(card => {
+    const radio = card.querySelector('input[type="radio"]');
+    if (radio && radio.checked) {
+      card.classList.add('active-slot-card');
+      const badge = card.querySelector('.slot-check-badge');
+      if (badge) {
+        badge.classList.add('bg-[#6a0815]', 'border-[#6a0815]', 'text-[#ebd86e]');
+        badge.classList.remove('text-transparent', 'border-slate-300');
+      }
+    } else {
+      card.classList.remove('active-slot-card');
+      const badge = card.querySelector('.slot-check-badge');
+      if (badge) {
+        badge.classList.remove('bg-[#6a0815]', 'border-[#6a0815]', 'text-[#ebd86e]');
+        badge.classList.add('text-transparent', 'border-slate-300');
+      }
+    }
+  });
+};
+
 window.onPrimaryDomainChange = function(domainKey) {
   // Update Radio Card Styling
   const cards = document.querySelectorAll('.domain-radio-card');
@@ -1155,7 +1188,8 @@ function renderAuditionsAdminTable() {
     const matchesSearch = app.name.toLowerCase().includes(searchVal) ||
                           app.regNo.toLowerCase().includes(searchVal) ||
                           app.dept.toLowerCase().includes(searchVal) ||
-                          app.refId.toLowerCase().includes(searchVal);
+                          app.refId.toLowerCase().includes(searchVal) ||
+                          (app.slot && app.slot.toLowerCase().includes(searchVal));
     const matchesDomain = (domainVal === 'all') || (app.primaryDomainTitle === domainVal);
     const matchesStatus = (statusVal === 'all') || (app.status === statusVal);
 
@@ -1194,7 +1228,8 @@ function renderAuditionsAdminTable() {
       </td>
       <td class="px-4 py-3.5">
         <span class="px-2 py-0.5 bg-[#4a040d]/10 text-[#6a0815] font-bold text-[10px] rounded uppercase">${app.primaryDomainTitle}</span>
-        <div class="text-[10px] text-slate-400 mt-0.5">Secondary: ${app.secondaryDomain || 'None'}</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">Sec: ${app.secondaryDomain || 'None'}</div>
+        <div class="text-[10px] font-bold text-slate-600 mt-1 flex items-center gap-1">🗓️ ${app.slot || 'No Slot'}</div>
       </td>
       <td class="px-4 py-3.5">
         <select onchange="updateApplicantStatus('${app.refId}', this.value)" class="px-2 py-1 bg-white border border-slate-200 rounded-lg text-[11px] font-bold ${statusClass}">
@@ -1242,7 +1277,7 @@ function exportAuditionsToCSV() {
   }
 
   let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-  csvContent += "Ref ID,Name,Reg No,Department,Year,Email,Phone,Primary Domain,Secondary Domain,Status,Applied At\n";
+  csvContent += "Ref ID,Name,Reg No,Department,Year,Email,Phone,Primary Domain,Secondary Domain,Audition Slot,Status,Applied At\n";
 
   applications.forEach(a => {
     const row = [
@@ -1255,6 +1290,7 @@ function exportAuditionsToCSV() {
       `"${a.phone}"`,
       `"${a.primaryDomainTitle}"`,
       `"${a.secondaryDomain || 'None'}"`,
+      `"${a.slot || 'N/A'}"`,
       `"${a.status}"`,
       `"${a.appliedAt}"`
     ].join(",");
@@ -1287,6 +1323,7 @@ function exportAuditionsToExcel() {
     "Phone Number": a.phone,
     "Primary Domain": a.primaryDomainTitle,
     "Secondary Domain": a.secondaryDomain || 'None',
+    "Preferred Time Slot": a.slot || 'N/A',
     "Application Status": a.status,
     "Applied At": a.appliedAt
   }));

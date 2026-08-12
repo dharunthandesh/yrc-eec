@@ -465,7 +465,8 @@
           </td>
           <td class="px-4 py-3.5">
             <span class="px-2 py-0.5 bg-[#4a040d] text-[#ebd86e] font-bold text-[10px] rounded uppercase border border-[#ebd86e]/30">${app.primaryDomainTitle}</span>
-            <div class="text-[10px] text-slate-400 mt-0.5">Secondary: ${app.secondaryDomain || 'None'}</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Sec: ${app.secondaryDomain || 'None'}</div>
+            <div class="text-[10px] font-semibold text-amber-300 mt-1 flex items-center gap-1">🗓️ ${app.slot || 'No Slot'}</div>
           </td>
           <td class="px-4 py-3.5">
             <select onchange="updateApplicantStatus('${app.refId}', this.value)" class="px-2 py-1 bg-slate-950 border text-[11px] font-bold rounded-lg ${statusBadge}">
@@ -523,7 +524,7 @@
       }
 
       let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-      csvContent += "Ref ID,Name,Reg No,Department,Year,Email,Phone,Primary Domain,Secondary Domain,Status,Applied At\n";
+      csvContent += "Ref ID,Name,Reg No,Department,Year,Email,Phone,Primary Domain,Secondary Domain,Preferred Time Slot,Status,Applied At\n";
 
       applications.forEach(a => {
         const row = [
@@ -536,6 +537,7 @@
           `"${a.phone}"`,
           `"${a.primaryDomainTitle}"`,
           `"${a.secondaryDomain || 'None'}"`,
+          `"${a.slot || 'N/A'}"`,
           `"${a.status}"`,
           `"${a.appliedAt}"`
         ].join(",");
@@ -568,6 +570,7 @@
         "Phone Number": a.phone,
         "Primary Domain": a.primaryDomainTitle,
         "Secondary Domain": a.secondaryDomain || 'None',
+        "Preferred Time Slot": a.slot || 'N/A',
         "Application Status": a.status,
         "Applied At": a.appliedAt
       }));
