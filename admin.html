@@ -122,7 +122,7 @@
         </div>
 
         <!-- Filter & Search Controls -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div>
             <label class="block text-[10px] font-extrabold uppercase text-slate-400 mb-1">Search Candidates</label>
             <input type="text" id="admin-search-input" oninput="renderAuditionsAdminTable()" placeholder="Name, Reg. No, Dept, or Ref ID..." class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#ebd86e]">
@@ -143,6 +143,20 @@
           </div>
 
           <div>
+            <label class="block text-[10px] font-extrabold uppercase text-slate-400 mb-1">Filter by Preferred Slot</label>
+            <select id="admin-slot-filter" onchange="renderAuditionsAdminTable()" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#ebd86e]">
+              <option value="all">All Audition Time Slots</option>
+              <option value="Sat 15/08: 06:00 PM – 07:00 PM">Sat 15/08 (06:00 PM – 07:00 PM)</option>
+              <option value="Sat 15/08: 07:00 PM – 08:00 PM">Sat 15/08 (07:00 PM – 08:00 PM)</option>
+              <option value="Sun 16/08: 11:00 AM – 12:00 PM">Sun 16/08 (11:00 AM – 12:00 PM)</option>
+              <option value="Sun 16/08: 12:00 PM – 01:00 PM">Sun 16/08 (12:00 PM – 01:00 PM)</option>
+              <option value="Sun 16/08: 06:00 PM – 07:00 PM">Sun 16/08 (06:00 PM – 07:00 PM)</option>
+              <option value="Sun 16/08: 07:00 PM – 08:00 PM">Sun 16/08 (07:00 PM – 08:00 PM)</option>
+              <option value="none">Unassigned / No Slot</option>
+            </select>
+          </div>
+
+          <div>
             <label class="block text-[10px] font-extrabold uppercase text-slate-400 mb-1">Filter by Candidate Status</label>
             <select id="admin-status-filter" onchange="renderAuditionsAdminTable()" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#ebd86e]">
               <option value="all">All Candidate Statuses</option>
@@ -157,13 +171,14 @@
 
         <!-- Auditions Applicants Data Table -->
         <div class="overflow-x-auto rounded-2xl border border-slate-800">
-          <table class="w-full text-left border-collapse min-w-[800px]">
+          <table class="w-full text-left border-collapse min-w-[900px]">
             <thead>
               <tr class="bg-slate-950 text-slate-400 text-[10px] font-black uppercase tracking-widest border-b border-slate-800">
                 <th class="px-4 py-3.5">Ref ID</th>
                 <th class="px-4 py-3.5">Applicant Name & Contact</th>
                 <th class="px-4 py-3.5">Dept & Year</th>
                 <th class="px-4 py-3.5">Domain Preference</th>
+                <th class="px-4 py-3.5">Audition Timing Slot</th>
                 <th class="px-4 py-3.5">Status Decision</th>
                 <th class="px-4 py-3.5 text-right">Actions</th>
               </tr>
@@ -420,23 +435,27 @@
 
       const searchVal = (document.getElementById('admin-search-input')?.value || '').toLowerCase();
       const domainVal = document.getElementById('admin-domain-filter')?.value || 'all';
+      const slotVal = document.getElementById('admin-slot-filter')?.value || 'all';
       const statusVal = document.getElementById('admin-status-filter')?.value || 'all';
 
       const filtered = applications.filter(app => {
-        const matchesSearch = app.name.toLowerCase().includes(searchVal) ||
-                              app.regNo.toLowerCase().includes(searchVal) ||
-                              app.dept.toLowerCase().includes(searchVal) ||
-                              app.refId.toLowerCase().includes(searchVal);
+        const matchesSearch = (app.name || '').toLowerCase().includes(searchVal) ||
+                              (app.regNo || '').toLowerCase().includes(searchVal) ||
+                              (app.dept || '').toLowerCase().includes(searchVal) ||
+                              (app.refId || '').toLowerCase().includes(searchVal);
         const matchesDomain = (domainVal === 'all') || (app.primaryDomainTitle === domainVal);
+        const matchesSlot = (slotVal === 'all') ||
+                            (slotVal === 'none' && (!app.slot || app.slot === 'No Slot Selected' || app.slot === 'No Slot')) ||
+                            (app.slot === slotVal);
         const matchesStatus = (statusVal === 'all') || (app.status === statusVal);
 
-        return matchesSearch && matchesDomain && matchesStatus;
+        return matchesSearch && matchesDomain && matchesSlot && matchesStatus;
       });
 
       if (filtered.length === 0) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="6" class="px-6 py-8 text-center text-slate-500 italic">
+            <td colspan="7" class="px-6 py-8 text-center text-slate-500 italic">
               No audition applications match the selected criteria.
             </td>
           </tr>
@@ -450,6 +469,8 @@
         if (app.status === 'Audition Scheduled') statusBadge = 'bg-purple-500/10 text-purple-400 border-purple-500/30';
         if (app.status === 'Selected') statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
         if (app.status === 'Rejected') statusBadge = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
+
+        const currentSlot = app.slot || 'No Slot Selected';
 
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-800/50 transition-colors";
@@ -466,7 +487,17 @@
           <td class="px-4 py-3.5">
             <span class="px-2 py-0.5 bg-[#4a040d] text-[#ebd86e] font-bold text-[10px] rounded uppercase border border-[#ebd86e]/30">${app.primaryDomainTitle}</span>
             <div class="text-[10px] text-slate-400 mt-0.5">Sec: ${app.secondaryDomain || 'None'}</div>
-            <div class="text-[10px] font-semibold text-amber-300 mt-1 flex items-center gap-1">🗓️ ${app.slot || 'No Slot'}</div>
+          </td>
+          <td class="px-4 py-3.5">
+            <select onchange="updateApplicantSlot('${app.refId}', this.value)" class="px-2 py-1 bg-slate-950 border border-amber-500/30 text-amber-300 text-[11px] font-bold rounded-lg focus:outline-none focus:border-amber-400 max-w-[210px] truncate">
+              <option value="No Slot Selected" ${(!app.slot || app.slot === 'No Slot Selected' || app.slot === 'No Slot') ? 'selected' : ''}>⚠️ Unassigned / No Slot</option>
+              <option value="Sat 15/08: 06:00 PM – 07:00 PM" ${app.slot === 'Sat 15/08: 06:00 PM – 07:00 PM' ? 'selected' : ''}>🗓️ Sat 15/08: 06:00 PM – 07:00 PM</option>
+              <option value="Sat 15/08: 07:00 PM – 08:00 PM" ${app.slot === 'Sat 15/08: 07:00 PM – 08:00 PM' ? 'selected' : ''}>🗓️ Sat 15/08: 07:00 PM – 08:00 PM</option>
+              <option value="Sun 16/08: 11:00 AM – 12:00 PM" ${app.slot === 'Sun 16/08: 11:00 AM – 12:00 PM' ? 'selected' : ''}>🗓️ Sun 16/08: 11:00 AM – 12:00 PM</option>
+              <option value="Sun 16/08: 12:00 PM – 01:00 PM" ${app.slot === 'Sun 16/08: 12:00 PM – 01:00 PM' ? 'selected' : ''}>🗓️ Sun 16/08: 12:00 PM – 01:00 PM</option>
+              <option value="Sun 16/08: 06:00 PM – 07:00 PM" ${app.slot === 'Sun 16/08: 06:00 PM – 07:00 PM' ? 'selected' : ''}>🗓️ Sun 16/08: 06:00 PM – 07:00 PM</option>
+              <option value="Sun 16/08: 07:00 PM – 08:00 PM" ${app.slot === 'Sun 16/08: 07:00 PM – 08:00 PM' ? 'selected' : ''}>🗓️ Sun 16/08: 07:00 PM – 08:00 PM</option>
+            </select>
           </td>
           <td class="px-4 py-3.5">
             <select onchange="updateApplicantStatus('${app.refId}', this.value)" class="px-2 py-1 bg-slate-950 border text-[11px] font-bold rounded-lg ${statusBadge}">
@@ -486,6 +517,17 @@
         tableBody.appendChild(row);
       });
       updateCounts();
+    }
+
+    function updateApplicantSlot(refId, newSlot) {
+      const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+      const target = applications.find(a => a.refId === refId);
+      if (target) {
+        target.slot = newSlot;
+        localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
+        renderAuditionsAdminTable();
+        if (typeof window.pushCloudData === 'function') window.pushCloudData();
+      }
     }
 
     function updateApplicantStatus(refId, newStatus) {

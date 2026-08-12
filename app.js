@@ -1250,13 +1250,25 @@ function renderAuditionsAdminTable() {
   });
 }
 
+window.updateApplicantSlot = function(refId, newSlot) {
+  const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+  const target = applications.find(a => a.refId === refId);
+  if (target) {
+    target.slot = newSlot;
+    localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
+    if (typeof renderAuditionsAdminTable === 'function') renderAuditionsAdminTable();
+    if (typeof window.pushCloudData === 'function') window.pushCloudData();
+  }
+};
+
 window.updateApplicantStatus = function(refId, newStatus) {
   const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
   const target = applications.find(a => a.refId === refId);
   if (target) {
     target.status = newStatus;
     localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
-    renderAuditionsAdminTable();
+    if (typeof renderAuditionsAdminTable === 'function') renderAuditionsAdminTable();
+    if (typeof window.pushCloudData === 'function') window.pushCloudData();
   }
 };
 
