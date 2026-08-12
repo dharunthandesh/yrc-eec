@@ -748,6 +748,14 @@ const DOMAIN_DATA = {
       { id: "aud_q_tech_stack", label: "What tech stack / web frameworks do you work with?", type: "text", placeholder: "e.g. HTML5, CSS3, Tailwind CSS, JavaScript, React, Python, Git..." },
       { id: "aud_q_github", label: "GitHub Profile URL or Web Project Link (Optional):", type: "text", placeholder: "e.g. https://github.com/username or project site URL..." }
     ]
+  },
+  team_management: {
+    title: "Team Management",
+    icon: "👥",
+    questions: [
+      { id: "aud_q_team_lead", label: "Describe any past team leadership or event coordination experience you have:", type: "text", placeholder: "e.g. Led a team of 10 volunteers, organized department event schedules..." },
+      { id: "aud_q_conflict_mgmt", label: "How do you handle team miscommunication or task delays?", type: "text", placeholder: "e.g. Conduct regular check-ins, reassign urgent tasks, encourage active feedback..." }
+    ]
   }
 };
 

@@ -139,7 +139,7 @@
       <!-- Quick Metrics Grid -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl w-full mt-14 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-6 reveal active">
         <div class="p-2 border-r border-white/10 last:border-0">
-          <div class="text-2xl sm:text-3xl font-black text-[#ebd86e]">6</div>
+          <div class="text-2xl sm:text-3xl font-black text-[#ebd86e]">7</div>
           <div class="text-[10px] uppercase font-bold text-slate-300 tracking-wider">Domain Wings</div>
         </div>
         <div class="p-2 border-r border-white/10 last:border-0">
@@ -349,6 +349,35 @@
           </button>
         </div>
 
+        <!-- Domain 7: Team Management -->
+        <div class="bg-slate-50 border border-slate-200 rounded-3xl p-7 hover:shadow-xl hover:border-[#6a0815]/40 transition-all duration-300 flex flex-col justify-between group reveal">
+          <div>
+            <div class="w-14 h-14 rounded-2xl bg-[#4a040d] text-[#ebd86e] flex items-center justify-center text-2xl font-black mb-6 shadow-md group-hover:scale-110 transition-transform">
+              👥
+            </div>
+            <span class="px-2.5 py-1 bg-[#4a040d]/10 text-[#6a0815] text-[10px] font-black uppercase tracking-wider rounded-md">Executive & Leadership</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-2.5 mb-2">Team Management</h3>
+            <p class="text-slate-600 text-xs leading-relaxed mb-4">
+              Oversee team coordination, member engagement, task delegation, performance tracking, and cross-wing workflow supervision.
+            </p>
+            <div class="space-y-1.5 border-t border-slate-200/60 pt-4 mb-6">
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Executive Task Delegation
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Member Engagement & Attendance
+              </div>
+              <div class="text-[11px] font-bold text-slate-700 flex items-center gap-2">
+                <span class="text-emerald-600">✓</span> Cross-Wing Workflow Supervision
+              </div>
+            </div>
+          </div>
+          <button onclick="selectDomainInForm('team_management')" class="w-full py-3 bg-white hover:bg-[#4a040d] hover:text-[#ebd86e] border border-slate-200 text-slate-800 text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+            <span>Apply for Team Mgmt</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
       </div>
     </div>
   </section>
@@ -550,6 +579,18 @@
                   </div>
                 </label>
 
+                <label class="domain-radio-card relative cursor-pointer border-2 border-slate-200 rounded-2xl p-4 transition-all hover:border-[#6a0815] flex flex-col justify-between">
+                  <input type="radio" name="primary_domain" value="team_management" required onchange="onPrimaryDomainChange(this.value)" class="sr-only">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-2xl">👥</span>
+                    <span class="domain-check-badge w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center text-[10px] font-bold text-transparent transition-all">✓</span>
+                  </div>
+                  <div>
+                    <div class="font-extrabold text-xs text-slate-900">Team Management</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">Leadership & HR</div>
+                  </div>
+                </label>
+
               </div>
             </div>
 
@@ -563,6 +604,7 @@
                 <option value="Operations & Logistics">Operations & Logistics</option>
                 <option value="Anchoring & PR">Anchoring & PR</option>
                 <option value="Technical & Web Dev">Technical & Web Dev</option>
+                <option value="Team Management">Team Management</option>
               </select>
             </div>
 
