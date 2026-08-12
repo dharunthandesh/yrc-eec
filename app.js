@@ -107,7 +107,15 @@ window.syncCloudData = async function(showNotice = false) {
         [...localAuditions, ...cloudAuditions].forEach(item => {
           if (item && item.email) {
             const key = item.email.toLowerCase().trim();
-            mergedMap.set(key, item);
+            const existing = mergedMap.get(key);
+            const resolvedSlot = item.slot || item.auditionSlot || item.timing || item.timeSlot || existing?.slot || existing?.auditionSlot || existing?.timing || existing?.timeSlot || '';
+            const resolvedStatus = item.status || existing?.status || 'Under Review';
+            mergedMap.set(key, {
+              ...existing,
+              ...item,
+              slot: resolvedSlot,
+              status: resolvedStatus
+            });
           }
         });
         const mergedList = Array.from(mergedMap.values());
@@ -1182,24 +1190,29 @@ function renderAuditionsAdminTable() {
 
   const searchVal = (document.getElementById('admin-search-input')?.value || '').toLowerCase();
   const domainVal = document.getElementById('admin-domain-filter')?.value || 'all';
+  const slotVal = document.getElementById('admin-slot-filter')?.value || 'all';
   const statusVal = document.getElementById('admin-status-filter')?.value || 'all';
 
   const filtered = applications.filter(app => {
-    const matchesSearch = app.name.toLowerCase().includes(searchVal) ||
-                          app.regNo.toLowerCase().includes(searchVal) ||
-                          app.dept.toLowerCase().includes(searchVal) ||
-                          app.refId.toLowerCase().includes(searchVal) ||
-                          (app.slot && app.slot.toLowerCase().includes(searchVal));
+    const rawSlot = (app.slot || app.auditionSlot || app.timing || app.timeSlot || '').toLowerCase();
+    const matchesSearch = (app.name || '').toLowerCase().includes(searchVal) ||
+                          (app.regNo || '').toLowerCase().includes(searchVal) ||
+                          (app.dept || '').toLowerCase().includes(searchVal) ||
+                          (app.refId || '').toLowerCase().includes(searchVal) ||
+                          rawSlot.includes(searchVal);
     const matchesDomain = (domainVal === 'all') || (app.primaryDomainTitle === domainVal);
+    const matchesSlot = (slotVal === 'all') ||
+                        (slotVal === 'none' && (!rawSlot || rawSlot === 'no slot' || rawSlot === 'no slot selected')) ||
+                        (rawSlot.includes(slotVal.toLowerCase()));
     const matchesStatus = (statusVal === 'all') || (app.status === statusVal);
 
-    return matchesSearch && matchesDomain && matchesStatus;
+    return matchesSearch && matchesDomain && matchesSlot && matchesStatus;
   });
 
   if (filtered.length === 0) {
     tableBody.innerHTML = `
       <tr>
-        <td colspan="6" class="px-6 py-8 text-center text-slate-400 italic">
+        <td colspan="7" class="px-6 py-8 text-center text-slate-500 italic">
           No audition applications match the selected criteria.
         </td>
       </tr>
@@ -1214,22 +1227,47 @@ function renderAuditionsAdminTable() {
     if (app.status === 'Selected') statusClass = 'status-badge-selected';
     if (app.status === 'Rejected') statusClass = 'status-badge-rejected';
 
+    const rawSlot = app.slot || app.auditionSlot || app.timing || app.timeSlot || '';
+    const hasSlot = rawSlot && rawSlot !== 'No Slot' && rawSlot !== 'No Slot Selected';
+
+    const slotBadgeHtml = hasSlot
+      ? `<div class="px-2.5 py-1 bg-amber-500/15 text-amber-300 font-extrabold text-[11px] rounded-lg border border-amber-500/30 flex items-center gap-1.5 shadow-sm">
+           <span>🗓️</span>
+           <span class="truncate max-w-[200px]" title="${rawSlot}">${rawSlot}</span>
+         </div>`
+      : `<div class="px-2 py-0.5 bg-slate-800 text-slate-400 font-semibold text-[10px] rounded border border-slate-700 inline-block">
+           ⚠️ Unassigned / No Slot
+         </div>`;
+
     const row = document.createElement('tr');
-    row.className = "hover:bg-slate-50 border-b border-slate-100 transition-colors";
+    row.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800";
     row.innerHTML = `
-      <td class="px-4 py-3.5 font-extrabold text-[#6a0815] font-mono text-[11px]">${app.refId}</td>
-      <td class="px-4 py-3.5 font-bold text-slate-900">
+      <td class="px-4 py-3.5 font-extrabold text-[#ebd86e] font-mono text-[11px]">${app.refId}</td>
+      <td class="px-4 py-3.5 font-bold text-white">
         <div>${app.name}</div>
         <div class="text-[10px] text-slate-400 font-normal">${app.email} &bull; ${app.phone}</div>
       </td>
-      <td class="px-4 py-3.5 text-slate-600">
-        <div class="font-semibold text-slate-800">${app.dept}</div>
+      <td class="px-4 py-3.5 text-slate-300">
+        <div class="font-semibold text-slate-200">${app.dept}</div>
         <div class="text-[10px] text-slate-400">${app.regNo} (${app.year})</div>
       </td>
       <td class="px-4 py-3.5">
-        <span class="px-2 py-0.5 bg-[#4a040d]/10 text-[#6a0815] font-bold text-[10px] rounded uppercase">${app.primaryDomainTitle}</span>
+        <span class="px-2 py-0.5 bg-[#4a040d] text-[#ebd86e] font-bold text-[10px] rounded uppercase border border-[#ebd86e]/30">${app.primaryDomainTitle}</span>
         <div class="text-[10px] text-slate-400 mt-0.5">Sec: ${app.secondaryDomain || 'None'}</div>
-        <div class="text-[10px] font-bold text-slate-600 mt-1 flex items-center gap-1">🗓️ ${app.slot || 'No Slot'}</div>
+      </td>
+      <td class="px-4 py-3.5">
+        ${slotBadgeHtml}
+        <div class="mt-1">
+          <select onchange="updateApplicantSlot('${app.refId}', this.value)" class="w-full text-[10px] bg-slate-950 text-slate-300 border border-slate-800 rounded px-1.5 py-0.5 focus:outline-none focus:border-amber-400 truncate">
+            <option value="" disabled selected>Reassign / Change Slot...</option>
+            <option value="Saturday (15/08) - Evening 06:00 PM - 07:00 PM" ${rawSlot === 'Saturday (15/08) - Evening 06:00 PM - 07:00 PM' ? 'selected' : ''}>Sat 15/08 (06:00 PM – 07:00 PM)</option>
+            <option value="Saturday (15/08) - Evening 07:00 PM - 08:00 PM" ${rawSlot === 'Saturday (15/08) - Evening 07:00 PM - 08:00 PM' ? 'selected' : ''}>Sat 15/08 (07:00 PM – 08:00 PM)</option>
+            <option value="Sunday (16/08) - Morning 11:00 AM - 12:00 PM" ${rawSlot === 'Sunday (16/08) - Morning 11:00 AM - 12:00 PM' ? 'selected' : ''}>Sun 16/08 (11:00 AM – 12:00 PM)</option>
+            <option value="Sunday (16/08) - Morning 12:00 PM - 01:00 PM" ${rawSlot === 'Sunday (16/08) - Morning 12:00 PM - 01:00 PM' ? 'selected' : ''}>Sun 16/08 (12:00 PM – 01:00 PM)</option>
+            <option value="Sunday (16/08) - Evening 06:00 PM - 07:00 PM" ${rawSlot === 'Sunday (16/08) - Evening 06:00 PM - 07:00 PM' ? 'selected' : ''}>Sun 16/08 (06:00 PM – 07:00 PM)</option>
+            <option value="Sunday (16/08) - Evening 07:00 PM - 08:00 PM" ${rawSlot === 'Sunday (16/08) - Evening 07:00 PM - 08:00 PM' ? 'selected' : ''}>Sun 16/08 (07:00 PM – 08:00 PM)</option>
+          </select>
+        </div>
       </td>
       <td class="px-4 py-3.5">
         <select onchange="updateApplicantStatus('${app.refId}', this.value)" class="px-2 py-1 bg-white border border-slate-200 rounded-lg text-[11px] font-bold ${statusClass}">

@@ -146,12 +146,12 @@
             <label class="block text-[10px] font-extrabold uppercase text-slate-400 mb-1">Filter by Preferred Slot</label>
             <select id="admin-slot-filter" onchange="renderAuditionsAdminTable()" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#ebd86e]">
               <option value="all">All Audition Time Slots</option>
-              <option value="Sat 15/08: 06:00 PM – 07:00 PM">Sat 15/08 (06:00 PM – 07:00 PM)</option>
-              <option value="Sat 15/08: 07:00 PM – 08:00 PM">Sat 15/08 (07:00 PM – 08:00 PM)</option>
-              <option value="Sun 16/08: 11:00 AM – 12:00 PM">Sun 16/08 (11:00 AM – 12:00 PM)</option>
-              <option value="Sun 16/08: 12:00 PM – 01:00 PM">Sun 16/08 (12:00 PM – 01:00 PM)</option>
-              <option value="Sun 16/08: 06:00 PM – 07:00 PM">Sun 16/08 (06:00 PM – 07:00 PM)</option>
-              <option value="Sun 16/08: 07:00 PM – 08:00 PM">Sun 16/08 (07:00 PM – 08:00 PM)</option>
+              <option value="Saturday (15/08) - Evening 06:00 PM - 07:00 PM">Sat 15/08 (06:00 PM – 07:00 PM)</option>
+              <option value="Saturday (15/08) - Evening 07:00 PM - 08:00 PM">Sat 15/08 (07:00 PM – 08:00 PM)</option>
+              <option value="Sunday (16/08) - Morning 11:00 AM - 12:00 PM">Sun 16/08 (11:00 AM – 12:00 PM)</option>
+              <option value="Sunday (16/08) - Morning 12:00 PM - 01:00 PM">Sun 16/08 (12:00 PM – 01:00 PM)</option>
+              <option value="Sunday (16/08) - Evening 06:00 PM - 07:00 PM">Sun 16/08 (06:00 PM – 07:00 PM)</option>
+              <option value="Sunday (16/08) - Evening 07:00 PM - 08:00 PM">Sun 16/08 (07:00 PM – 08:00 PM)</option>
               <option value="none">Unassigned / No Slot</option>
             </select>
           </div>
@@ -439,14 +439,16 @@
       const statusVal = document.getElementById('admin-status-filter')?.value || 'all';
 
       const filtered = applications.filter(app => {
+        const rawSlot = (app.slot || app.auditionSlot || app.timing || app.timeSlot || '').toLowerCase();
         const matchesSearch = (app.name || '').toLowerCase().includes(searchVal) ||
                               (app.regNo || '').toLowerCase().includes(searchVal) ||
                               (app.dept || '').toLowerCase().includes(searchVal) ||
-                              (app.refId || '').toLowerCase().includes(searchVal);
+                              (app.refId || '').toLowerCase().includes(searchVal) ||
+                              rawSlot.includes(searchVal);
         const matchesDomain = (domainVal === 'all') || (app.primaryDomainTitle === domainVal);
         const matchesSlot = (slotVal === 'all') ||
-                            (slotVal === 'none' && (!app.slot || app.slot === 'No Slot Selected' || app.slot === 'No Slot')) ||
-                            (app.slot === slotVal);
+                            (slotVal === 'none' && (!rawSlot || rawSlot === 'no slot' || rawSlot === 'no slot selected')) ||
+                            (rawSlot.includes(slotVal.toLowerCase()));
         const matchesStatus = (statusVal === 'all') || (app.status === statusVal);
 
         return matchesSearch && matchesDomain && matchesSlot && matchesStatus;
@@ -470,7 +472,17 @@
         if (app.status === 'Selected') statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
         if (app.status === 'Rejected') statusBadge = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
 
-        const currentSlot = app.slot || 'No Slot Selected';
+        const rawSlot = app.slot || app.auditionSlot || app.timing || app.timeSlot || '';
+        const hasSlot = rawSlot && rawSlot !== 'No Slot' && rawSlot !== 'No Slot Selected';
+
+        const slotBadgeHtml = hasSlot
+          ? `<div class="px-2.5 py-1 bg-amber-500/15 text-amber-300 font-extrabold text-[11px] rounded-lg border border-amber-500/30 flex items-center gap-1.5 shadow-sm">
+               <span>🗓️</span>
+               <span class="truncate max-w-[200px]" title="${rawSlot}">${rawSlot}</span>
+             </div>`
+          : `<div class="px-2 py-0.5 bg-slate-800 text-slate-400 font-semibold text-[10px] rounded border border-slate-700 inline-block">
+               ⚠️ Unassigned / No Slot
+             </div>`;
 
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-800/50 transition-colors";
@@ -489,15 +501,18 @@
             <div class="text-[10px] text-slate-400 mt-0.5">Sec: ${app.secondaryDomain || 'None'}</div>
           </td>
           <td class="px-4 py-3.5">
-            <select onchange="updateApplicantSlot('${app.refId}', this.value)" class="px-2 py-1 bg-slate-950 border border-amber-500/30 text-amber-300 text-[11px] font-bold rounded-lg focus:outline-none focus:border-amber-400 max-w-[210px] truncate">
-              <option value="No Slot Selected" ${(!app.slot || app.slot === 'No Slot Selected' || app.slot === 'No Slot') ? 'selected' : ''}>⚠️ Unassigned / No Slot</option>
-              <option value="Sat 15/08: 06:00 PM – 07:00 PM" ${app.slot === 'Sat 15/08: 06:00 PM – 07:00 PM' ? 'selected' : ''}>🗓️ Sat 15/08: 06:00 PM – 07:00 PM</option>
-              <option value="Sat 15/08: 07:00 PM – 08:00 PM" ${app.slot === 'Sat 15/08: 07:00 PM – 08:00 PM' ? 'selected' : ''}>🗓️ Sat 15/08: 07:00 PM – 08:00 PM</option>
-              <option value="Sun 16/08: 11:00 AM – 12:00 PM" ${app.slot === 'Sun 16/08: 11:00 AM – 12:00 PM' ? 'selected' : ''}>🗓️ Sun 16/08: 11:00 AM – 12:00 PM</option>
-              <option value="Sun 16/08: 12:00 PM – 01:00 PM" ${app.slot === 'Sun 16/08: 12:00 PM – 01:00 PM' ? 'selected' : ''}>🗓️ Sun 16/08: 12:00 PM – 01:00 PM</option>
-              <option value="Sun 16/08: 06:00 PM – 07:00 PM" ${app.slot === 'Sun 16/08: 06:00 PM – 07:00 PM' ? 'selected' : ''}>🗓️ Sun 16/08: 06:00 PM – 07:00 PM</option>
-              <option value="Sun 16/08: 07:00 PM – 08:00 PM" ${app.slot === 'Sun 16/08: 07:00 PM – 08:00 PM' ? 'selected' : ''}>🗓️ Sun 16/08: 07:00 PM – 08:00 PM</option>
-            </select>
+            ${slotBadgeHtml}
+            <div class="mt-1">
+              <select onchange="updateApplicantSlot('${app.refId}', this.value)" class="w-full text-[10px] bg-slate-950 text-slate-300 border border-slate-800 rounded px-1.5 py-0.5 focus:outline-none focus:border-amber-400 truncate">
+                <option value="" disabled selected>Reassign / Change Slot...</option>
+                <option value="Saturday (15/08) - Evening 06:00 PM - 07:00 PM" ${rawSlot === 'Saturday (15/08) - Evening 06:00 PM - 07:00 PM' ? 'selected' : ''}>Sat 15/08 (06:00 PM – 07:00 PM)</option>
+                <option value="Saturday (15/08) - Evening 07:00 PM - 08:00 PM" ${rawSlot === 'Saturday (15/08) - Evening 07:00 PM - 08:00 PM' ? 'selected' : ''}>Sat 15/08 (07:00 PM – 08:00 PM)</option>
+                <option value="Sunday (16/08) - Morning 11:00 AM - 12:00 PM" ${rawSlot === 'Sunday (16/08) - Morning 11:00 AM - 12:00 PM' ? 'selected' : ''}>Sun 16/08 (11:00 AM – 12:00 PM)</option>
+                <option value="Sunday (16/08) - Morning 12:00 PM - 01:00 PM" ${rawSlot === 'Sunday (16/08) - Morning 12:00 PM - 01:00 PM' ? 'selected' : ''}>Sun 16/08 (12:00 PM – 01:00 PM)</option>
+                <option value="Sunday (16/08) - Evening 06:00 PM - 07:00 PM" ${rawSlot === 'Sunday (16/08) - Evening 06:00 PM - 07:00 PM' ? 'selected' : ''}>Sun 16/08 (06:00 PM – 07:00 PM)</option>
+                <option value="Sunday (16/08) - Evening 07:00 PM - 08:00 PM" ${rawSlot === 'Sunday (16/08) - Evening 07:00 PM - 08:00 PM' ? 'selected' : ''}>Sun 16/08 (07:00 PM – 08:00 PM)</option>
+              </select>
+            </div>
           </td>
           <td class="px-4 py-3.5">
             <select onchange="updateApplicantStatus('${app.refId}', this.value)" class="px-2 py-1 bg-slate-950 border text-[11px] font-bold rounded-lg ${statusBadge}">
