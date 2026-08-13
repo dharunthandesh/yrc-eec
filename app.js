@@ -86,56 +86,72 @@ window.closeCustomAlert = function() {
 };
 
 /* ==========================================================================
-   CLOUD DATABASE REST SYNC FOR VERCEL & MULTI-DEVICE REALTIME DATA STORE
+   CLOUD DATABASE REST SYNC FOR MULTI-DEVICE REALTIME DATA STORE
+   Supports Firebase Realtime Database & Google Sheets Web App
    ========================================================================== */
-const CLOUD_DB_BASE_URL = "https://crudcrud.com/api/7ff8e92a606640b5a5e01792cc2e0eee";
+// Replace with your Firebase Realtime DB URL or Google Apps Script Web App URL
+const CLOUD_DB_BASE_URL = "https://yrc-eec-auditions-2026-default-rtdb.firebaseio.com";
 
 window.syncCloudData = async function(showNotice = false) {
   try {
-    // 1. Sync Audition Applications from Cloud Database
-    const resAud = await fetch(`${CLOUD_DB_BASE_URL}/auditions`, { headers: { 'Accept': 'application/json' } });
-    if (resAud.ok) {
-      const cloudAuditions = await resAud.json();
-      if (Array.isArray(cloudAuditions)) {
-        const localAuditions = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-        const mergedMap = new Map();
-        
-        [...localAuditions, ...cloudAuditions].forEach(item => {
-          if (item && (item.email || item.refId)) {
-            const key = (item.email || item.refId).toLowerCase().trim();
-            const existing = mergedMap.get(key);
-            const resolvedSlot = item.slot || item.auditionSlot || item.timing || item.timeSlot || existing?.slot || existing?.auditionSlot || existing?.timing || existing?.timeSlot || '';
-            const resolvedStatus = item.status || existing?.status || 'Under Review';
-            mergedMap.set(key, {
-              ...existing,
-              ...item,
-              slot: resolvedSlot,
-              status: resolvedStatus
-            });
-          }
-        });
-        const mergedList = Array.from(mergedMap.values());
-        localStorage.setItem('yrc_audition_applications', JSON.stringify(mergedList));
+    let cloudAuditions = [];
+    let cloudVolunteers = [];
+
+    // Attempt 1: Fetch from Firebase Realtime Database / REST Store
+    if (CLOUD_DB_BASE_URL && !CLOUD_DB_BASE_URL.includes('crudcrud')) {
+      const resAud = await fetch(`${CLOUD_DB_BASE_URL}/auditions.json`, { headers: { 'Accept': 'application/json' } });
+      if (resAud.ok) {
+        const jsonRes = await resAud.json();
+        if (jsonRes) {
+          cloudAuditions = Array.isArray(jsonRes) ? jsonRes : Object.values(jsonRes);
+        }
+      }
+
+      const resVol = await fetch(`${CLOUD_DB_BASE_URL}/volunteers.json`, { headers: { 'Accept': 'application/json' } });
+      if (resVol.ok) {
+        const jsonResVol = await resVol.json();
+        if (jsonResVol) {
+          cloudVolunteers = Array.isArray(jsonResVol) ? jsonResVol : Object.values(jsonResVol);
+        }
       }
     }
 
-    // 2. Sync Volunteer Registrations from Cloud Database
-    const resVol = await fetch(`${CLOUD_DB_BASE_URL}/volunteers`, { headers: { 'Accept': 'application/json' } });
-    if (resVol.ok) {
-      const cloudVolunteers = await resVol.json();
-      if (Array.isArray(cloudVolunteers)) {
-        const localVolunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
-        const mergedVolMap = new Map();
-        
-        [...localVolunteers, ...cloudVolunteers].forEach(item => {
-          if (item && (item.email || item.name)) {
-            const key = (item.email || item.name).toLowerCase().trim();
-            mergedVolMap.set(key, item);
-          }
-        });
-        const mergedVolList = Array.from(mergedVolMap.values());
-        localStorage.setItem('yrc_volunteers', JSON.stringify(mergedVolList));
-      }
+    // 1. Sync Auditions
+    if (cloudAuditions.length > 0) {
+      const localAuditions = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+      const mergedMap = new Map();
+      
+      [...localAuditions, ...cloudAuditions].forEach(item => {
+        if (item && (item.email || item.refId)) {
+          const key = (item.email || item.refId).toLowerCase().trim();
+          const existing = mergedMap.get(key);
+          const resolvedSlot = item.slot || item.auditionSlot || item.timing || item.timeSlot || existing?.slot || existing?.auditionSlot || existing?.timing || existing?.timeSlot || '';
+          const resolvedStatus = item.status || existing?.status || 'Under Review';
+          mergedMap.set(key, {
+            ...existing,
+            ...item,
+            slot: resolvedSlot,
+            status: resolvedStatus
+          });
+        }
+      });
+      const mergedList = Array.from(mergedMap.values());
+      localStorage.setItem('yrc_audition_applications', JSON.stringify(mergedList));
+    }
+
+    // 2. Sync Volunteers
+    if (cloudVolunteers.length > 0) {
+      const localVolunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+      const mergedVolMap = new Map();
+      
+      [...localVolunteers, ...cloudVolunteers].forEach(item => {
+        if (item && (item.email || item.name)) {
+          const key = (item.email || item.name).toLowerCase().trim();
+          mergedVolMap.set(key, item);
+        }
+      });
+      const mergedVolList = Array.from(mergedVolMap.values());
+      localStorage.setItem('yrc_volunteers', JSON.stringify(mergedVolList));
     }
 
     if (typeof renderAuditionsAdminTable === 'function') renderAuditionsAdminTable();
@@ -143,35 +159,39 @@ window.syncCloudData = async function(showNotice = false) {
     if (typeof updateCounts === 'function') updateCounts();
 
     if (showNotice && typeof showCustomAlert === 'function') {
-      showCustomAlert('Cloud Sync Complete', 'Successfully fetched and merged live candidate registrations across all mobile devices & browsers!', 'success');
+      showCustomAlert('Cloud Sync Complete', 'Successfully fetched live candidate registrations across all mobile devices!', 'success');
     }
   } catch (err) {
-    console.warn('Cloud DB sync error:', err);
+    console.warn('Cloud DB sync offline / notice:', err);
   }
 };
 
 window.pushCloudData = async function(singleItem = null, type = 'auditions') {
   try {
+    if (!CLOUD_DB_BASE_URL) return;
+
     if (singleItem && singleItem.email) {
-      const endpoint = `${CLOUD_DB_BASE_URL}/${type}`;
+      const endpoint = `${CLOUD_DB_BASE_URL}/${type}.json`;
       await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(singleItem)
       });
     } else {
-      // Sync any un-pushed local entries
-      const localAuditions = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-      const resAud = await fetch(`${CLOUD_DB_BASE_URL}/auditions`);
-      if (resAud.ok) {
-        const cloudList = await resAud.json();
+      // Sync un-pushed local entries
+      const localItems = JSON.parse(localStorage.getItem(type === 'auditions' ? 'yrc_audition_applications' : 'yrc_volunteers') || '[]');
+      const res = await fetch(`${CLOUD_DB_BASE_URL}/${type}.json`);
+      if (res.ok) {
+        const cloudData = await res.json();
+        const cloudList = cloudData ? (Array.isArray(cloudData) ? cloudData : Object.values(cloudData)) : [];
         const existingEmails = new Set(cloudList.map(c => c.email?.toLowerCase().trim()));
-        for (const app of localAuditions) {
-          if (app.email && !existingEmails.has(app.email.toLowerCase().trim())) {
-            await fetch(`${CLOUD_DB_BASE_URL}/auditions`, {
+        
+        for (const item of localItems) {
+          if (item.email && !existingEmails.has(item.email.toLowerCase().trim())) {
+            await fetch(`${CLOUD_DB_BASE_URL}/${type}.json`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-              body: JSON.stringify(app)
+              body: JSON.stringify(item)
             });
           }
         }
