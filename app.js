@@ -89,8 +89,8 @@ window.closeCustomAlert = function() {
    CLOUD DATABASE REST SYNC FOR MULTI-DEVICE REALTIME DATA STORE
    Supports Firebase Realtime Database & Google Sheets Web App
    ========================================================================== */
-// Replace with your Firebase Realtime DB URL or Google Apps Script Web App URL
-const CLOUD_DB_BASE_URL = "https://yrc-eec-auditions-2026-default-rtdb.firebaseio.com";
+// Active Firebase Realtime DB URL
+const CLOUD_DB_BASE_URL = "https://yrc-eec-180dd-default-rtdb.asia-southeast1.firebasedatabase.app";
 
 window.syncCloudData = async function(showNotice = false) {
   try {
