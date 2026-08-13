@@ -700,6 +700,7 @@
         volunteers.splice(index, 1);
         localStorage.setItem('yrc_volunteers', JSON.stringify(volunteers));
         renderVolunteersAdminTable();
+        if (typeof window.pushCloudData === 'function') window.pushCloudData();
       }
     }
 
