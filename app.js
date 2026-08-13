@@ -88,155 +88,97 @@ window.closeCustomAlert = function() {
 /* ==========================================================================
    CLOUD DATABASE REST SYNC FOR VERCEL & MULTI-DEVICE REALTIME DATA STORE
    ========================================================================== */
-const CLOUD_DB_ENDPOINTS = [
-  "https://api.restful-api.dev/objects/ff8081819ff5b110019ff95b54b90834",
-  "https://api.restful-api.dev/objects/ff8081819ff5b110019ff95b749c0836"
-];
+const CLOUD_DB_BASE_URL = "https://crudcrud.com/api/7ff8e92a606640b5a5e01792cc2e0eee";
 
 window.syncCloudData = async function(showNotice = false) {
-  let cloudData = null;
-
-  for (const endpoint of CLOUD_DB_ENDPOINTS) {
-    try {
-      const res = await fetch(endpoint, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-      if (res.ok) {
-        const jsonRes = await res.json();
-        if (jsonRes && jsonRes.data) {
-          cloudData = jsonRes.data;
-          break;
-        }
+  try {
+    // 1. Sync Audition Applications from Cloud Database
+    const resAud = await fetch(`${CLOUD_DB_BASE_URL}/auditions`, { headers: { 'Accept': 'application/json' } });
+    if (resAud.ok) {
+      const cloudAuditions = await resAud.json();
+      if (Array.isArray(cloudAuditions)) {
+        const localAuditions = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+        const mergedMap = new Map();
+        
+        [...localAuditions, ...cloudAuditions].forEach(item => {
+          if (item && (item.email || item.refId)) {
+            const key = (item.email || item.refId).toLowerCase().trim();
+            const existing = mergedMap.get(key);
+            const resolvedSlot = item.slot || item.auditionSlot || item.timing || item.timeSlot || existing?.slot || existing?.auditionSlot || existing?.timing || existing?.timeSlot || '';
+            const resolvedStatus = item.status || existing?.status || 'Under Review';
+            mergedMap.set(key, {
+              ...existing,
+              ...item,
+              slot: resolvedSlot,
+              status: resolvedStatus
+            });
+          }
+        });
+        const mergedList = Array.from(mergedMap.values());
+        localStorage.setItem('yrc_audition_applications', JSON.stringify(mergedList));
       }
-    } catch (err) {
-      console.warn('Cloud DB endpoint fetch error:', endpoint, err);
-    }
-  }
-
-  if (cloudData) {
-    // 1. Sync Auditions
-    if (Array.isArray(cloudData.auditions)) {
-      const cloudAuditions = cloudData.auditions;
-      const localAuditions = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-      
-      const mergedMap = new Map();
-      [...localAuditions, ...cloudAuditions].forEach(item => {
-        if (item && (item.email || item.refId)) {
-          const key = (item.email || item.refId).toLowerCase().trim();
-          const existing = mergedMap.get(key);
-          const resolvedSlot = item.slot || item.auditionSlot || item.timing || item.timeSlot || existing?.slot || existing?.auditionSlot || existing?.timing || existing?.timeSlot || '';
-          const resolvedStatus = item.status || existing?.status || 'Under Review';
-          mergedMap.set(key, {
-            ...existing,
-            ...item,
-            slot: resolvedSlot,
-            status: resolvedStatus
-          });
-        }
-      });
-      const mergedList = Array.from(mergedMap.values());
-      localStorage.setItem('yrc_audition_applications', JSON.stringify(mergedList));
     }
 
-    // 2. Sync Volunteers
-    if (Array.isArray(cloudData.volunteers)) {
-      const cloudVolunteers = cloudData.volunteers;
-      const localVolunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
-      
-      const mergedVolMap = new Map();
-      [...localVolunteers, ...cloudVolunteers].forEach(item => {
-        if (item && (item.email || item.name)) {
-          const key = (item.email || item.name).toLowerCase().trim();
-          mergedVolMap.set(key, item);
-        }
-      });
-      const mergedVolList = Array.from(mergedVolMap.values());
-      localStorage.setItem('yrc_volunteers', JSON.stringify(mergedVolList));
+    // 2. Sync Volunteer Registrations from Cloud Database
+    const resVol = await fetch(`${CLOUD_DB_BASE_URL}/volunteers`, { headers: { 'Accept': 'application/json' } });
+    if (resVol.ok) {
+      const cloudVolunteers = await resVol.json();
+      if (Array.isArray(cloudVolunteers)) {
+        const localVolunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+        const mergedVolMap = new Map();
+        
+        [...localVolunteers, ...cloudVolunteers].forEach(item => {
+          if (item && (item.email || item.name)) {
+            const key = (item.email || item.name).toLowerCase().trim();
+            mergedVolMap.set(key, item);
+          }
+        });
+        const mergedVolList = Array.from(mergedVolMap.values());
+        localStorage.setItem('yrc_volunteers', JSON.stringify(mergedVolList));
+      }
     }
-  }
 
-  if (typeof renderAuditionsAdminTable === 'function') renderAuditionsAdminTable();
-  if (typeof renderVolunteersAdminTable === 'function') renderVolunteersAdminTable();
-  if (typeof updateCounts === 'function') updateCounts();
+    if (typeof renderAuditionsAdminTable === 'function') renderAuditionsAdminTable();
+    if (typeof renderVolunteersAdminTable === 'function') renderVolunteersAdminTable();
+    if (typeof updateCounts === 'function') updateCounts();
 
-  if (showNotice && typeof showCustomAlert === 'function') {
-    showCustomAlert('Cloud Sync Complete', 'Successfully fetched and merged live candidate registrations across all mobile devices & browsers!', 'success');
+    if (showNotice && typeof showCustomAlert === 'function') {
+      showCustomAlert('Cloud Sync Complete', 'Successfully fetched and merged live candidate registrations across all mobile devices & browsers!', 'success');
+    }
+  } catch (err) {
+    console.warn('Cloud DB sync error:', err);
   }
 };
 
-window.pushCloudData = async function() {
-  const localAuditions = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-  const localVolunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
-
-  // Fetch existing cloud data first to preserve any concurrent registrations from other devices
-  let cloudAuditions = [];
-  let cloudVolunteers = [];
-
-  for (const endpoint of CLOUD_DB_ENDPOINTS) {
-    try {
-      const res = await fetch(endpoint, { headers: { 'Accept': 'application/json' } });
-      if (res.ok) {
-        const jsonRes = await res.json();
-        if (jsonRes && jsonRes.data) {
-          if (Array.isArray(jsonRes.data.auditions)) cloudAuditions = jsonRes.data.auditions;
-          if (Array.isArray(jsonRes.data.volunteers)) cloudVolunteers = jsonRes.data.volunteers;
-          break;
+window.pushCloudData = async function(singleItem = null, type = 'auditions') {
+  try {
+    if (singleItem && singleItem.email) {
+      const endpoint = `${CLOUD_DB_BASE_URL}/${type}`;
+      await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(singleItem)
+      });
+    } else {
+      // Sync any un-pushed local entries
+      const localAuditions = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+      const resAud = await fetch(`${CLOUD_DB_BASE_URL}/auditions`);
+      if (resAud.ok) {
+        const cloudList = await resAud.json();
+        const existingEmails = new Set(cloudList.map(c => c.email?.toLowerCase().trim()));
+        for (const app of localAuditions) {
+          if (app.email && !existingEmails.has(app.email.toLowerCase().trim())) {
+            await fetch(`${CLOUD_DB_BASE_URL}/auditions`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify(app)
+            });
+          }
         }
       }
-    } catch (e) {
-      console.warn('Push fetch error:', e);
     }
-  }
-
-  // Merge local and cloud auditions
-  const mergedAudMap = new Map();
-  [...cloudAuditions, ...localAuditions].forEach(item => {
-    if (item && (item.email || item.refId)) {
-      const key = (item.email || item.refId).toLowerCase().trim();
-      const existing = mergedAudMap.get(key);
-      mergedAudMap.set(key, { ...existing, ...item });
-    }
-  });
-  const finalAuditions = Array.from(mergedAudMap.values());
-
-  // Merge local and cloud volunteers
-  const mergedVolMap = new Map();
-  [...cloudVolunteers, ...localVolunteers].forEach(item => {
-    if (item && (item.email || item.name)) {
-      const key = (item.email || item.name).toLowerCase().trim();
-      const existing = mergedVolMap.get(key);
-      mergedVolMap.set(key, { ...existing, ...item });
-    }
-  });
-  const finalVolunteers = Array.from(mergedVolMap.values());
-
-  // Update LocalStorage with merged data
-  localStorage.setItem('yrc_audition_applications', JSON.stringify(finalAuditions));
-  localStorage.setItem('yrc_volunteers', JSON.stringify(finalVolunteers));
-
-  // Push payload to cloud endpoints
-  const payload = {
-    name: "YRC_EEC_AUDITIONS_2026_MASTER",
-    data: {
-      auditions: finalAuditions,
-      volunteers: finalVolunteers
-    }
-  };
-
-  for (const endpoint of CLOUD_DB_ENDPOINTS) {
-    try {
-      await fetch(endpoint, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-    } catch (err) {
-      console.warn('Push cloud data error on endpoint:', endpoint, err);
-    }
+  } catch (err) {
+    console.warn('Push cloud data error:', err);
   }
 };
 
@@ -575,7 +517,7 @@ function initVolunteerPortal() {
 
       // Push to Cloud DB REST Endpoint for multi-device live sync
       if (typeof window.pushCloudData === 'function') {
-        window.pushCloudData();
+        window.pushCloudData(newRegistration, 'volunteers');
       }
 
       // Reset form
@@ -1018,7 +960,7 @@ function initAuditionPortal() {
 
     // Push to Cloud DB REST Endpoint for instant multi-device sync
     if (typeof window.pushCloudData === 'function') {
-      window.pushCloudData();
+      window.pushCloudData(newApplication, 'auditions');
     }
 
     // Populate Modal Ticket
