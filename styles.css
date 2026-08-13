@@ -468,21 +468,56 @@ img, video, iframe, canvas, svg {
 
 /* Print Ticket Media Query */
 @media print {
-  body * {
-    visibility: hidden;
+  @page {
+    size: auto;
+    margin: 5mm;
   }
-  #audition-modal, #audition-modal * {
-    visibility: visible;
+
+  html, body {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    position: relative !important;
   }
+
+  /* Hide everything inside body on the auditions page except the audition modal */
+  body.auditions-page > *:not(#audition-modal) {
+    display: none !important;
+  }
+
+  /* Reset modal display from fixed overlay to static block */
   #audition-modal {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: auto;
-    background: transparent;
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
   }
-  #audition-modal button {
+
+  /* Style the inner modal container to act as the main printed page */
+  #audition-modal > div {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 10px !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    background: #ffffff !important;
+    border-radius: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Hide the action buttons during printing */
+  #ticket-action-buttons {
     display: none !important;
   }
 }

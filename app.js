@@ -94,64 +94,54 @@ const CLOUD_DB_BASE_URL = "https://yrc-eec-180dd-default-rtdb.asia-southeast1.fi
 
 window.syncCloudData = async function(showNotice = false) {
   try {
-    let cloudAuditions = [];
-    let cloudVolunteers = [];
+    let cloudAuditions = null;
+    let cloudVolunteers = null;
 
-    // Attempt 1: Fetch from Firebase Realtime Database / REST Store
     if (CLOUD_DB_BASE_URL && !CLOUD_DB_BASE_URL.includes('crudcrud')) {
-      const resAud = await fetch(`${CLOUD_DB_BASE_URL}/auditions.json`, { headers: { 'Accept': 'application/json' } });
-      if (resAud.ok) {
-        const jsonRes = await resAud.json();
-        if (jsonRes) {
-          cloudAuditions = Array.isArray(jsonRes) ? jsonRes : Object.values(jsonRes);
+      // 1. Fetch Auditions
+      try {
+        const resAud = await fetch(`${CLOUD_DB_BASE_URL}/auditions.json`, { headers: { 'Accept': 'application/json' } });
+        if (resAud.ok) {
+          const jsonRes = await resAud.json();
+          if (jsonRes) {
+            cloudAuditions = (Array.isArray(jsonRes) ? jsonRes : Object.values(jsonRes)).filter(item => item !== null && item !== undefined);
+          } else {
+            cloudAuditions = [];
+          }
         }
+      } catch (err) {
+        console.warn('Failed to fetch auditions from cloud:', err);
       }
 
-      const resVol = await fetch(`${CLOUD_DB_BASE_URL}/volunteers.json`, { headers: { 'Accept': 'application/json' } });
-      if (resVol.ok) {
-        const jsonResVol = await resVol.json();
-        if (jsonResVol) {
-          cloudVolunteers = Array.isArray(jsonResVol) ? jsonResVol : Object.values(jsonResVol);
+      // 2. Fetch Volunteers
+      try {
+        const resVol = await fetch(`${CLOUD_DB_BASE_URL}/volunteers.json`, { headers: { 'Accept': 'application/json' } });
+        if (resVol.ok) {
+          const jsonResVol = await resVol.json();
+          if (jsonResVol) {
+            cloudVolunteers = (Array.isArray(jsonResVol) ? jsonResVol : Object.values(jsonResVol)).filter(item => item !== null && item !== undefined);
+          } else {
+            cloudVolunteers = [];
+          }
         }
+      } catch (err) {
+        console.warn('Failed to fetch volunteers from cloud:', err);
       }
     }
 
-    // 1. Sync Auditions
-    if (cloudAuditions.length > 0) {
-      const localAuditions = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-      const mergedMap = new Map();
-      
-      [...localAuditions, ...cloudAuditions].forEach(item => {
-        if (item && (item.email || item.refId)) {
-          const key = (item.email || item.refId).toLowerCase().trim();
-          const existing = mergedMap.get(key);
-          const resolvedSlot = item.slot || item.auditionSlot || item.timing || item.timeSlot || existing?.slot || existing?.auditionSlot || existing?.timing || existing?.timeSlot || '';
-          const resolvedStatus = item.status || existing?.status || 'Under Review';
-          mergedMap.set(key, {
-            ...existing,
-            ...item,
-            slot: resolvedSlot,
-            status: resolvedStatus
-          });
-        }
+    // Update LocalStorage if we successfully received data from the cloud
+    if (cloudAuditions !== null) {
+      cloudAuditions.sort((a, b) => {
+        const numA = parseInt(a.refId?.split('-').pop() || 0, 10);
+        const numB = parseInt(b.refId?.split('-').pop() || 0, 10);
+        return numB - numA;
       });
-      const mergedList = Array.from(mergedMap.values());
-      localStorage.setItem('yrc_audition_applications', JSON.stringify(mergedList));
+      localStorage.setItem('yrc_audition_applications', JSON.stringify(cloudAuditions));
     }
 
-    // 2. Sync Volunteers
-    if (cloudVolunteers.length > 0) {
-      const localVolunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
-      const mergedVolMap = new Map();
-      
-      [...localVolunteers, ...cloudVolunteers].forEach(item => {
-        if (item && (item.email || item.name)) {
-          const key = (item.email || item.name).toLowerCase().trim();
-          mergedVolMap.set(key, item);
-        }
-      });
-      const mergedVolList = Array.from(mergedVolMap.values());
-      localStorage.setItem('yrc_volunteers', JSON.stringify(mergedVolList));
+    if (cloudVolunteers !== null) {
+      cloudVolunteers.reverse();
+      localStorage.setItem('yrc_volunteers', JSON.stringify(cloudVolunteers));
     }
 
     if (typeof renderAuditionsAdminTable === 'function') renderAuditionsAdminTable();
@@ -170,30 +160,31 @@ window.pushCloudData = async function(singleItem = null, type = 'auditions') {
   try {
     if (!CLOUD_DB_BASE_URL) return;
 
-    if (singleItem && singleItem.email) {
-      const endpoint = `${CLOUD_DB_BASE_URL}/${type}.json`;
-      await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(singleItem)
-      });
+    if (singleItem) {
+      const key = type === 'auditions' 
+        ? singleItem.refId 
+        : (singleItem.email ? singleItem.email.replace(/\./g, '_') : null);
+      if (key) {
+        const endpoint = `${CLOUD_DB_BASE_URL}/${type}/${key}.json`;
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(singleItem)
+        });
+      }
     } else {
-      // Sync un-pushed local entries
+      // Sync all local items to cloud via PUT
       const localItems = JSON.parse(localStorage.getItem(type === 'auditions' ? 'yrc_audition_applications' : 'yrc_volunteers') || '[]');
-      const res = await fetch(`${CLOUD_DB_BASE_URL}/${type}.json`);
-      if (res.ok) {
-        const cloudData = await res.json();
-        const cloudList = cloudData ? (Array.isArray(cloudData) ? cloudData : Object.values(cloudData)) : [];
-        const existingEmails = new Set(cloudList.map(c => c.email?.toLowerCase().trim()));
-        
-        for (const item of localItems) {
-          if (item.email && !existingEmails.has(item.email.toLowerCase().trim())) {
-            await fetch(`${CLOUD_DB_BASE_URL}/${type}.json`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-              body: JSON.stringify(item)
-            });
-          }
+      for (const item of localItems) {
+        const key = type === 'auditions' 
+          ? item.refId 
+          : (item.email ? item.email.replace(/\./g, '_') : null);
+        if (key) {
+          await fetch(`${CLOUD_DB_BASE_URL}/${type}/${key}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(item)
+          });
         }
       }
     }
@@ -475,35 +466,10 @@ function initVolunteerPortal() {
   const adminCloseBtn = document.getElementById('close-admin-panel');
 
   // Prepopulate mockup data if storage is empty
-  const defaultSubmissions = [
-    {
-      name: "Rohith S",
-      email: "rohith.s@eec.srmrmp.edu.in",
-      phone: "9840123456",
-      dept: "Computer Science & Engineering",
-      year: "III Year",
-      skills: "Event Coordination, Technical support"
-    },
-    {
-      name: "Abinaya K",
-      email: "abinaya.k@eec.srmrmp.edu.in",
-      phone: "8754213980",
-      dept: "Information Technology",
-      year: "III Year",
-      skills: "Design & Social Media, Documentation"
-    },
-    {
-      name: "Gokul V",
-      email: "gokul.v@eec.srmrmp.edu.in",
-      phone: "7639554012",
-      dept: "Electronics & Communication",
-      year: "IV Year",
-      skills: "Photography, Team Management"
-    }
-  ];
+  const defaultSubmissions = [];
 
   if (!localStorage.getItem('yrc_volunteers')) {
-    localStorage.setItem('yrc_volunteers', JSON.stringify(defaultSubmissions));
+    localStorage.setItem('yrc_volunteers', JSON.stringify([]));
   }
 
   // Handle Form Submission
@@ -638,8 +604,8 @@ function initVolunteerPortal() {
   // Clear Database Button
   if (clearDbBtn) {
     clearDbBtn.addEventListener('click', () => {
-      if (confirm("Are you sure you want to clear the volunteer registration list? This will reset to default data.")) {
-        localStorage.setItem('yrc_volunteers', JSON.stringify(defaultSubmissions));
+      if (confirm("Are you sure you want to clear all volunteer registration records?")) {
+        localStorage.setItem('yrc_volunteers', JSON.stringify([]));
         renderAdminTable();
       }
     });
@@ -817,74 +783,10 @@ function initAuditionPortal() {
   if (!wizardForm) return;
 
   // Pre-populate Mock Audition Data if empty
-  const defaultAuditions = [
-    {
-      refId: "YRC-AUD-2026-1497",
-      name: "Sanjay Raghavan",
-      regNo: "310623104112",
-      dept: "Computer Science & Engineering",
-      year: "II Year",
-      email: "sanjay.r@eec.srmrmp.edu.in",
-      phone: "9840192837",
-      primaryDomainKey: "media",
-      primaryDomainTitle: "Media & Photography",
-      secondaryDomain: "Visual & Graphic Design",
-      expLevel: "Intermediate",
-      pastExp: "Shot photos for school fest and edit reels on CapCut / Lightroom.",
-      domainQ1: "Sony A6400 with 35mm lens & iPhone 14",
-      domainQ2: "Lightroom Classic, Premiere Pro, CapCut",
-      portfolio: "https://drive.google.com/drive/folders/sample-photos",
-      motivation: "Passionate about capturing human emotions during blood camps and creating viral reels for YRC.",
-      slot: "Day 1 - Aug 5, 2026 (04:00 PM - 05:30 PM)",
-      status: "Shortlisted",
-      appliedAt: "2026-08-01 10:30 AM"
-    },
-    {
-      refId: "YRC-AUD-2026-1498",
-      name: "Harini Sundaram",
-      regNo: "310622205044",
-      dept: "Information Technology",
-      year: "III Year",
-      email: "harini.s@eec.srmrmp.edu.in",
-      phone: "8754129034",
-      primaryDomainKey: "anchoring",
-      primaryDomainTitle: "Public Relations & Anchoring",
-      secondaryDomain: "Content & Editorial",
-      expLevel: "Advanced / Experienced",
-      pastExp: "Anchored IT Department Symposium and inter-college cultural events.",
-      domainQ1: "Anchored 5+ major college symposium inaugurations in main auditorium.",
-      domainQ2: "English, Tamil, Hindi",
-      portfolio: "https://instagram.com/harini_anchors",
-      motivation: "I love connecting with audiences and bringing energy to humanitarian cause events.",
-      slot: "Day 2 - Aug 6, 2026 (12:30 PM - 02:00 PM)",
-      status: "Audition Scheduled",
-      appliedAt: "2026-08-01 02:15 PM"
-    },
-    {
-      refId: "YRC-AUD-2026-1499",
-      name: "Karthik Raja M",
-      regNo: "310624106021",
-      dept: "Artificial Intelligence & Data Science",
-      year: "I Year",
-      email: "karthik.m@eec.srmrmp.edu.in",
-      phone: "7639014522",
-      primaryDomainKey: "technical",
-      primaryDomainTitle: "Technical & Web Development",
-      secondaryDomain: "Operations & Logistics",
-      expLevel: "Intermediate",
-      pastExp: "Built personal portfolio and club websites using HTML, CSS, JavaScript, and Tailwind.",
-      domainQ1: "HTML5, CSS3, Tailwind, JS, Python, Git",
-      domainQ2: "https://github.com/karthikraja-dev",
-      portfolio: "https://github.com/karthikraja-dev",
-      motivation: "Want to contribute technically to YRC web portals, automated certificates, and QR entry forms.",
-      slot: "Day 2 - Aug 6, 2026 (04:00 PM - 05:30 PM)",
-      status: "Under Review",
-      appliedAt: "2026-08-01 04:45 PM"
-    }
-  ];
+  const defaultAuditions = [];
 
   if (!localStorage.getItem('yrc_audition_applications')) {
-    localStorage.setItem('yrc_audition_applications', JSON.stringify(defaultAuditions));
+    localStorage.setItem('yrc_audition_applications', JSON.stringify([]));
   }
 
   // Handle Form Submission
@@ -1061,8 +963,8 @@ function initAuditionPortal() {
 
   if (resetDbBtn) {
     resetDbBtn.addEventListener('click', () => {
-      if (confirm('Reset audition application database to default demo entries?')) {
-        localStorage.setItem('yrc_audition_applications', JSON.stringify(defaultAuditions));
+      if (confirm('Are you sure you want to clear all audition application records?')) {
+        localStorage.setItem('yrc_audition_applications', JSON.stringify([]));
         renderAuditionsAdminTable();
       }
     });
@@ -1307,7 +1209,7 @@ window.updateApplicantSlot = function(refId, newSlot) {
     target.slot = newSlot;
     localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
     if (typeof renderAuditionsAdminTable === 'function') renderAuditionsAdminTable();
-    if (typeof window.pushCloudData === 'function') window.pushCloudData();
+    if (typeof window.pushCloudData === 'function') window.pushCloudData(target, 'auditions');
   }
 };
 
@@ -1318,16 +1220,24 @@ window.updateApplicantStatus = function(refId, newStatus) {
     target.status = newStatus;
     localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
     if (typeof renderAuditionsAdminTable === 'function') renderAuditionsAdminTable();
-    if (typeof window.pushCloudData === 'function') window.pushCloudData();
+    if (typeof window.pushCloudData === 'function') window.pushCloudData(target, 'auditions');
   }
 };
 
-window.deleteAuditionApplicant = function(refId) {
+window.deleteAuditionApplicant = async function(refId) {
   if (confirm(`Remove application ${refId}?`)) {
     let applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
     applications = applications.filter(a => a.refId !== refId);
     localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
-    renderAuditionsAdminTable();
+    if (typeof renderAuditionsAdminTable === 'function') renderAuditionsAdminTable();
+    
+    try {
+      if (typeof CLOUD_DB_BASE_URL !== 'undefined' && CLOUD_DB_BASE_URL) {
+        await fetch(`${CLOUD_DB_BASE_URL}/auditions/${refId}.json`, { method: 'DELETE' });
+      }
+    } catch (err) {
+      console.warn('Cloud DB delete error:', err);
+    }
   }
 };
 

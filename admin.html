@@ -115,8 +115,8 @@
             <button onclick="exportAuditionsToCSV()" class="px-4 py-2.5 bg-[#4a040d] hover:bg-[#6a0815] text-[#ebd86e] border border-[#ebd86e]/30 font-extrabold rounded-xl text-xs transition shadow-md">
               <span>Export CSV</span>
             </button>
-            <button onclick="resetAuditionsDb()" class="px-3.5 py-2.5 bg-slate-950 hover:bg-rose-950 text-slate-400 hover:text-rose-300 font-semibold rounded-xl text-xs border border-slate-800 transition">
-              Reset Demo
+            <button onclick="clearAuditionsDb()" class="px-3.5 py-2.5 bg-slate-950 hover:bg-rose-950 text-slate-400 hover:text-rose-300 font-semibold rounded-xl text-xs border border-slate-800 transition">
+              Clear Database
             </button>
           </div>
         </div>
@@ -211,8 +211,8 @@
             <button onclick="exportVolunteersToCSV()" class="px-4 py-2.5 bg-[#4a040d] hover:bg-[#6a0815] text-[#ebd86e] border border-[#ebd86e]/30 font-extrabold rounded-xl text-xs transition shadow-md">
               <span>Export CSV</span>
             </button>
-            <button onclick="resetVolunteersDb()" class="px-3.5 py-2.5 bg-slate-950 hover:bg-rose-950 text-slate-400 hover:text-rose-[#300] font-semibold rounded-xl text-xs border border-slate-800 transition">
-              Reset Data
+            <button onclick="clearVolunteersDb()" class="px-3.5 py-2.5 bg-slate-950 hover:bg-rose-950 text-slate-400 hover:text-rose-300 font-semibold rounded-xl text-xs border border-slate-800 transition">
+              Clear Database
             </button>
           </div>
         </div>
@@ -541,7 +541,7 @@
         target.slot = newSlot;
         localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
         renderAuditionsAdminTable();
-        if (typeof window.pushCloudData === 'function') window.pushCloudData();
+        if (typeof window.pushCloudData === 'function') window.pushCloudData(target, 'auditions');
       }
     }
 
@@ -552,23 +552,37 @@
         target.status = newStatus;
         localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
         renderAuditionsAdminTable();
-        if (typeof window.pushCloudData === 'function') window.pushCloudData();
+        if (typeof window.pushCloudData === 'function') window.pushCloudData(target, 'auditions');
       }
     }
 
-    function deleteAuditionApplicant(refId) {
+    async function deleteAuditionApplicant(refId) {
       if (confirm(`Remove application ${refId}?`)) {
         let applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
         applications = applications.filter(a => a.refId !== refId);
         localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
         renderAuditionsAdminTable();
-        if (typeof window.pushCloudData === 'function') window.pushCloudData();
+        try {
+          if (typeof CLOUD_DB_BASE_URL !== 'undefined' && CLOUD_DB_BASE_URL) {
+            await fetch(`${CLOUD_DB_BASE_URL}/auditions/${refId}.json`, { method: 'DELETE' });
+          }
+        } catch (e) {
+          console.warn('Cloud DB delete error:', e);
+        }
       }
     }
 
-    function resetAuditionsDb() {
-      if (confirm('Reset audition applications DB?')) {
-        localStorage.removeItem('yrc_audition_applications');
+    async function clearAuditionsDb() {
+      if (confirm('Are you sure you want to clear all audition application records? This will delete all entries locally and from the cloud.')) {
+        localStorage.setItem('yrc_audition_applications', JSON.stringify([]));
+        renderAuditionsAdminTable();
+        try {
+          if (typeof CLOUD_DB_BASE_URL !== 'undefined') {
+            await fetch(`${CLOUD_DB_BASE_URL}/auditions.json`, { method: 'DELETE' });
+          }
+        } catch (e) {
+          console.warn('Cloud DB clear error:', e);
+        }
         location.reload();
       }
     }
@@ -694,19 +708,38 @@
       updateCounts();
     }
 
-    function deleteVolunteer(index) {
+    async function deleteVolunteer(index) {
       if (confirm('Remove volunteer registration?')) {
         let volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+        const target = volunteers[index];
         volunteers.splice(index, 1);
         localStorage.setItem('yrc_volunteers', JSON.stringify(volunteers));
         renderVolunteersAdminTable();
-        if (typeof window.pushCloudData === 'function') window.pushCloudData();
+        
+        if (target && target.email) {
+          const key = target.email.replace(/\./g, '_');
+          try {
+            if (typeof CLOUD_DB_BASE_URL !== 'undefined' && CLOUD_DB_BASE_URL) {
+              await fetch(`${CLOUD_DB_BASE_URL}/volunteers/${key}.json`, { method: 'DELETE' });
+            }
+          } catch (e) {
+            console.warn('Cloud DB volunteer delete error:', e);
+          }
+        }
       }
     }
 
-    function resetVolunteersDb() {
-      if (confirm('Reset volunteer database?')) {
-        localStorage.removeItem('yrc_volunteers');
+    async function clearVolunteersDb() {
+      if (confirm('Are you sure you want to clear all volunteer registration records? This will delete all entries locally and from the cloud.')) {
+        localStorage.setItem('yrc_volunteers', JSON.stringify([]));
+        renderVolunteersAdminTable();
+        try {
+          if (typeof CLOUD_DB_BASE_URL !== 'undefined') {
+            await fetch(`${CLOUD_DB_BASE_URL}/volunteers.json`, { method: 'DELETE' });
+          }
+        } catch (e) {
+          console.warn('Cloud DB clear error:', e);
+        }
         location.reload();
       }
     }

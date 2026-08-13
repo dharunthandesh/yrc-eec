@@ -39,7 +39,7 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-slate-50/50 text-slate-900 font-sans selection:bg-red-500 selection:text-white antialiased min-h-screen flex flex-col">
+<body class="auditions-page bg-slate-50/50 text-slate-900 font-sans selection:bg-red-500 selection:text-white antialiased min-h-screen flex flex-col">
 
   <!-- ==========================================
        HEADER & NAVIGATION
@@ -619,7 +619,7 @@
               <label class="block text-xs font-extrabold uppercase text-slate-800 mb-1">
                 Preferred Audition Time Slot *
               </label>
-              <p class="text-xs text-slate-500 mb-4">Select your preferred date and 1-hour interview slot for YRC Auditions:</p>
+              <p class="text-xs text-slate-500 mb-4">Select your preferred date and 1-hour online interview slot for YRC Auditions:</p>
 
               <div class="space-y-4">
                 <!-- Saturday 15/08 Evening -->
@@ -762,7 +762,7 @@
       </span>
 
       <h3 class="text-2xl font-extrabold text-slate-900 mt-2">Audition Reference Ticket</h3>
-      <p class="text-slate-500 text-xs mt-1">Keep this Reference ID handy for your audition interview.</p>
+      <p class="text-slate-500 text-xs mt-1">Keep this Reference ID handy for your online audition interview.</p>
 
       <!-- Ticket Card Container -->
       <div id="ticket-summary-content" class="my-6 p-6 bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl text-left space-y-3 relative">
@@ -791,13 +791,13 @@
         </div>
 
         <div class="border-t border-slate-200 pt-3 text-[11px] text-slate-600 flex items-center gap-2">
-          <span>📍</span>
-          <span><strong>Venue:</strong> EEC Campus &bull; Block 3 MBA Hall (Ground Floor)</span>
+          <span>🌐</span>
+          <span><strong>Venue:</strong> Online Interview &bull; Meeting link will be shared via Email/WhatsApp</span>
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex flex-col sm:flex-row gap-3">
+      <div id="ticket-action-buttons" class="flex flex-col sm:flex-row gap-3">
         <button onclick="window.print()" class="w-full py-3 bg-[#4a040d] text-[#ebd86e] font-extrabold text-xs uppercase tracking-wider rounded-xl hover:bg-[#270206] transition shadow-md">
           Print / Save Ticket PDF
         </button>
