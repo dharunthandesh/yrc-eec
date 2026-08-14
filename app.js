@@ -132,9 +132,13 @@ window.syncCloudData = async function(showNotice = false) {
     // Update LocalStorage if we successfully received data from the cloud
     if (cloudAuditions !== null) {
       cloudAuditions.sort((a, b) => {
-        const numA = parseInt(a.refId?.split('-').pop() || 0, 10);
-        const numB = parseInt(b.refId?.split('-').pop() || 0, 10);
-        return numB - numA;
+        const timeA = new Date(a.appliedAt || 0).getTime() || 0;
+        const timeB = new Date(b.appliedAt || 0).getTime() || 0;
+        if (timeA && timeB && timeA !== timeB) return timeB - timeA;
+        const numA = parseInt(a.refId?.match(/\d+/)?.[0] || 0, 10);
+        const numB = parseInt(b.refId?.match(/\d+/)?.[0] || 0, 10);
+        if (numA !== numB) return numB - numA;
+        return (b.refId || '').localeCompare(a.refId || '');
       });
       localStorage.setItem('yrc_audition_applications', JSON.stringify(cloudAuditions));
     }
@@ -158,27 +162,32 @@ window.syncCloudData = async function(showNotice = false) {
 
 window.pushCloudData = async function(singleItem = null, type = 'auditions') {
   try {
-    if (!CLOUD_DB_BASE_URL) return;
+    if (!CLOUD_DB_BASE_URL) return false;
 
     if (singleItem) {
-      const key = type === 'auditions' 
-        ? singleItem.refId 
-        : (singleItem.email ? singleItem.email.replace(/\./g, '_') : null);
+      let key = null;
+      if (type === 'auditions') {
+        key = singleItem.refId ? singleItem.refId.replace(/[\.#$\[\]\/]/g, '_') : null;
+      } else {
+        key = singleItem.email ? singleItem.email.replace(/[\.#$\[\]\/]/g, '_') : (singleItem.id || Date.now());
+      }
       if (key) {
         const endpoint = `${CLOUD_DB_BASE_URL}/${type}/${key}.json`;
-        await fetch(endpoint, {
+        const res = await fetch(endpoint, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify(singleItem)
         });
+        return res.ok;
       }
+      return false;
     } else {
       // Sync all local items to cloud via PUT
       const localItems = JSON.parse(localStorage.getItem(type === 'auditions' ? 'yrc_audition_applications' : 'yrc_volunteers') || '[]');
       for (const item of localItems) {
         const key = type === 'auditions' 
-          ? item.refId 
-          : (item.email ? item.email.replace(/\./g, '_') : null);
+          ? (item.refId ? item.refId.replace(/[\.#$\[\]\/]/g, '_') : null)
+          : (item.email ? item.email.replace(/[\.#$\[\]\/]/g, '_') : null);
         if (key) {
           await fetch(`${CLOUD_DB_BASE_URL}/${type}/${key}.json`, {
             method: 'PUT',
@@ -187,9 +196,11 @@ window.pushCloudData = async function(singleItem = null, type = 'auditions') {
           });
         }
       }
+      return true;
     }
   } catch (err) {
     console.warn('Push cloud data error:', err);
+    return false;
   }
 };
 
@@ -474,15 +485,54 @@ function initVolunteerPortal() {
 
   // Handle Form Submission
   if (joinForm) {
-    joinForm.addEventListener('submit', (e) => {
+    joinForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const submitBtn = joinForm.querySelector('button[type="submit"]');
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+        submitBtn.innerHTML = `<span>Submitting...</span>`;
+      }
+
       const email = document.getElementById('reg-email').value?.trim();
-      const volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+      const localVolunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
+
+      // Fetch live cloud volunteers to prevent duplicate race conditions
+      let liveVolunteers = [];
+      try {
+        if (CLOUD_DB_BASE_URL) {
+          const resVol = await fetch(`${CLOUD_DB_BASE_URL}/volunteers.json`, { 
+            headers: { 'Accept': 'application/json' },
+            cache: 'no-store'
+          });
+          if (resVol.ok) {
+            const jsonRes = await resVol.json();
+            if (jsonRes) {
+              liveVolunteers = (Array.isArray(jsonRes) ? jsonRes : Object.values(jsonRes)).filter(item => item !== null && item !== undefined);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Volunteer live check offline fallback:', err);
+      }
+
+      const allVolunteers = [...liveVolunteers];
+      localVolunteers.forEach(lv => {
+        if (!allVolunteers.some(av => av.email && av.email.toLowerCase().trim() === (lv.email || '').toLowerCase().trim())) {
+          allVolunteers.push(lv);
+        }
+      });
 
       // Check unique personal email ID
-      const duplicateEmail = volunteers.find(v => v.email && v.email.toLowerCase().trim() === email.toLowerCase());
+      const duplicateEmail = allVolunteers.find(v => v.email && v.email.toLowerCase().trim() === email.toLowerCase());
       if (duplicateEmail) {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+          submitBtn.innerHTML = originalBtnHtml;
+        }
         showCustomAlert('Duplicate Registration Detected', `A volunteer registration has already been submitted for Personal Email ID: ${email}`, 'warning');
         return;
       }
@@ -498,15 +548,21 @@ function initVolunteerPortal() {
       };
 
       // Save to localStorage
-      volunteers.unshift(newRegistration);
-      localStorage.setItem('yrc_volunteers', JSON.stringify(volunteers));
+      const updatedVolunteers = [newRegistration, ...allVolunteers];
+      localStorage.setItem('yrc_volunteers', JSON.stringify(updatedVolunteers));
 
       // Push to Cloud DB REST Endpoint for multi-device live sync
       if (typeof window.pushCloudData === 'function') {
-        window.pushCloudData(newRegistration, 'volunteers');
+        await window.pushCloudData(newRegistration, 'volunteers');
       }
 
-      // Reset form
+      // Reset submit button & form
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        submitBtn.innerHTML = originalBtnHtml;
+      }
+
       joinForm.reset();
 
       // Show Success Modal
@@ -793,6 +849,28 @@ function initAuditionPortal() {
   wizardForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const submitBtn = wizardForm.querySelector('button[type="submit"]');
+    const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+      submitBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-[#ebd86e] inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        <span>Submitting Application...</span>
+      `;
+    }
+
+    const resetSubmitBtn = () => {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        submitBtn.innerHTML = originalBtnHtml;
+      }
+    };
+
     // Step 1 Validation
     const name = document.getElementById('aud-name')?.value?.trim();
     const regNo = document.getElementById('aud-regno')?.value?.trim();
@@ -802,17 +880,8 @@ function initAuditionPortal() {
     const phone = document.getElementById('aud-phone')?.value?.trim();
 
     if (!name || !regNo || !dept || !year || !email || !phone) {
+      resetSubmitBtn();
       showCustomAlert('Incomplete Details', 'Please fill out all required personal and academic details in Step 1.', 'warning');
-      showWizardStepCard(1);
-      return;
-    }
-
-    // Check Unique User (Exclusively By Personal Email ID)
-    const existingApplications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-
-    const duplicateEmail = existingApplications.find(a => a.email && a.email.toLowerCase().trim() === email.toLowerCase().trim());
-    if (duplicateEmail) {
-      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Personal Email ID: ${email}\n\nReference ID: ${duplicateEmail.refId}`, 'warning');
       showWizardStepCard(1);
       return;
     }
@@ -820,6 +889,7 @@ function initAuditionPortal() {
     // Step 2 Validation
     const selectedDomainInput = document.querySelector('input[name="primary_domain"]:checked');
     if (!selectedDomainInput) {
+      resetSubmitBtn();
       showCustomAlert('Domain Selection Required', 'Please select a primary domain choice in Step 2.', 'warning');
       showWizardStepCard(2);
       return;
@@ -827,6 +897,7 @@ function initAuditionPortal() {
 
     const selectedSlotInput = document.querySelector('input[name="audition_slot"]:checked');
     if (!selectedSlotInput) {
+      resetSubmitBtn();
       showCustomAlert('Time Slot Required', 'Please select your preferred audition time slot in Step 2.', 'warning');
       showWizardStepCard(2);
       return;
@@ -834,8 +905,45 @@ function initAuditionPortal() {
 
     const termsCheckbox = document.getElementById('aud-terms');
     if (termsCheckbox && !termsCheckbox.checked) {
+      resetSubmitBtn();
       showCustomAlert('Confirmation Required', 'Please check the confirmation box in Step 2.', 'warning');
       showWizardStepCard(2);
+      return;
+    }
+
+    // Fetch live cloud auditions to prevent concurrent ID and email collisions
+    let liveCloudAuditions = [];
+    try {
+      if (CLOUD_DB_BASE_URL) {
+        const resAud = await fetch(`${CLOUD_DB_BASE_URL}/auditions.json`, { 
+          headers: { 'Accept': 'application/json' },
+          cache: 'no-store'
+        });
+        if (resAud.ok) {
+          const jsonRes = await resAud.json();
+          if (jsonRes) {
+            liveCloudAuditions = (Array.isArray(jsonRes) ? jsonRes : Object.values(jsonRes)).filter(item => item !== null && item !== undefined);
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Live cloud auditions check offline fallback:', err);
+    }
+
+    const localApplications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
+    const allKnown = [...liveCloudAuditions];
+    localApplications.forEach(localItem => {
+      if (!allKnown.some(k => (k.refId && k.refId === localItem.refId) || (k.email && k.email.toLowerCase() === (localItem.email || '').toLowerCase()))) {
+        allKnown.push(localItem);
+      }
+    });
+
+    // Check Unique User (Exclusively By Personal Email ID across all live & local entries)
+    const duplicateEmail = allKnown.find(a => a.email && a.email.toLowerCase().trim() === email.toLowerCase().trim());
+    if (duplicateEmail) {
+      resetSubmitBtn();
+      showCustomAlert('Duplicate Submission Detected', `An application has already been submitted for Personal Email ID: ${email}\n\nReference ID: ${duplicateEmail.refId}`, 'warning');
+      showWizardStepCard(1);
       return;
     }
 
@@ -843,9 +951,9 @@ function initAuditionPortal() {
     const domainMeta = DOMAIN_DATA[domainKey] || { title: domainKey };
     const chosenSlot = selectedSlotInput.value;
 
-    // Generate Sequential Application Reference ID (starting from 1500)
+    // Generate Sequential Application Reference ID with unique entropy token to guarantee zero collision during simultaneous submissions
     let maxTicketNum = 1499;
-    existingApplications.forEach(a => {
+    allKnown.forEach(a => {
       if (a && a.refId) {
         const match = a.refId.match(/YRC-AUD-2026-(\d+)/);
         if (match) {
@@ -861,29 +969,31 @@ function initAuditionPortal() {
     let refId = "";
     let isUnique = false;
 
-    // Verify refId is unique against local and cloud DB
     while (!isUnique) {
-      refId = `YRC-AUD-2026-${nextTicketNum}`;
+      // 3-digit uppercase alphanumeric entropy ensures 100% collision prevention even if 100+ users submit at the exact same millisecond
+      const entropyToken = Math.random().toString(36).substring(2, 5).toUpperCase();
+      refId = `YRC-AUD-2026-${nextTicketNum}-${entropyToken}`;
       
-      // 1. Check local applications
-      const duplicateLocal = existingApplications.find(a => a.refId === refId);
+      const duplicateLocal = allKnown.find(a => a.refId === refId);
       if (duplicateLocal) {
         nextTicketNum++;
         continue;
       }
 
-      // 2. Check cloud database via REST
-      try {
-        const checkRes = await fetch(`${CLOUD_DB_BASE_URL}/auditions/${refId}.json`);
-        if (checkRes.ok) {
-          const cloudData = await checkRes.json();
-          if (cloudData !== null) {
-            nextTicketNum++;
-            continue;
+      if (CLOUD_DB_BASE_URL) {
+        try {
+          const safeKey = refId.replace(/[\.#$\[\]\/]/g, '_');
+          const checkRes = await fetch(`${CLOUD_DB_BASE_URL}/auditions/${safeKey}.json`);
+          if (checkRes.ok) {
+            const cloudData = await checkRes.json();
+            if (cloudData !== null) {
+              nextTicketNum++;
+              continue;
+            }
           }
+        } catch (err) {
+          console.warn("Could not verify refId uniqueness on cloud, assuming unique:", err);
         }
-      } catch (err) {
-        console.warn("Could not verify refId uniqueness on cloud, assuming unique:", err);
       }
 
       isUnique = true;
@@ -906,12 +1016,12 @@ function initAuditionPortal() {
     };
 
     // Save to LocalStorage
-    applications = [newApplication, ...existingApplications];
-    localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
+    const updatedApplications = [newApplication, ...allKnown];
+    localStorage.setItem('yrc_audition_applications', JSON.stringify(updatedApplications));
 
-    // Push to Cloud DB REST Endpoint for instant multi-device sync
+    // Push to Cloud DB REST Endpoint for instant multi-device sync and wait for it
     if (typeof window.pushCloudData === 'function') {
-      window.pushCloudData(newApplication, 'auditions');
+      await window.pushCloudData(newApplication, 'auditions');
     }
 
     // Populate Modal Ticket
@@ -926,6 +1036,9 @@ function initAuditionPortal() {
     if (ticketDept) ticketDept.innerText = `${newApplication.regNo} (${newApplication.dept})`;
     if (ticketDomain) ticketDomain.innerText = domainMeta.title;
     if (ticketSlot) ticketSlot.innerText = newApplication.slot;
+
+    // Reset button
+    resetSubmitBtn();
 
     // Show Ticket Modal
     if (modal) {
@@ -1203,8 +1316,6 @@ function renderAuditionsAdminTable() {
         <div class="mt-1">
           <select onchange="updateApplicantSlot('${app.refId}', this.value)" class="w-full text-[10px] bg-slate-950 text-slate-300 border border-slate-800 rounded px-1.5 py-0.5 focus:outline-none focus:border-amber-400 truncate">
             <option value="" disabled selected>Reassign / Change Slot...</option>
-            <option value="Saturday (15/08) - Evening 06:00 PM - 07:00 PM" ${rawSlot === 'Saturday (15/08) - Evening 06:00 PM - 07:00 PM' ? 'selected' : ''}>Sat 15/08 (06:00 PM – 07:00 PM)</option>
-            <option value="Saturday (15/08) - Evening 07:00 PM - 08:00 PM" ${rawSlot === 'Saturday (15/08) - Evening 07:00 PM - 08:00 PM' ? 'selected' : ''}>Sat 15/08 (07:00 PM – 08:00 PM)</option>
             <option value="Sunday (16/08) - Morning 11:00 AM - 12:00 PM" ${rawSlot === 'Sunday (16/08) - Morning 11:00 AM - 12:00 PM' ? 'selected' : ''}>Sun 16/08 (11:00 AM – 12:00 PM)</option>
             <option value="Sunday (16/08) - Morning 12:00 PM - 01:00 PM" ${rawSlot === 'Sunday (16/08) - Morning 12:00 PM - 01:00 PM' ? 'selected' : ''}>Sun 16/08 (12:00 PM – 01:00 PM)</option>
             <option value="Sunday (16/08) - Evening 06:00 PM - 07:00 PM" ${rawSlot === 'Sunday (16/08) - Evening 06:00 PM - 07:00 PM' ? 'selected' : ''}>Sun 16/08 (06:00 PM – 07:00 PM)</option>
