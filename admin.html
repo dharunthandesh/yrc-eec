@@ -425,152 +425,8 @@
       document.getElementById('badge-volunteer-count').innerText = volunteers.length;
     }
 
-    /* Render Auditions Table */
-    function renderAuditionsAdminTable() {
-      const tableBody = document.getElementById('audition-admin-table-body');
-      if (!tableBody) return;
-
-      tableBody.innerHTML = '';
-      const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-
-      const searchVal = (document.getElementById('admin-search-input')?.value || '').toLowerCase();
-      const domainVal = document.getElementById('admin-domain-filter')?.value || 'all';
-      const slotVal = document.getElementById('admin-slot-filter')?.value || 'all';
-      const statusVal = document.getElementById('admin-status-filter')?.value || 'all';
-
-      const filtered = applications.filter(app => {
-        const rawSlot = (app.slot || app.auditionSlot || app.timing || app.timeSlot || '').toLowerCase();
-        const matchesSearch = (app.name || '').toLowerCase().includes(searchVal) ||
-                              (app.regNo || '').toLowerCase().includes(searchVal) ||
-                              (app.dept || '').toLowerCase().includes(searchVal) ||
-                              (app.refId || '').toLowerCase().includes(searchVal) ||
-                              rawSlot.includes(searchVal);
-        const matchesDomain = (domainVal === 'all') || (app.primaryDomainTitle === domainVal);
-        const matchesSlot = (slotVal === 'all') ||
-                            (slotVal === 'none' && (!rawSlot || rawSlot === 'no slot' || rawSlot === 'no slot selected')) ||
-                            (rawSlot.includes(slotVal.toLowerCase()));
-        const matchesStatus = (statusVal === 'all') || (app.status === statusVal);
-
-        return matchesSearch && matchesDomain && matchesSlot && matchesStatus;
-      });
-
-      if (filtered.length === 0) {
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="7" class="px-6 py-8 text-center text-slate-500 italic">
-              No audition applications match the selected criteria.
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      filtered.forEach((app) => {
-        let statusBadge = 'bg-amber-500/10 text-amber-400 border-amber-500/30';
-        if (app.status === 'Shortlisted') statusBadge = 'bg-blue-500/10 text-blue-400 border-blue-500/30';
-        if (app.status === 'Audition Scheduled') statusBadge = 'bg-purple-500/10 text-purple-400 border-purple-500/30';
-        if (app.status === 'Selected') statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-        if (app.status === 'Rejected') statusBadge = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
-
-        const rawSlot = app.slot || app.auditionSlot || app.timing || app.timeSlot || '';
-        const hasSlot = rawSlot && rawSlot !== 'No Slot' && rawSlot !== 'No Slot Selected';
-
-        const slotBadgeHtml = hasSlot
-          ? `<div class="px-2.5 py-1 bg-amber-500/15 text-amber-300 font-extrabold text-[11px] rounded-lg border border-amber-500/30 flex items-center gap-1.5 shadow-sm">
-               <span>🗓️</span>
-               <span class="truncate max-w-[200px]" title="${rawSlot}">${rawSlot}</span>
-             </div>`
-          : `<div class="px-2 py-0.5 bg-slate-800 text-slate-400 font-semibold text-[10px] rounded border border-slate-700 inline-block">
-               ⚠️ Unassigned / No Slot
-             </div>`;
-
-        const row = document.createElement('tr');
-        row.className = "hover:bg-slate-800/50 transition-colors";
-        row.innerHTML = `
-          <td class="px-4 py-3.5 font-extrabold text-[#ebd86e] font-mono text-[11px]">${app.refId}</td>
-          <td class="px-4 py-3.5 font-bold text-white">
-            <div>${app.name}</div>
-            <div class="text-[10px] text-slate-400 font-normal">${app.email} &bull; ${app.phone}</div>
-          </td>
-          <td class="px-4 py-3.5 text-slate-300">
-            <div class="font-semibold text-slate-200">${app.dept}</div>
-            <div class="text-[10px] text-slate-400">${app.regNo} (${app.year})</div>
-          </td>
-          <td class="px-4 py-3.5">
-            <span class="px-2 py-0.5 bg-[#4a040d] text-[#ebd86e] font-bold text-[10px] rounded uppercase border border-[#ebd86e]/30">${app.primaryDomainTitle}</span>
-            <div class="text-[10px] text-slate-400 mt-0.5">Sec: ${app.secondaryDomain || 'None'}</div>
-          </td>
-          <td class="px-4 py-3.5">
-            ${slotBadgeHtml}
-            <div class="mt-1">
-              <select onchange="updateApplicantSlot('${app.refId}', this.value)" class="w-full text-[10px] bg-slate-950 text-slate-300 border border-slate-800 rounded px-1.5 py-0.5 focus:outline-none focus:border-amber-400 truncate">
-                <option value="" disabled selected>Reassign / Change Slot...</option>
-                <option value="Saturday (15/08) - Evening 06:00 PM - 07:00 PM" ${rawSlot === 'Saturday (15/08) - Evening 06:00 PM - 07:00 PM' ? 'selected' : ''}>Sat 15/08 (06:00 PM – 07:00 PM)</option>
-                <option value="Saturday (15/08) - Evening 07:00 PM - 08:00 PM" ${rawSlot === 'Saturday (15/08) - Evening 07:00 PM - 08:00 PM' ? 'selected' : ''}>Sat 15/08 (07:00 PM – 08:00 PM)</option>
-                <option value="Sunday (16/08) - Morning 11:00 AM - 12:00 PM" ${rawSlot === 'Sunday (16/08) - Morning 11:00 AM - 12:00 PM' ? 'selected' : ''}>Sun 16/08 (11:00 AM – 12:00 PM)</option>
-                <option value="Sunday (16/08) - Morning 12:00 PM - 01:00 PM" ${rawSlot === 'Sunday (16/08) - Morning 12:00 PM - 01:00 PM' ? 'selected' : ''}>Sun 16/08 (12:00 PM – 01:00 PM)</option>
-                <option value="Sunday (16/08) - Evening 06:00 PM - 07:00 PM" ${rawSlot === 'Sunday (16/08) - Evening 06:00 PM - 07:00 PM' ? 'selected' : ''}>Sun 16/08 (06:00 PM – 07:00 PM)</option>
-                <option value="Sunday (16/08) - Evening 07:00 PM - 08:00 PM" ${rawSlot === 'Sunday (16/08) - Evening 07:00 PM - 08:00 PM' ? 'selected' : ''}>Sun 16/08 (07:00 PM – 08:00 PM)</option>
-              </select>
-            </div>
-          </td>
-          <td class="px-4 py-3.5">
-            <select onchange="updateApplicantStatus('${app.refId}', this.value)" class="px-2 py-1 bg-slate-950 border text-[11px] font-bold rounded-lg ${statusBadge}">
-              <option value="Under Review" ${app.status === 'Under Review' ? 'selected' : ''}>Under Review</option>
-              <option value="Shortlisted" ${app.status === 'Shortlisted' ? 'selected' : ''}>Shortlisted</option>
-              <option value="Audition Scheduled" ${app.status === 'Audition Scheduled' ? 'selected' : ''}>Audition Scheduled</option>
-              <option value="Selected" ${app.status === 'Selected' ? 'selected' : ''}>Selected</option>
-              <option value="Rejected" ${app.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
-            </select>
-          </td>
-          <td class="px-4 py-3.5 text-right">
-            <button onclick="deleteAuditionApplicant('${app.refId}')" class="text-rose-400 hover:text-rose-300 font-bold text-xs transition">
-              Remove
-            </button>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-      updateCounts();
-    }
-
-    function updateApplicantSlot(refId, newSlot) {
-      const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-      const target = applications.find(a => a.refId === refId);
-      if (target) {
-        target.slot = newSlot;
-        localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
-        renderAuditionsAdminTable();
-        if (typeof window.pushCloudData === 'function') window.pushCloudData(target, 'auditions');
-      }
-    }
-
-    function updateApplicantStatus(refId, newStatus) {
-      const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-      const target = applications.find(a => a.refId === refId);
-      if (target) {
-        target.status = newStatus;
-        localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
-        renderAuditionsAdminTable();
-        if (typeof window.pushCloudData === 'function') window.pushCloudData(target, 'auditions');
-      }
-    }
-
-    async function deleteAuditionApplicant(refId) {
-      if (confirm(`Remove application ${refId}?`)) {
-        let applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-        applications = applications.filter(a => a.refId !== refId);
-        localStorage.setItem('yrc_audition_applications', JSON.stringify(applications));
-        renderAuditionsAdminTable();
-        try {
-          if (typeof CLOUD_DB_BASE_URL !== 'undefined' && CLOUD_DB_BASE_URL) {
-            await fetch(`${CLOUD_DB_BASE_URL}/auditions/${refId}.json`, { method: 'DELETE' });
-          }
-        } catch (e) {
-          console.warn('Cloud DB delete error:', e);
-        }
-      }
-    }
+    // Note: renderAuditionsAdminTable, updateApplicantSlot, updateApplicantStatus,
+    // and deleteAuditionApplicant are imported from app.js and exposed globally.
 
     async function clearAuditionsDb() {
       if (confirm('Are you sure you want to clear all audition application records? This will delete all entries locally and from the cloud.')) {
@@ -587,74 +443,7 @@
       }
     }
 
-    function exportAuditionsToCSV() {
-      const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-      if (applications.length === 0) {
-        showCustomAlert('Export Notice', 'No audition application records to export.', 'info');
-        return;
-      }
-
-      let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-      csvContent += "Ref ID,Name,Reg No,Department,Year,Email,Phone,Primary Domain,Secondary Domain,Preferred Time Slot,Status,Applied At\n";
-
-      applications.forEach(a => {
-        const row = [
-          `"${a.refId}"`,
-          `"${a.name}"`,
-          `"${a.regNo}"`,
-          `"${a.dept}"`,
-          `"${a.year}"`,
-          `"${a.email}"`,
-          `"${a.phone}"`,
-          `"${a.primaryDomainTitle}"`,
-          `"${a.secondaryDomain || 'None'}"`,
-          `"${a.slot || 'N/A'}"`,
-          `"${a.status}"`,
-          `"${a.appliedAt}"`
-        ].join(",");
-        csvContent += row + "\n";
-      });
-
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `YRC_Audition_Applicants_${new Date().toISOString().slice(0,10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    function exportAuditionsToExcel() {
-      const applications = JSON.parse(localStorage.getItem('yrc_audition_applications') || '[]');
-      if (applications.length === 0) {
-        showCustomAlert('Export Notice', 'No audition application records to export.', 'info');
-        return;
-      }
-
-      const exportData = applications.map(a => ({
-        "Ref ID": a.refId,
-        "Applicant Name": a.name,
-        "Register Number": a.regNo,
-        "Department": a.dept,
-        "Year of Study": a.year,
-        "Email ID": a.email,
-        "Phone Number": a.phone,
-        "Primary Domain": a.primaryDomainTitle,
-        "Secondary Domain": a.secondaryDomain || 'None',
-        "Preferred Time Slot": a.slot || 'N/A',
-        "Application Status": a.status,
-        "Applied At": a.appliedAt
-      }));
-
-      if (window.XLSX) {
-        const worksheet = XLSX.utils.json_to_sheet(exportData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Audition Applicants");
-        XLSX.writeFile(workbook, `YRC_Audition_Applicants_${new Date().toISOString().slice(0,10)}.xlsx`);
-      } else {
-        exportAuditionsToCSV();
-      }
-    }
+    // Note: exportAuditionsToCSV and exportAuditionsToExcel are imported from app.js and exposed globally.
 
     /* Render Volunteers Table */
     function renderVolunteersAdminTable() {
@@ -698,7 +487,7 @@
           </td>
           <td class="px-4 py-3.5 text-slate-400 text-xs">${v.skills || 'General Volunteering'}</td>
           <td class="px-4 py-3.5 text-right">
-            <button onclick="deleteVolunteer(${index})" class="text-rose-400 hover:text-rose-300 font-bold text-xs transition">
+            <button onclick="deleteVolunteer('${v.email}')" class="text-rose-400 hover:text-rose-300 font-bold text-xs transition">
               Remove
             </button>
           </td>
@@ -708,16 +497,16 @@
       updateCounts();
     }
 
-    async function deleteVolunteer(index) {
-      if (confirm('Remove volunteer registration?')) {
+    async function deleteVolunteer(email) {
+      if (confirm(`Remove volunteer registration for ${email}?`)) {
         let volunteers = JSON.parse(localStorage.getItem('yrc_volunteers') || '[]');
-        const target = volunteers[index];
-        volunteers.splice(index, 1);
-        localStorage.setItem('yrc_volunteers', JSON.stringify(volunteers));
-        renderVolunteersAdminTable();
-        
-        if (target && target.email) {
-          const key = target.email.replace(/\./g, '_');
+        const target = volunteers.find(v => v.email === email);
+        if (target) {
+          volunteers = volunteers.filter(v => v.email !== email);
+          localStorage.setItem('yrc_volunteers', JSON.stringify(volunteers));
+          renderVolunteersAdminTable();
+          
+          const key = email.replace(/\./g, '_');
           try {
             if (typeof CLOUD_DB_BASE_URL !== 'undefined' && CLOUD_DB_BASE_URL) {
               await fetch(`${CLOUD_DB_BASE_URL}/volunteers/${key}.json`, { method: 'DELETE' });

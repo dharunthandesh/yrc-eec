@@ -790,7 +790,7 @@ function initAuditionPortal() {
   }
 
   // Handle Form Submission
-  wizardForm.addEventListener('submit', (e) => {
+  wizardForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // Step 1 Validation
@@ -857,8 +857,37 @@ function initAuditionPortal() {
       }
     });
 
-    const nextTicketNum = maxTicketNum + 1;
-    const refId = `YRC-AUD-2026-${nextTicketNum}`;
+    let nextTicketNum = maxTicketNum + 1;
+    let refId = "";
+    let isUnique = false;
+
+    // Verify refId is unique against local and cloud DB
+    while (!isUnique) {
+      refId = `YRC-AUD-2026-${nextTicketNum}`;
+      
+      // 1. Check local applications
+      const duplicateLocal = existingApplications.find(a => a.refId === refId);
+      if (duplicateLocal) {
+        nextTicketNum++;
+        continue;
+      }
+
+      // 2. Check cloud database via REST
+      try {
+        const checkRes = await fetch(`${CLOUD_DB_BASE_URL}/auditions/${refId}.json`);
+        if (checkRes.ok) {
+          const cloudData = await checkRes.json();
+          if (cloudData !== null) {
+            nextTicketNum++;
+            continue;
+          }
+        }
+      } catch (err) {
+        console.warn("Could not verify refId uniqueness on cloud, assuming unique:", err);
+      }
+
+      isUnique = true;
+    }
 
     const newApplication = {
       refId: refId,
@@ -1135,11 +1164,11 @@ function renderAuditionsAdminTable() {
   }
 
   filtered.forEach((app) => {
-    let statusClass = 'status-badge-under-review';
-    if (app.status === 'Shortlisted') statusClass = 'status-badge-shortlisted';
-    if (app.status === 'Audition Scheduled') statusClass = 'status-badge-scheduled';
-    if (app.status === 'Selected') statusClass = 'status-badge-selected';
-    if (app.status === 'Rejected') statusClass = 'status-badge-rejected';
+    let statusBadge = 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+    if (app.status === 'Shortlisted') statusBadge = 'bg-blue-500/10 text-blue-400 border-blue-500/30';
+    if (app.status === 'Audition Scheduled') statusBadge = 'bg-purple-500/10 text-purple-400 border-purple-500/30';
+    if (app.status === 'Selected') statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+    if (app.status === 'Rejected') statusBadge = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
 
     const rawSlot = app.slot || app.auditionSlot || app.timing || app.timeSlot || '';
     const hasSlot = rawSlot && rawSlot !== 'No Slot' && rawSlot !== 'No Slot Selected';
@@ -1184,7 +1213,7 @@ function renderAuditionsAdminTable() {
         </div>
       </td>
       <td class="px-4 py-3.5">
-        <select onchange="updateApplicantStatus('${app.refId}', this.value)" class="px-2 py-1 bg-white border border-slate-200 rounded-lg text-[11px] font-bold ${statusClass}">
+        <select onchange="updateApplicantStatus('${app.refId}', this.value)" class="px-2 py-1 bg-slate-950 border text-[11px] font-bold rounded-lg ${statusBadge}">
           <option value="Under Review" ${app.status === 'Under Review' ? 'selected' : ''}>Under Review</option>
           <option value="Shortlisted" ${app.status === 'Shortlisted' ? 'selected' : ''}>Shortlisted</option>
           <option value="Audition Scheduled" ${app.status === 'Audition Scheduled' ? 'selected' : ''}>Audition Scheduled</option>
@@ -1309,4 +1338,9 @@ function exportAuditionsToExcel() {
     exportAuditionsToCSV();
   }
 }
+
+// Expose admin utilities to global scope for admin.html
+window.exportAuditionsToCSV = exportAuditionsToCSV;
+window.exportAuditionsToExcel = exportAuditionsToExcel;
+window.renderAuditionsAdminTable = renderAuditionsAdminTable;
 
