@@ -1316,10 +1316,11 @@ function renderAuditionsAdminTable() {
         <div class="mt-1">
           <select onchange="updateApplicantSlot('${app.refId}', this.value)" class="w-full text-[10px] bg-slate-950 text-slate-300 border border-slate-800 rounded px-1.5 py-0.5 focus:outline-none focus:border-amber-400 truncate">
             <option value="" disabled selected>Reassign / Change Slot...</option>
-            <option value="Sunday (16/08) - Morning 11:00 AM - 12:00 PM" ${rawSlot === 'Sunday (16/08) - Morning 11:00 AM - 12:00 PM' ? 'selected' : ''}>Sun 16/08 (11:00 AM – 12:00 PM)</option>
-            <option value="Sunday (16/08) - Morning 12:00 PM - 01:00 PM" ${rawSlot === 'Sunday (16/08) - Morning 12:00 PM - 01:00 PM' ? 'selected' : ''}>Sun 16/08 (12:00 PM – 01:00 PM)</option>
-            <option value="Sunday (16/08) - Evening 06:00 PM - 07:00 PM" ${rawSlot === 'Sunday (16/08) - Evening 06:00 PM - 07:00 PM' ? 'selected' : ''}>Sun 16/08 (06:00 PM – 07:00 PM)</option>
-            <option value="Sunday (16/08) - Evening 07:00 PM - 08:00 PM" ${rawSlot === 'Sunday (16/08) - Evening 07:00 PM - 08:00 PM' ? 'selected' : ''}>Sun 16/08 (07:00 PM – 08:00 PM)</option>
+            <option value="Saturday (22/08) - Evening 05:00 PM - 06:00 PM" ${rawSlot === 'Saturday (22/08) - Evening 05:00 PM - 06:00 PM' ? 'selected' : ''}>Sat 22/08 (05:00 PM – 06:00 PM)</option>
+            <option value="Saturday (22/08) - Evening 06:00 PM - 07:00 PM" ${rawSlot === 'Saturday (22/08) - Evening 06:00 PM - 07:00 PM' ? 'selected' : ''}>Sat 22/08 (06:00 PM – 07:00 PM)</option>
+            <option value="Saturday (22/08) - Evening 07:00 PM - 08:00 PM" ${rawSlot === 'Saturday (22/08) - Evening 07:00 PM - 08:00 PM' ? 'selected' : ''}>Sat 22/08 (07:00 PM – 08:00 PM)</option>
+            <option value="Saturday (22/08) - Night 08:00 PM - 09:00 PM" ${rawSlot === 'Saturday (22/08) - Night 08:00 PM - 09:00 PM' ? 'selected' : ''}>Sat 22/08 (08:00 PM – 09:00 PM)</option>
+            <option value="Saturday (22/08) - Night 09:00 PM - 10:00 PM" ${rawSlot === 'Saturday (22/08) - Night 09:00 PM - 10:00 PM' ? 'selected' : ''}>Sat 22/08 (09:00 PM – 10:00 PM)</option>
           </select>
         </div>
       </td>
