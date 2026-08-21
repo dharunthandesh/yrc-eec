@@ -1228,12 +1228,11 @@ window.onPrimaryDomainChange = function(domainKey) {
 };
 
 window.selectDomainInForm = function(domainKey) {
-  const radio = document.querySelector(`input[name="primary_domain"][value="${domainKey}"]`);
-  if (radio) {
-    radio.checked = true;
-    window.onPrimaryDomainChange(domainKey);
+  if (typeof showCustomAlert === 'function') {
+    showCustomAlert('Registrations Closed', 'Audition registrations for Core Committee 2026–27 have officially closed.', 'info');
+  } else {
+    alert('Audition registrations for Core Committee 2026–27 have officially closed.');
   }
-  showWizardStepCard(2);
 };
 
 /* Render Admin Management Table */
